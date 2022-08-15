@@ -1,0 +1,53 @@
+{
+  "name": "AF1",
+  "version": "1.0.0",
+  "description": "An Arduino extension framework",
+  "keywords": "Arduino, ESP32, ESPNOW, IOT, Extension",
+  "authors": [
+    {
+      "name": "Jon Shaw",
+      "email": "jonshaw199@gmail.com",
+      "url": "https://github.com/jonshaw199",
+      "maintainer": true
+    }
+  ],
+  "license": "LGPL-3.0",
+  "dependencies": {
+    "ESPAsyncWebServer": "https://github.com/me-no-dev/ESPAsyncWebServer.git",
+    "fastled/FastLED": "^3.5.0",
+    "ayushsharma82/WebSerial": "^1.3.0"
+  },
+  "frameworks": "Arduino",
+  "platforms": "*",
+  "build": {
+    "flags": [
+      "-D JSSSID_DEF=ssid-here",
+      "-D JSPASS_DEF=pass-here",
+      "-D DEVICE_PREFIX_DEF=JS",
+      "-D DEVICE_AP_PASS_DEF=1234567890",
+
+      "-D GATEWAY_A=192",
+      "-D GATEWAY_B=168",
+      "-D GATEWAY_C=1",
+      "-D GATEWAY_D=254",
+      "-D SUBNET_A=255",
+      "-D SUBNET_B=255",
+      "-D SUBNET_C=255",
+      "-D SUBNET_D=0",
+      "-D PRINT_WIFI_SCAN_RESULTS=false",
+
+      "-D INITIAL_STATE=STATE_IDLE",
+      "-D ESPNOW_CHANNEL=0",
+      "-D SLAVE_CNT=4",
+      "-D DEFAULT_RETRIES=3",
+      "-D RETRIES_PURG=10",
+
+      "-D DELAY_PREPARE_WIFI=500",
+      "-D DELAY_SEND=2",
+      "-D MS_PURG_DEFAULT=5000",
+      "-D MS_MASTER_HANDSHAKE_LOOP=333",
+
+      "-D LED_BRIGHTNESS_LOW=33"
+    ]
+  }
+}
