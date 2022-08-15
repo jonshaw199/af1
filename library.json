@@ -23,8 +23,8 @@
     "flags": [
       "-D JSSSID_DEF=ssid-here",
       "-D JSPASS_DEF=pass-here",
-      "-D DEVICE_PREFIX_DEF=JS",
-      "-D DEVICE_AP_PASS_DEF=1234567890",
+      "-D DEVICE_PREFIX=JS",
+      "-D DEVICE_AP_PASS=1234567890",
 
       "-D GATEWAY_A=192",
       "-D GATEWAY_B=168",

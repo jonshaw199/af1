@@ -20,27 +20,12 @@
 #ifndef FRAMEWORK_FRAMEWORK_H_
 #define FRAMEWORK_FRAMEWORK_H_
 
-#ifndef JSSSID
-#define JSSSID JSSSID_DEF
-#endif
-
-#ifndef JSPASS
-#define JSPASS JSPASS_DEF
-#endif
-
-#ifndef DEVICE_PREFIX
-#define DEVICE_PREFIX DEVICE_PREFIX_DEF
-#endif
-
-#ifndef DEVICE_AP_PASS
-#define DEVICE_AP_PASS DEVICE_AP_PASS_DEF
-#endif
-
 #include "stateent/base/base.h"
 
 #include "messageHandler/messageHandler.h"
 #include "stateManager/stateManager.h"
 #include "led/led.h"
+#include "flags.h"
 
 class Framework
 {
