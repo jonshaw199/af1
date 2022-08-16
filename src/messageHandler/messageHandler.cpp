@@ -367,6 +367,7 @@ void MessageHandler::sendStateChangeMessages(int s)
   msg.setType(TYPE_CHANGE_STATE);
   msg.setSenderID(JS_ID);
   msg.setState(s);
+  msg.setMaxRetries(DEFAULT_RETRIES);
 
   getInstance().outbox.enqueue(msg);
 }
