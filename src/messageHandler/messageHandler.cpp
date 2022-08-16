@@ -358,6 +358,19 @@ void MessageHandler::receiveHandshakeResponse(JSMessage m)
   getInstance().peerInfoMap[m.getSenderID()].handshakeResponse = true;
 }
 
+void MessageHandler::sendStateChangeMessages(int s)
+{
+  Serial.println("Sending state change messages");
+
+  JSMessage msg = JSMessage();
+
+  msg.setType(TYPE_CHANGE_STATE);
+  msg.setSenderID(JS_ID);
+  msg.setState(s);
+
+  getInstance().outbox.enqueue(msg);
+}
+
 const std::map<int, js_peer_info> &MessageHandler::getPeerInfoMap()
 {
   return getInstance().peerInfoMap;

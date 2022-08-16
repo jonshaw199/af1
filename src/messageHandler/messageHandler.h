@@ -61,6 +61,7 @@ public:
   static void receiveHandshakeRequest(JSMessage m);
   static void sendHandshakeResponses(std::set<int> ids);
   static void receiveHandshakeResponse(JSMessage m);
+  static void sendStateChangeMessages(int s);
   static const std::map<int, js_peer_info> &getPeerInfoMap(); // Read only
   static void sendAllHandshakes();
   static std::set<int> getPeerIDs();
