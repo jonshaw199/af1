@@ -45,6 +45,8 @@ bool Base::preStateChange(int s)
   int slaveState = s;
   switch (s)
   {
+  case STATE_OTA:
+    return true; // Slaves already notified
   case STATE_PURG_OTA:
     slaveState = STATE_OTA;
     break;
