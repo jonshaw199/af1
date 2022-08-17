@@ -41,6 +41,24 @@ void Base::loop()
 
 bool Base::preStateChange(int s)
 {
+#ifdef MASTER
+  int slaveState = s;
+  switch (s)
+  {
+  case STATE_PURG_OTA:
+    slaveState = STATE_OTA;
+    break;
+  case STATE_PURG_RESTART:
+    slaveState = STATE_RESTART;
+    break;
+  }
+  JSMessage msg;
+  msg.setType(TYPE_CHANGE_STATE);
+  msg.setState(slaveState);
+  msg.setMaxRetries(RETRIES_PURG);
+  MessageHandler::pushOutbox(msg);
+#endif
+
   return true;
 }
 

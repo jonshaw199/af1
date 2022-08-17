@@ -31,7 +31,6 @@ class Purg : public Base
 public:
   Purg();
   Purg(int s);
-  void setup();
   void loop();
   void setPurgMs(unsigned long purgMs);
   void setNext(int s);
