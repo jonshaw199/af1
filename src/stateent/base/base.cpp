@@ -52,11 +52,7 @@ bool Base::preStateChange(int s)
     slaveState = STATE_RESTART;
     break;
   }
-  JSMessage msg;
-  msg.setType(TYPE_CHANGE_STATE);
-  msg.setState(slaveState);
-  msg.setMaxRetries(RETRIES_PURG);
-  MessageHandler::pushOutbox(msg);
+  MessageHandler::sendStateChangeMessages(s);
 #endif
 
   return true;

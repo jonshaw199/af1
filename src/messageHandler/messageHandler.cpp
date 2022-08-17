@@ -247,7 +247,7 @@ void MessageHandler::sendMsg(JSMessage msg)
     getInstance().peerInfoMap[*it].mutex.lock();
     // Update last msg sent for this peer (now doing this even if sending fails)
     getInstance().peerInfoMap[*it].lastMsg = msg;
-    // Serial.println("Sending message to device ID " + String(*it) + " (MAC address " + WifiUtil::macToString(getInstance().peerInfoMap[*it].espnowPeerInfo.peer_addr) + ")");
+    Serial.println("Sending message to device ID " + String(*it) + " (MAC address " + WifiUtil::macToString(getInstance().peerInfoMap[*it].espnowPeerInfo.peer_addr) + ")");
     esp_err_t result = esp_now_send(getInstance().peerInfoMap[*it].espnowPeerInfo.peer_addr, (uint8_t *)&msg, sizeof(msg));
     // Serial.print("Send Status: ");
     if (result != ESP_OK)
