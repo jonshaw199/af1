@@ -43,6 +43,7 @@ public:
   virtual void setInboxMessageHandler();
   virtual void setOutboxMessageHandler();
   unsigned long getElapsedMs();
+  void resetIntervalEvents();
 };
 
 #endif // STATEENT_BASE_BASE_H_

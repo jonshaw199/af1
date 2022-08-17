@@ -83,3 +83,8 @@ bool IntervalEvent::cbIfTime(unsigned long elapsedMs)
   }
   return false;
 }
+
+void IntervalEvent::reset()
+{
+  cbCnt = 0;
+}

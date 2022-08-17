@@ -27,6 +27,7 @@ Base::Base()
 
 void Base::setup()
 {
+  resetIntervalEvents();
   startMs = millis();
 }
 
@@ -46,6 +47,7 @@ bool Base::preStateChange(int s)
   switch (s)
   {
   case STATE_OTA:
+  case STATE_RESTART:
     return true; // Slaves already notified
   case STATE_PURG_OTA:
     slaveState = STATE_OTA;
@@ -110,4 +112,12 @@ void Base::setInboxMessageHandler()
 void Base::setOutboxMessageHandler()
 {
   MessageHandler::setOutboxMsgHandler(handleOutboxMsg);
+}
+
+void Base::resetIntervalEvents()
+{
+  for (std::vector<IntervalEvent>::iterator it = intervalEvents.begin(); it != intervalEvents.end(); it++)
+  {
+    it->reset();
+  }
 }

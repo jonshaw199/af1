@@ -44,6 +44,8 @@ public:
   unsigned long getNextCbMs();
   bool isTime(unsigned long elapsedMs);
   bool cbIfTime(unsigned long elapsedMs);
+
+  void reset();
 };
 
 #endif // STATEENT_BASE_INTERVALEVENT_H_
