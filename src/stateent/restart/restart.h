@@ -20,7 +20,7 @@
 #ifndef STATEENT_RESTART_RESTART_H_
 #define STATEENT_RESTART_RESTART_H_
 
-#include "stateent/base/base.h"
+#include "stateEnt/base/base.h"
 
 class Restart : public Base
 {

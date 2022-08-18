@@ -21,7 +21,7 @@
 #include "messageHandler/messageHandler.h"
 #include "util/wifi/wifiUtil.h"
 #include "stateManager/stateManager.h"
-#include "stateent/base/intervalEvent/intervalEvent.h"
+#include "stateEnt/base/intervalEvent/intervalEvent.h"
 
 bool handleHandshakes()
 {

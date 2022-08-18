@@ -18,14 +18,14 @@
 */
 
 #include "stateManager.h"
-#include "stateent/ota/ota.h"
-#include "stateent/base/base.h"
-#include "stateent/restart/restart.h"
-#include "stateent/idle/idle.h"
-#include "stateent/handshake/master/masterHandshake.h"
-#include "stateent/handshake/slave/slaveHandshake.h"
-#include "stateent/init/init.h"
-#include "stateent/purg/purg.h"
+#include "stateEnt/ota/ota.h"
+#include "stateEnt/base/base.h"
+#include "stateEnt/restart/restart.h"
+#include "stateEnt/idle/idle.h"
+#include "stateEnt/handshake/master/masterHandshake.h"
+#include "stateEnt/handshake/slave/slaveHandshake.h"
+#include "stateEnt/init/init.h"
+#include "stateEnt/purg/purg.h"
 
 StateManager &StateManager::getInstance()
 {

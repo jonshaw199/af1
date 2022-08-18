@@ -20,7 +20,7 @@
 #ifndef STATEENT_INIT_INIT_H_
 #define STATEENT_INIT_INIT_H_
 
-#include "stateent/base/base.h"
+#include "stateEnt/base/base.h"
 
 class Init : public Base
 {

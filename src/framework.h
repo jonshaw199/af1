@@ -20,7 +20,7 @@
 #ifndef FRAMEWORK_FRAMEWORK_H_
 #define FRAMEWORK_FRAMEWORK_H_
 
-#include "stateent/base/base.h"
+#include "stateEnt/base/base.h"
 
 #include "messageHandler/messageHandler.h"
 #include "stateManager/stateManager.h"

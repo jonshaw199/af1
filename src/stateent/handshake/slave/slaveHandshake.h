@@ -20,7 +20,7 @@
 #ifndef STATEENT_HANDSHAKE_SLAVE_SLAVEHANDSHAKE_H_
 #define STATEENT_HANDSHAKE_SLAVE_SLAVEHANDSHAKE_H_
 
-#include "stateent/handshake/handshake.h"
+#include "stateEnt/handshake/handshake.h"
 
 class SlaveHandshake : public Handshake
 {
