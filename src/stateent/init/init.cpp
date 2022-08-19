@@ -23,7 +23,8 @@
 
 void Init::setup()
 {
-  Serial.println("Setting up");
+  Serial.print("JS ID: ");
+  Serial.println(JS_ID);
   Base::setup();
 #ifdef LED_BUILTIN
   pinMode(LED_BUILTIN, OUTPUT);
