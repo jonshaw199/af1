@@ -23,7 +23,7 @@
 #include "stateManager/stateManager.h"
 #include "stateEnt/base/intervalEvent/intervalEvent.h"
 
-bool handleHandshakes()
+bool handleHandshakes(IECBArg a)
 {
   MessageHandler::scanForPeers();
   MessageHandler::connectToPeers();

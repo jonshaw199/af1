@@ -20,7 +20,16 @@
 #ifndef STATEENT_BASE_INTERVALEVENT_H_
 #define STATEENT_BASE_INTERVALEVENT_H_
 
-typedef bool (*interval_event_cb)();
+class IECBArg
+{
+  const unsigned long elapsedMs;
+
+public:
+  IECBArg(unsigned long e);
+  unsigned long getElapsedMs();
+};
+
+typedef bool (*interval_event_cb)(IECBArg a);
 
 class IntervalEvent
 {

@@ -19,6 +19,13 @@
 
 #include "intervalEvent.h"
 
+IECBArg::IECBArg(unsigned long e) : elapsedMs(e) {}
+
+unsigned long IECBArg::getElapsedMs()
+{
+  return elapsedMs;
+}
+
 IntervalEvent::IntervalEvent()
 {
   intervalMs = 0;
@@ -76,7 +83,7 @@ bool IntervalEvent::isTime(unsigned long elapsedMs)
 
 bool IntervalEvent::cbIfTime(unsigned long elapsedMs)
 {
-  if (isTime(elapsedMs) && intervalMs && cb()) // Checking intervalMs here since default constructor doesnt even define cb; might need stub there to be safe
+  if (isTime(elapsedMs) && intervalMs && cb(IECBArg(elapsedMs))) // Checking intervalMs here since default constructor doesnt even define cb; might need stub there to be safe
   {
     cbCnt = elapsedMs / intervalMs; // Setting cbCnt to expected value rather than just incrementing
     return true;
