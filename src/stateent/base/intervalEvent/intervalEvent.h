@@ -20,13 +20,19 @@
 #ifndef STATEENT_BASE_INTERVALEVENT_H_
 #define STATEENT_BASE_INTERVALEVENT_H_
 
+#define MAX_CB_CNT_INF -1;
+
 class IECBArg
 {
   const unsigned long elapsedMs;
+  const int cbCnt;
+  const int maxCbCnt;
 
 public:
-  IECBArg(unsigned long e);
+  IECBArg(unsigned long e, int c, int m);
   unsigned long getElapsedMs();
+  int getCbCnt();
+  int getMaxCbCnt();
 };
 
 typedef bool (*interval_event_cb)(IECBArg a);
@@ -35,7 +41,7 @@ class IntervalEvent
 {
   unsigned long intervalMs;
   interval_event_cb cb;
-  int maxCbCnt = -1;
+  int maxCbCnt = MAX_CB_CNT_INF;
 
   int cbCnt = 0;
 

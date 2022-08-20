@@ -19,11 +19,21 @@
 
 #include "intervalEvent.h"
 
-IECBArg::IECBArg(unsigned long e) : elapsedMs(e) {}
+IECBArg::IECBArg(unsigned long e, int c, int m) : elapsedMs(e), cbCnt(c), maxCbCnt(m) {}
 
 unsigned long IECBArg::getElapsedMs()
 {
   return elapsedMs;
+}
+
+int IECBArg::getCbCnt()
+{
+  return cbCnt;
+}
+
+int IECBArg::getMaxCbCnt()
+{
+  return maxCbCnt;
 }
 
 IntervalEvent::IntervalEvent()
@@ -36,7 +46,7 @@ IntervalEvent::IntervalEvent(unsigned long i, interval_event_cb c)
 {
   intervalMs = i;
   cb = c;
-  maxCbCnt = -1;
+  maxCbCnt = MAX_CB_CNT_INF;
 }
 
 IntervalEvent::IntervalEvent(unsigned long i, interval_event_cb c, int m)
@@ -83,7 +93,7 @@ bool IntervalEvent::isTime(unsigned long elapsedMs)
 
 bool IntervalEvent::cbIfTime(unsigned long elapsedMs)
 {
-  if (isTime(elapsedMs) && intervalMs && cb(IECBArg(elapsedMs))) // Checking intervalMs here since default constructor doesnt even define cb; might need stub there to be safe
+  if (isTime(elapsedMs) && intervalMs && cb(IECBArg(elapsedMs, cbCnt, maxCbCnt))) // Checking intervalMs here since default constructor doesnt even define cb; might need stub there to be safe
   {
     cbCnt = elapsedMs / intervalMs; // Setting cbCnt to expected value rather than just incrementing
     return true;
