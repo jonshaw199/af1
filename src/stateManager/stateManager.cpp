@@ -106,9 +106,7 @@ void StateManager::init()
   getInstance().requestedState = s;
   getInstance().webServer = new AsyncWebServer(80);
 
-  handleStateChange(s);
-
-  StateManager::setRequestedState(STATE_HANDSHAKE);
+  handleStateChange(s); // Let Init stateEnt handle everything
 }
 
 void StateManager::setRequestedState(int s)
