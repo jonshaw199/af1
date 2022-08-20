@@ -1,6 +1,6 @@
 {
   "name": "AF1",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "An Arduino extension framework for ESP32 development boards",
   "keywords": "Arduino, ESP32, ESPNOW, IOT, Extension",
   "authors": [
