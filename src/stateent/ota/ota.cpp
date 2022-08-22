@@ -24,8 +24,7 @@
 
 #include "ota.h"
 #include "stateManager/stateManager.h"
-#include "util/wifi/wifiUtil.h"
-#include "util/stringify/stringify.h"
+#include "pre.h"
 #include "wifiHandler/wifiHandler.h"
 
 void OTA::setup()

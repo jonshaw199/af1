@@ -1,7 +1,5 @@
-#include <WiFi.h>
-
 #include "wifiHandler.h"
-#include "util/stringify/stringify.h"
+#include "pre.h"
 
 WifiHandler::WifiHandler()
 {
