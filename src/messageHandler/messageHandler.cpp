@@ -72,8 +72,9 @@ void MessageHandler::onDataRecv(const uint8_t *mac, const uint8_t *incomingData,
   char macStr[18];
   snprintf(macStr, sizeof(macStr), "%02x:%02x:%02x:%02x:%02x:%02x",
            mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
-  Serial.print("Last Packet Recv from: ");
-  Serial.println(macStr);
+  // Serial.print("Last Packet Recv from: ");
+  // Serial.println(macStr);
+  Serial.print(".");
   js_message msg;
   memcpy(&msg, incomingData, sizeof(msg));
   JSMessage msgWrapper = msg;
@@ -247,7 +248,7 @@ void MessageHandler::sendMsg(JSMessage msg)
     getInstance().peerInfoMap[*it].mutex.lock();
     // Update last msg sent for this peer (now doing this even if sending fails)
     getInstance().peerInfoMap[*it].lastMsg = msg;
-    Serial.println("Sending message to device ID " + String(*it) + " (MAC address " + WifiUtil::macToString(getInstance().peerInfoMap[*it].espnowPeerInfo.peer_addr) + ")");
+    // Serial.println("Sending message to device ID " + String(*it) + " (MAC address " + WifiUtil::macToString(getInstance().peerInfoMap[*it].espnowPeerInfo.peer_addr) + ")");
     esp_err_t result = esp_now_send(getInstance().peerInfoMap[*it].espnowPeerInfo.peer_addr, (uint8_t *)&msg, sizeof(msg));
     // Serial.print("Send Status: ");
     if (result != ESP_OK)
