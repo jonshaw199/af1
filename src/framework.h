@@ -24,7 +24,7 @@
 
 #include "stateManager/stateManager.h"
 #include "messageHandler/messageHandler.h"
-#include "flags.h"
+#include "pre.h"
 
 class Framework
 {
