@@ -77,16 +77,7 @@ bool Base::handleInboxMsg(JSMessage m)
   case TYPE_CHANGE_STATE:
     Serial.println("State change request message in inbox");
     StateManager::setRequestedState(m.getState());
-    break;
-  case TYPE_HANDSHAKE_REQUEST:
-    Serial.println("Handshake request message in inbox");
-    ESPNowHandler::receiveHandshakeRequest(m);
-    ESPNowHandler::sendHandshakeResponses({m.getSenderID()});
-    break;
-  case TYPE_HANDSHAKE_RESPONSE:
-    Serial.println("Handshake response message in inbox");
-    ESPNowHandler::receiveHandshakeResponse(m);
-    break;
+    return true;
   }
 
 #ifndef MASTER
@@ -94,16 +85,16 @@ bool Base::handleInboxMsg(JSMessage m)
   {
     Serial.println("Implicit state change to " + StateManager::stateToString(m.getState()));
     StateManager::setRequestedState(m.getState());
+    return true;
   }
 #endif
 
-  return true;
+  return false;
 }
 
 bool Base::handleOutboxMsg(JSMessage m)
 {
-  ESPNowHandler::sendMsg(m);
-  return true;
+  return false;
 }
 
 void Base::setInboxMessageHandler()

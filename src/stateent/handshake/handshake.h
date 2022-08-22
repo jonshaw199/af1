@@ -20,9 +20,9 @@
 #ifndef STATEENT_HANDSHAKE_HANDSHAKE_H_
 #define STATEENT_HANDSHAKE_HANDSHAKE_H_
 
-#include "stateEnt/virtual/base/base.h"
+#include "stateEnt/virtual/espnowEnt/espnowEnt.h"
 
-class Handshake : public Base
+class Handshake : public ESPNowEnt
 {
 };
 
