@@ -26,6 +26,7 @@
 #include "stateManager/stateManager.h"
 #include "util/wifi/wifiUtil.h"
 #include "util/stringify/stringify.h"
+#include "wifiHandler/wifiHandler.h"
 
 void OTA::setup()
 {
@@ -47,7 +48,7 @@ void OTA::setup()
   // Serial.println(WiFi.getMode());
   // End silly stuff !!!
 
-  WifiUtil::prepareWifi();
+  WifiHandler::prepareWifi();
   WiFi.mode(WIFI_STA);
   Serial.println("MAC: " + WiFi.macAddress());
   // delay(1000);

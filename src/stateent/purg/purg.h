@@ -20,7 +20,7 @@
 #ifndef STATEENT_PURG_PURG_H_
 #define STATEENT_PURG_PURG_H_
 
-#include "stateEnt/base/base.h"
+#include "stateEnt/virtual/base/base.h"
 #include "state/state.h"
 
 class Purg : public Base

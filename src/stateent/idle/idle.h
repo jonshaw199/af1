@@ -20,7 +20,7 @@
 #ifndef STATEENT_IDLE_IDLE_H_
 #define STATEENT_IDLE_IDLE_H_
 
-#include "stateEnt/base/base.h"
+#include "stateEnt/virtual/base/base.h"
 
 class Idle : public Base
 {

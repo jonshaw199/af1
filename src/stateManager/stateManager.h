@@ -29,7 +29,7 @@
 
 #include "state/state.h"
 #include "message/message.h"
-#include "stateEnt/base/base.h"
+#include "stateEnt/virtual/base/base.h"
 
 typedef void (*string_input_handler)();
 

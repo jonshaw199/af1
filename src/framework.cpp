@@ -24,7 +24,6 @@
 void Framework::setup()
 {
   StateManager::init();
-  MessageHandler::init();
 }
 
 void Framework::loop()

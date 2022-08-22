@@ -17,8 +17,8 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef STATEENT_BASE_BASE_H_
-#define STATEENT_BASE_BASE_H_
+#ifndef STATEENT_VIRTUAL_BASE_BASE_H_
+#define STATEENT_VIRTUAL_BASE_BASE_H_
 
 #include <Arduino.h>
 #include <vector>
@@ -46,4 +46,4 @@ public:
   void resetIntervalEvents();
 };
 
-#endif // STATEENT_BASE_BASE_H_
+#endif // STATEENT_VIRTUAL_BASE_BASE_H_

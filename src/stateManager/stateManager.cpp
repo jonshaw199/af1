@@ -19,7 +19,7 @@
 
 #include "stateManager.h"
 #include "stateEnt/ota/ota.h"
-#include "stateEnt/base/base.h"
+#include "stateEnt/virtual/base/base.h"
 #include "stateEnt/restart/restart.h"
 #include "stateEnt/idle/idle.h"
 #include "stateEnt/handshake/master/masterHandshake.h"

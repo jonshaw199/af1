@@ -20,10 +20,10 @@
 #ifndef FRAMEWORK_FRAMEWORK_H_
 #define FRAMEWORK_FRAMEWORK_H_
 
-#include "stateEnt/base/base.h"
+#include "stateEnt/virtual/base/base.h"
 
-#include "messageHandler/messageHandler.h"
 #include "stateManager/stateManager.h"
+#include "messageHandler/messageHandler.h"
 #include "flags.h"
 
 class Framework

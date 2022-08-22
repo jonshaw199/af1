@@ -18,15 +18,15 @@
 */
 
 #include "slaveHandshake.h"
-#include "messageHandler/messageHandler.h"
-#include "util/wifi/wifiUtil.h"
+#include "espnowHandler/espnowHandler.h"
+#include "wifiHandler/wifiHandler.h"
 
 void SlaveHandshake::setup()
 {
   Base::setup();
-  WifiUtil::setAPMode();
-  WifiUtil::broadcastAP();
-  MessageHandler::initEspNow();
+  WifiHandler::setAPMode();
+  WifiHandler::broadcastAP();
+  ESPNowHandler::initEspNow();
 }
 
 void SlaveHandshake::loop()

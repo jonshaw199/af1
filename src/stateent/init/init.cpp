@@ -18,7 +18,6 @@
 */
 
 #include "init.h"
-#include "messageHandler/messageHandler.h"
 #include "stateManager/stateManager.h"
 
 void Init::setup()

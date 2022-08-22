@@ -20,7 +20,7 @@
 #ifndef STATEENT_HANDSHAKE_HANDSHAKE_H_
 #define STATEENT_HANDSHAKE_HANDSHAKE_H_
 
-#include "stateEnt/base/base.h"
+#include "stateEnt/virtual/base/base.h"
 
 class Handshake : public Base
 {

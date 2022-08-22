@@ -20,6 +20,7 @@
 #include "base.h"
 #include "stateManager/stateManager.h"
 #include "messageHandler/messageHandler.h"
+#include "espnowHandler/espnowHandler.h"
 
 Base::Base()
 {
@@ -57,7 +58,7 @@ bool Base::preStateChange(int s)
     slaveState = STATE_RESTART;
     break;
   }
-  MessageHandler::sendStateChangeMessages(s);
+  ESPNowHandler::sendStateChangeMessages(slaveState);
 #endif
 
   return true;
@@ -79,12 +80,12 @@ bool Base::handleInboxMsg(JSMessage m)
     break;
   case TYPE_HANDSHAKE_REQUEST:
     Serial.println("Handshake request message in inbox");
-    MessageHandler::receiveHandshakeRequest(m);
-    MessageHandler::sendHandshakeResponses({m.getSenderID()});
+    ESPNowHandler::receiveHandshakeRequest(m);
+    ESPNowHandler::sendHandshakeResponses({m.getSenderID()});
     break;
   case TYPE_HANDSHAKE_RESPONSE:
     Serial.println("Handshake response message in inbox");
-    MessageHandler::receiveHandshakeResponse(m);
+    ESPNowHandler::receiveHandshakeResponse(m);
     break;
   }
 
@@ -101,7 +102,7 @@ bool Base::handleInboxMsg(JSMessage m)
 
 bool Base::handleOutboxMsg(JSMessage m)
 {
-  MessageHandler::sendMsg(m);
+  ESPNowHandler::sendMsg(m);
   return true;
 }
 
