@@ -12,6 +12,7 @@ protected:
 public:
   virtual void setInboxMessageHandler();
   virtual void setOutboxMessageHandler();
+  virtual bool preStateChange(int s);
 };
 
 #endif // STATEENT_VIRTUAL_ESPNOWENT_ESPNOWENT_H_
