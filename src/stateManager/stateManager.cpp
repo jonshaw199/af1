@@ -21,7 +21,6 @@
 #include "stateEnt/ota/ota.h"
 #include "stateEnt/virtual/base/base.h"
 #include "stateEnt/restart/restart.h"
-#include "stateEnt/idle/idle.h"
 #include "stateEnt/handshake/master/masterHandshake.h"
 #include "stateEnt/handshake/slave/slaveHandshake.h"
 #include "stateEnt/init/init.h"
@@ -49,9 +48,9 @@ void setStatePurgOTA()
   StateManager::getInstance().setRequestedState(STATE_PURG_OTA);
 }
 
-void setStateIdle()
+void setstateESPNowIdle()
 {
-  StateManager::getInstance().setRequestedState(STATE_IDLE);
+  StateManager::getInstance().setRequestedState(STATE_IDLE_ESPNOW);
 }
 
 void setStatePurgRestart()
@@ -79,7 +78,7 @@ StateManager::StateManager()
   stateEntMap[STATE_HANDSHAKE] = new SlaveHandshake();
 #endif
   stateEntMap[STATE_RESTART] = new Restart();
-  stateEntMap[STATE_IDLE] = new Idle();
+  stateEntMap[STATE_IDLE_ESPNOW] = new ESPNowEnt();
   stateEntMap[STATE_PURG_OTA] = new Purg(STATE_OTA);
   stateEntMap[STATE_PURG_RESTART] = new Purg(STATE_RESTART);
 
@@ -87,13 +86,13 @@ StateManager::StateManager()
   stringHandlerMap["o"] = setStatePurgOTA;
   stringHandlerMap["h"] = setStateHandshake;
   stringHandlerMap["k"] = setStatePurgRestart;
-  stringHandlerMap["i"] = setStateIdle;
+  stringHandlerMap["i"] = setstateESPNowIdle;
 
   stateNameMap[STATE_NONE] = "STATE_NONE";
   stateNameMap[STATE_INIT] = "STATE_INIT";
   stateNameMap[STATE_PURG_OTA] = "STATE_PURG_OTA";
   stateNameMap[STATE_OTA] = "STATE_OTA";
-  stateNameMap[STATE_IDLE] = "STATE_IDLE";
+  stateNameMap[STATE_IDLE_ESPNOW] = "STATE_IDLE_ESPNOW";
   stateNameMap[STATE_PURG_RESTART] = "STATE_PURG_RESTART";
   stateNameMap[STATE_RESTART] = "STATE_RESTART";
   stateNameMap[STATE_HANDSHAKE] = "STATE_HANDSHAKE";
