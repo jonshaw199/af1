@@ -20,10 +20,10 @@
 #ifndef STATEENT_PURG_PURG_H_
 #define STATEENT_PURG_PURG_H_
 
-#include "stateEnt/virtual/base/base.h"
+#include "stateEnt/virtual/espnowEnt/espnowEnt.h"
 #include "state/state.h"
 
-class Purg : public Base
+class Purg : public ESPNowEnt
 {
   unsigned long purgMs;
   int next;
