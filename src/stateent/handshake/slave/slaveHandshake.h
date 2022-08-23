@@ -26,7 +26,6 @@ class SlaveHandshake : public Handshake
 {
 public:
   void setup();
-  void loop();
 };
 
 #endif // STATEENT_HANDSHAKE_SLAVE_SLAVEHANDSHAKE_H_

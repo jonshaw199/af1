@@ -28,8 +28,3 @@ void SlaveHandshake::setup()
   WifiHandler::broadcastAP();
   ESPNowHandler::initEspNow();
 }
-
-void SlaveHandshake::loop()
-{
-  Base::loop();
-}
