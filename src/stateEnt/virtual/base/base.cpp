@@ -74,11 +74,13 @@ bool Base::handleInboxMsg(JSMessage m)
   }
 #endif
 
+  Serial.println("Inbox message going to the abyss");
   return false;
 }
 
 bool Base::handleOutboxMsg(JSMessage m)
 {
+  Serial.println("Outbox message going to the abyss");
   return false;
 }
 
