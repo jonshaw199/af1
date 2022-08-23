@@ -30,8 +30,8 @@ protected:
   static bool handleOutboxMsg(JSMessage m);
 
 public:
-  virtual void setInboxMessageHandler();
-  virtual void setOutboxMessageHandler();
+  void setInboxMessageHandler();
+  void setOutboxMessageHandler();
   // From espnowHandler
   static int8_t scanForPeers();
   static void connectToPeers();

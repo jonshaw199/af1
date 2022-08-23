@@ -6,7 +6,7 @@
 class ESPNowEntMaster : public ESPNowEnt
 {
 public:
-  virtual bool preStateChange(int s);
+  bool preStateChange(int s);
 };
 
 #endif // STATEENT_VIRTUAL_ESPNOWENT_ESPNOWENTMASTER_ESPNOWENTMASTER_H_
