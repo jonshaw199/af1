@@ -20,7 +20,6 @@
 #include "base.h"
 #include "stateManager/stateManager.h"
 #include "messageHandler/messageHandler.h"
-#include "espnowHandler/espnowHandler.h"
 
 Base::Base()
 {
