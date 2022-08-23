@@ -25,6 +25,7 @@
 #include "stateManager/stateManager.h"
 #include "messageHandler/messageHandler.h"
 #include "pre.h"
+#include "stateEnt/virtual/espnowEnt/espnowEnt.h"
 
 class Framework
 {
