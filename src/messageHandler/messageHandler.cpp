@@ -18,7 +18,6 @@
 */
 
 #include "messageHandler.h"
-#include "espnowHandler/espnowHandler.h"
 #include "pre.h"
 
 MessageHandler::MessageHandler()

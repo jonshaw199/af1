@@ -1,5 +1,4 @@
 #include "espnowEntMaster.h"
-#include "espnowHandler/espnowHandler.h"
 
 bool ESPNowEntMaster::preStateChange(int s)
 {
@@ -20,7 +19,7 @@ bool ESPNowEntMaster::preStateChange(int s)
       slaveState = STATE_RESTART;
       break;
     }
-    ESPNowHandler::sendStateChangeMessages(slaveState);
+    sendStateChangeMessages(slaveState);
   }
   return baseResult;
 }

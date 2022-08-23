@@ -18,7 +18,6 @@
 */
 
 #include "slaveHandshake.h"
-#include "espnowHandler/espnowHandler.h"
 #include "wifiHandler/wifiHandler.h"
 
 void SlaveHandshake::setup()
@@ -26,5 +25,5 @@ void SlaveHandshake::setup()
   Base::setup();
   WifiHandler::setAPMode();
   WifiHandler::broadcastAP();
-  ESPNowHandler::initEspNow();
+  initEspNow();
 }

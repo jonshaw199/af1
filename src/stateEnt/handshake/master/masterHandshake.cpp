@@ -18,15 +18,14 @@
 */
 
 #include "masterHandshake.h"
-#include "espnowHandler/espnowHandler.h"
 #include "wifiHandler/wifiHandler.h"
 #include "stateManager/stateManager.h"
 #include "stateEnt/virtual/base/intervalEvent/intervalEvent.h"
 #include "pre.h"
 
-bool handleHandshakes(IECBArg a)
+bool handleHandshakesInternal(IECBArg a)
 {
-  ESPNowHandler::handleHandshakes();
+  ESPNowEnt::handleHandshakes();
   return true;
 }
 
@@ -36,8 +35,8 @@ void MasterHandshake::setup()
   WifiHandler::prepareWifi();
   WifiHandler::setAPMode();
   delay(DELAY_PREPARE_WIFI);
-  ESPNowHandler::initEspNow();
-  intervalEvents.push_back(IntervalEvent(MS_MASTER_HANDSHAKE_LOOP, handleHandshakes));
+  initEspNow();
+  intervalEvents.push_back(IntervalEvent(MS_MASTER_HANDSHAKE_LOOP, handleHandshakesInternal));
 }
 
 void MasterHandshake::loop()
@@ -46,7 +45,7 @@ void MasterHandshake::loop()
 
   // Check if handshake has been completed for all slaves
   int numHandshakeComplete = 0;
-  for (std::map<int, js_peer_info>::const_iterator it = ESPNowHandler::getPeerInfoMap().begin(); it != ESPNowHandler::getPeerInfoMap().end(); it++)
+  for (std::map<int, js_peer_info>::const_iterator it = getPeerInfoMap().begin(); it != getPeerInfoMap().end(); it++)
   {
     if (it->second.handshakeResponse)
     {
