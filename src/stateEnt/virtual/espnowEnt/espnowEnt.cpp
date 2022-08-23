@@ -5,6 +5,7 @@
 // From espnowHandler
 static std::map<int, js_peer_info> peerInfoMap;
 static std::map<String, int> macToIDMap;
+// End ?
 
 bool ESPNowEnt::handleInboxMsg(JSMessage m)
 {
@@ -40,8 +41,35 @@ void ESPNowEnt::setOutboxMessageHandler()
   MessageHandler::setOutboxMsgHandler(handleOutboxMsg);
 }
 
-/*
+bool ESPNowEnt::preStateChange(int s)
+{
+#ifdef MASTER
+  bool baseResult = Base::preStateChange(s);
+  if (baseResult)
+  {
+    int slaveState = s;
+    switch (s)
+    {
+    case STATE_OTA:       // Slaves already notified
+    case STATE_RESTART:   // Slaves already notified
+    case STATE_HANDSHAKE: // Slaves can' be notified
+      return true;
+    case STATE_PURG_OTA:
+      slaveState = STATE_OTA;
+      break;
+    case STATE_PURG_RESTART:
+      slaveState = STATE_RESTART;
+      break;
+    }
+    sendStateChangeMessages(slaveState);
+  }
+  return baseResult;
+#endif
+  return true;
+}
 
+/*
+  From ESPNowHandler ?
 */
 
 void ESPNowEnt::onDataSent(const uint8_t *mac_addr, esp_now_send_status_t status)

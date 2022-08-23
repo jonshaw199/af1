@@ -32,6 +32,7 @@ protected:
 public:
   void setInboxMessageHandler();
   void setOutboxMessageHandler();
+  bool preStateChange(int s); // From espnowEntMaster
   // From espnowHandler
   static int8_t scanForPeers();
   static void connectToPeers();
