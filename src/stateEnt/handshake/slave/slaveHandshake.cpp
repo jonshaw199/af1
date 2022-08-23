@@ -18,12 +18,11 @@
 */
 
 #include "slaveHandshake.h"
-#include "wifiHandler/wifiHandler.h"
 
 void SlaveHandshake::setup()
 {
   Base::setup();
-  WifiHandler::setAPMode();
-  WifiHandler::broadcastAP();
+  setAPMode();
+  broadcastAP();
   initEspNow();
 }

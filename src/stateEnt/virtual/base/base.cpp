@@ -20,6 +20,10 @@
 #include "base.h"
 #include "stateManager/stateManager.h"
 #include "messageHandler/messageHandler.h"
+#include "pre.h"
+
+uint8_t Base::macAP[6];
+uint8_t Base::macSTA[6];
 
 Base::Base()
 {
@@ -94,4 +98,72 @@ void Base::resetIntervalEvents()
   {
     it->reset();
   }
+}
+
+/*
+
+*/
+
+void Base::prepareWifi()
+{
+  WiFi.disconnect(true);
+  delay(DELAY_PREPARE_WIFI);
+}
+
+void Base::setSTAMode()
+{
+  Serial.println("Setting wifi mode to STA");
+  WiFi.mode(WIFI_STA);
+}
+
+void Base::setAPMode()
+{
+  Serial.println("Setting wifi mode to AP");
+  WiFi.mode(WIFI_AP);
+}
+
+// Setup access point (aka open wifi network); this is used by slaves so master can find them
+bool Base::broadcastAP()
+{
+  Serial.println("Broadcasting soft AP");
+  String Prefix = STRINGIFY(DEVICE_PREFIX);
+  String id = String(JS_ID);
+  String SSID = Prefix + id;
+  String Password = STRINGIFY(DEVICE_AP_PASS);
+  return WiFi.softAP(SSID.c_str(), Password.c_str(), ESPNOW_CHANNEL, 0);
+}
+
+String Base::macToString(const uint8_t *m)
+{
+  char buffer[33];
+  String result = "";
+  for (int i = 0; i < 6; i++)
+  {
+    itoa(m[i], buffer, 16);
+    result += buffer;
+  }
+  return result;
+}
+
+void Base::printMac(const uint8_t *m)
+{
+  Serial.print("{");
+  for (int i = 0; i < 6; i++)
+  {
+    Serial.print("0x");
+    Serial.print(m[i], HEX);
+    if (i < 5)
+      Serial.print(',');
+  }
+  Serial.println("}");
+}
+
+uint8_t *Base::getMacSTA()
+{
+  return macSTA;
+}
+
+uint8_t *Base::getMacAP()
+{
+  return macAP;
 }

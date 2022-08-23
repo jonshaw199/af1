@@ -34,6 +34,9 @@ protected:
   std::vector<IntervalEvent> intervalEvents;
   static bool handleInboxMsg(JSMessage m);
   static bool handleOutboxMsg(JSMessage m);
+  // From WifiHandler
+  static uint8_t macAP[6];
+  static uint8_t macSTA[6];
 
 public:
   Base();
@@ -44,6 +47,15 @@ public:
   virtual void setOutboxMessageHandler();
   unsigned long getElapsedMs();
   void resetIntervalEvents();
+  // From WifiHandler
+  static void prepareWifi();
+  static void setSTAMode();
+  static void setAPMode();
+  static bool broadcastAP();
+  static String macToString(const uint8_t *m);
+  static void printMac(const uint8_t *m);
+  static uint8_t *getMacSTA();
+  static uint8_t *getMacAP();
 };
 
 #endif // STATEENT_VIRTUAL_BASE_BASE_H_

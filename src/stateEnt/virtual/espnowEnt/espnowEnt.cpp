@@ -1,6 +1,5 @@
 #include "espnowEnt.h"
 #include "messageHandler/messageHandler.h"
-#include "wifiHandler/wifiHandler.h"
 #include "pre.h"
 
 // From espnowHandler
@@ -60,7 +59,7 @@ void ESPNowEnt::onDataSent(const uint8_t *mac_addr, esp_now_send_status_t status
   else
   {
     // Serial.println("Delivery Fail");
-    int peerDeviceID = macToIDMap[WifiHandler::macToString(mac_addr)];
+    int peerDeviceID = macToIDMap[macToString(mac_addr)];
     Serial.println("Delivery failed to peer ID " + String(peerDeviceID));
     peerInfoMap[peerDeviceID].mutex.lock();
     // Check if there are more retries remaining and retry if so
@@ -178,7 +177,7 @@ int8_t ESPNowEnt::scanForPeers()
             peerInfoMap[deviceID].espnowPeerInfo = info;
             peerInfoMap[deviceID].handshakeResponse = false;
             peerInfoMap[deviceID].lastMsg = JSMessage();
-            macToIDMap[WifiHandler::macToString(info.peer_addr)] = deviceID;
+            macToIDMap[macToString(info.peer_addr)] = deviceID;
             Serial.println("Saved peer info for device ID " + String(deviceID));
           }
         }
@@ -261,7 +260,7 @@ void ESPNowEnt::sendMsg(JSMessage msg)
     peerInfoMap[*it].mutex.lock();
     // Update last msg sent for this peer (now doing this even if sending fails)
     peerInfoMap[*it].lastMsg = msg;
-    // Serial.println("Sending message to device ID " + String(*it) + " (MAC address " + WifiHandler::macToString(peerInfoMap[*it].espnowPeerInfo.peer_addr) + ")");
+    // Serial.println("Sending message to device ID " + String(*it) + " (MAC address " + macToString(peerInfoMap[*it].espnowPeerInfo.peer_addr) + ")");
     esp_err_t result = esp_now_send(peerInfoMap[*it].espnowPeerInfo.peer_addr, (uint8_t *)&msg, sizeof(msg));
     // Serial.print("Send Status: ");
     if (result != ESP_OK)
@@ -333,7 +332,7 @@ void ESPNowEnt::sendHandshakeRequests(std::set<int> ids)
   msg.setType(TYPE_HANDSHAKE_REQUEST);
   msg.setSenderID(JS_ID);
   msg.setState(STATE_HANDSHAKE);
-  msg.setSenderAPMac(WifiHandler::getMacAP());
+  msg.setSenderAPMac(getMacAP());
   // Set wrapper
   msg.setRecipients(ids);
 
@@ -349,7 +348,7 @@ void ESPNowEnt::receiveHandshakeRequest(JSMessage m)
 {
   Serial.println("Receiving handshake request from ID " + String(m.getSenderID()));
   Serial.print("Mac: ");
-  WifiHandler::printMac(m.getSenderAPMac());
+  printMac(m.getSenderAPMac());
 
   esp_now_peer_info_t ei;
   memset(&ei, 0, sizeof(ei));

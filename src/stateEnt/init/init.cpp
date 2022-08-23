@@ -17,17 +17,32 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#include <WiFi.h>
+
 #include "init.h"
 #include "stateManager/stateManager.h"
-#include "wifiHandler/wifiHandler.h"
 #include "pre.h"
 
 void Init::setup()
 {
+  Serial.println();
+  Serial.println("*********");
   Serial.print("JS ID: ");
   Serial.println(JS_ID);
 
-  WifiHandler::init();
+  // WifiHandler init
+  setAPMode();
+  WiFi.softAPmacAddress(macAP);
+  Serial.print("MAC AP: ");
+  printMac(macAP);
+  setSTAMode();
+  WiFi.macAddress(macSTA);
+  Serial.print("MAC STA: ");
+  printMac(macSTA);
+
+  Serial.println("*********");
+  Serial.println();
+
   Base::setup();
 #ifdef LED_BUILTIN
   pinMode(LED_BUILTIN, OUTPUT);

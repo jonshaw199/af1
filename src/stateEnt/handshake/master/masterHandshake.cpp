@@ -18,7 +18,6 @@
 */
 
 #include "masterHandshake.h"
-#include "wifiHandler/wifiHandler.h"
 #include "stateManager/stateManager.h"
 #include "stateEnt/virtual/base/intervalEvent/intervalEvent.h"
 #include "pre.h"
@@ -32,8 +31,8 @@ bool handleHandshakesInternal(IECBArg a)
 void MasterHandshake::setup()
 {
   Base::setup();
-  WifiHandler::prepareWifi();
-  WifiHandler::setAPMode();
+  prepareWifi();
+  setAPMode();
   delay(DELAY_PREPARE_WIFI);
   initEspNow();
   intervalEvents.push_back(IntervalEvent(MS_MASTER_HANDSHAKE_LOOP, handleHandshakesInternal));
