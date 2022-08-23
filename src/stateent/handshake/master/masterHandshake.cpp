@@ -22,6 +22,7 @@
 #include "wifiHandler/wifiHandler.h"
 #include "stateManager/stateManager.h"
 #include "stateEnt/virtual/base/intervalEvent/intervalEvent.h"
+#include "pre.h"
 
 bool handleHandshakes(IECBArg a)
 {
