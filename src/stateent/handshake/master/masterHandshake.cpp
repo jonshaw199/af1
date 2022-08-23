@@ -54,6 +54,6 @@ void MasterHandshake::loop()
   }
   if (numHandshakeComplete >= SLAVE_CNT)
   {
-    StateManager::setRequestedState(INITIAL_STATE);
+    StateManager::setRequestedState(STATE_AFTER_HANDSHAKE);
   }
 }

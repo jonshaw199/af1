@@ -32,5 +32,5 @@ void Init::setup()
   pinMode(LED_BUILTIN, OUTPUT);
 #endif
   // setupDisplay();
-  StateManager::setRequestedState(STATE_HANDSHAKE);
+  StateManager::setRequestedState(INITIAL_STATE);
 }
