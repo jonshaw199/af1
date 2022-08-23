@@ -1,0 +1,12 @@
+#ifndef STATEENT_VIRTUAL_ESPNOWENT_ESPNOWENTMASTER_ESPNOWENTMASTER_H_
+#define STATEENT_VIRTUAL_ESPNOWENT_ESPNOWENTMASTER_ESPNOWENTMASTER_H_
+
+#include "stateEnt/virtual/espnowEnt/espnowEnt.h"
+
+class ESPNowEntMaster : public ESPNowEnt
+{
+public:
+  virtual bool preStateChange(int s);
+};
+
+#endif // STATEENT_VIRTUAL_ESPNOWENT_ESPNOWENTMASTER_ESPNOWENTMASTER_H_
