@@ -20,6 +20,7 @@
 #include "init.h"
 #include "stateManager/stateManager.h"
 #include "wifiHandler/wifiHandler.h"
+#include "pre.h"
 
 void Init::setup()
 {
