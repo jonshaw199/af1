@@ -19,11 +19,14 @@
 
 #include "init.h"
 #include "stateManager/stateManager.h"
+#include "wifiHandler/wifiHandler.h"
 
 void Init::setup()
 {
   Serial.print("JS ID: ");
   Serial.println(JS_ID);
+
+  WifiHandler::init();
   Base::setup();
 #ifdef LED_BUILTIN
   pinMode(LED_BUILTIN, OUTPUT);
