@@ -18,7 +18,7 @@ bool ESPNowEnt::handleInboxMsg(JSMessage m)
   case TYPE_HANDSHAKE_RESPONSE:
     Serial.println("Handshake response message in inbox");
     receiveHandshakeResponse(m);
-    true;
+    return true;
   }
 
   return Base::handleInboxMsg(m);
