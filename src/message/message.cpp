@@ -85,11 +85,6 @@ int JSMessage::getState()
   return msg.state;
 }
 
-void JSMessage::setSenderAPMac(uint8_t *m)
-{
-  memcpy(&msg.senderAPMac, m, 6);
-}
-
 void JSMessage::setSenderID(int id)
 {
   msg.senderID = id;
@@ -98,11 +93,6 @@ void JSMessage::setSenderID(int id)
 int JSMessage::getSenderID()
 {
   return msg.senderID;
-}
-
-uint8_t *JSMessage::getSenderAPMac()
-{
-  return msg.senderAPMac;
 }
 
 void JSMessage::setMaxRetries(int m)

@@ -360,7 +360,7 @@ void ESPNowEnt::sendHandshakeRequests(std::set<int> ids)
   msg.setType(TYPE_HANDSHAKE_REQUEST);
   msg.setSenderID(JS_ID);
   msg.setState(STATE_HANDSHAKE);
-  msg.setSenderAPMac(getMacAP());
+  msg.setData(getMacAP());
   // Set wrapper
   msg.setRecipients(ids);
 
@@ -376,11 +376,11 @@ void ESPNowEnt::receiveHandshakeRequest(JSMessage m)
 {
   Serial.println("Receiving handshake request from ID " + String(m.getSenderID()));
   Serial.print("Mac: ");
-  printMac(m.getSenderAPMac());
+  printMac(m.getData());
 
   esp_now_peer_info_t ei;
   memset(&ei, 0, sizeof(ei));
-  memcpy(&ei.peer_addr, m.getSenderAPMac(), 6);
+  memcpy(&ei.peer_addr, m.getData(), 6);
   ei.channel = ESPNOW_CHANNEL;
   ei.encrypt = 0; // No encryption
   ei.ifidx = WIFI_IF_AP;

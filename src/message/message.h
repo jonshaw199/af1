@@ -21,7 +21,6 @@
 #define MESSAGE_MESSAGE_H_
 
 #include <Arduino.h>
-#include <FastLED.h>
 #include <set>
 
 #include "state/state.h"
@@ -44,8 +43,6 @@ typedef struct js_message
   int senderID;
   int state;
   // State dependent
-  uint8_t senderAPMac[6]; // Handshake
-
   uint8_t data[100];
 } js_message;
 
@@ -70,8 +67,6 @@ public:
   int getType();
   void setState(int s);
   int getState();
-  void setSenderAPMac(uint8_t *m);
-  uint8_t *getSenderAPMac();
   void setSenderID(int id);
   int getSenderID();
   void setMaxRetries(int m);
