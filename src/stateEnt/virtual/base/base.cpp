@@ -19,11 +19,13 @@
 
 #include "base.h"
 #include "stateManager/stateManager.h"
-#include "messageHandler/messageHandler.h"
 #include "pre.h"
 
 uint8_t Base::macAP[6];
 uint8_t Base::macSTA[6];
+
+Box Base::inbox;
+Box Base::outbox;
 
 Base::Base()
 {
@@ -37,6 +39,9 @@ void Base::setup()
 
 void Base::loop()
 {
+  inbox.handleMessages();
+  outbox.handleMessages();
+
   // Interval events
   for (std::vector<IntervalEvent>::iterator it = intervalEvents.begin(); it != intervalEvents.end(); it++)
   {
@@ -86,12 +91,12 @@ bool Base::handleOutboxMsg(JSMessage m)
 
 void Base::setInboxMessageHandler()
 {
-  MessageHandler::setInboxMsgHandler(handleInboxMsg);
+  setInboxMsgHandler(handleInboxMsg);
 }
 
 void Base::setOutboxMessageHandler()
 {
-  MessageHandler::setOutboxMsgHandler(handleOutboxMsg);
+  setOutboxMsgHandler(handleOutboxMsg);
 }
 
 void Base::resetIntervalEvents()
@@ -103,7 +108,7 @@ void Base::resetIntervalEvents()
 }
 
 /*
-
+  From WifiHandler
 */
 
 void Base::prepareWifi()
@@ -168,4 +173,38 @@ uint8_t *Base::getMacSTA()
 uint8_t *Base::getMacAP()
 {
   return macAP;
+}
+
+/*
+  From MessageHandler
+*/
+
+const TSQueue<JSMessage> &Base::getOutbox()
+{
+  return outbox;
+}
+
+const TSQueue<JSMessage> &Base::getInbox()
+{
+  return inbox;
+}
+
+void Base::setInboxMsgHandler(msg_handler h)
+{
+  inbox.setMsgHandler(h);
+}
+
+void Base::setOutboxMsgHandler(msg_handler h)
+{
+  outbox.setMsgHandler(h);
+}
+
+void Base::pushOutbox(JSMessage m)
+{
+  outbox.enqueue(m);
+}
+
+void Base::pushInbox(JSMessage m)
+{
+  inbox.enqueue(m);
 }

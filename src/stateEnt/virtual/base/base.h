@@ -22,10 +22,17 @@
 
 #include <Arduino.h>
 #include <vector>
+#include <map>
+#include <queue>
+#include <set>
+#include <esp_now.h>
+#include <WiFi.h>
+#include <mutex>
 
 #include "intervalEvent/intervalEvent.h"
 #include "state/state.h"
 #include "message/message.h"
+#include "box/box.h"
 
 class Base
 {
@@ -37,6 +44,9 @@ protected:
   // From WifiHandler
   static uint8_t macAP[6];
   static uint8_t macSTA[6];
+  // From MessageHandler
+  static Box inbox;
+  static Box outbox;
 
 public:
   Base();
@@ -56,6 +66,15 @@ public:
   static void printMac(const uint8_t *m);
   static uint8_t *getMacSTA();
   static uint8_t *getMacAP();
+  // From MessageHandler
+  static const TSQueue<JSMessage> &getOutbox(); // Read only
+  static const TSQueue<JSMessage> &getInbox();  // Read only
+  static void handleInboxMessages();
+  static void handleOutboxMessages();
+  static void setInboxMsgHandler(msg_handler h);
+  static void setOutboxMsgHandler(msg_handler h);
+  static void pushOutbox(JSMessage m);
+  static void pushInbox(JSMessage m);
 };
 
 #endif // STATEENT_VIRTUAL_BASE_BASE_H_

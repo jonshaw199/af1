@@ -1,5 +1,4 @@
 #include "espnowEnt.h"
-#include "messageHandler/messageHandler.h"
 #include "pre.h"
 
 // From espnowHandler
@@ -27,7 +26,7 @@ bool ESPNowEnt::handleInboxMsg(JSMessage m)
 
 void ESPNowEnt::setInboxMessageHandler()
 {
-  MessageHandler::setInboxMsgHandler(handleInboxMsg);
+  setInboxMsgHandler(handleInboxMsg);
 }
 
 bool ESPNowEnt::handleOutboxMsg(JSMessage m)
@@ -38,7 +37,7 @@ bool ESPNowEnt::handleOutboxMsg(JSMessage m)
 
 void ESPNowEnt::setOutboxMessageHandler()
 {
-  MessageHandler::setOutboxMsgHandler(handleOutboxMsg);
+  setOutboxMsgHandler(handleOutboxMsg);
 }
 
 bool ESPNowEnt::preStateChange(int s)
@@ -97,7 +96,7 @@ void ESPNowEnt::onDataSent(const uint8_t *mac_addr, esp_now_send_status_t status
       JSMessage msg = peerInfoMap[peerDeviceID].lastMsg;
       msg.incrementSendCnt();
       msg.setRecipients({peerDeviceID}); // Only resending to 1 device!
-      MessageHandler::pushOutbox(msg);
+      pushOutbox(msg);
       // outbox.enqueue(msg);
     }
     else
@@ -119,7 +118,7 @@ void ESPNowEnt::onDataRecv(const uint8_t *mac, const uint8_t *incomingData, int 
   js_message msg;
   memcpy(&msg, incomingData, sizeof(msg));
   JSMessage msgWrapper = msg;
-  MessageHandler::pushInbox(msg);
+  pushInbox(msg);
   // inbox.enqueue(msgWrapper);
 }
 
@@ -347,7 +346,7 @@ void ESPNowEnt::sendStateChangeMessages(int s)
   msg.setState(s);
   msg.setMaxRetries(DEFAULT_RETRIES);
 
-  MessageHandler::pushOutbox(msg);
+  pushOutbox(msg);
 }
 
 void ESPNowEnt::sendHandshakeRequests(std::set<int> ids)
@@ -364,7 +363,7 @@ void ESPNowEnt::sendHandshakeRequests(std::set<int> ids)
   // Set wrapper
   msg.setRecipients(ids);
 
-  MessageHandler::pushOutbox(msg);
+  pushOutbox(msg);
 
   for (std::set<int>::const_iterator it = ids.begin(); it != ids.end(); it++)
   {
@@ -404,7 +403,7 @@ void ESPNowEnt::sendHandshakeResponses(std::set<int> ids)
   // Set wrapper
   msg.setRecipients(ids);
 
-  MessageHandler::pushOutbox(msg);
+  pushOutbox(msg);
 }
 
 void ESPNowEnt::receiveHandshakeResponse(JSMessage m)

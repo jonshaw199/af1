@@ -18,7 +18,6 @@
 */
 
 #include "stateManager/stateManager.h"
-#include "messageHandler/messageHandler.h"
 #include "framework.h"
 
 void Framework::setup()
@@ -28,7 +27,6 @@ void Framework::setup()
 
 void Framework::loop()
 {
-  MessageHandler::loop();
   StateManager::loop();
 }
 

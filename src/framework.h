@@ -23,7 +23,6 @@
 #include "stateEnt/virtual/base/base.h"
 
 #include "stateManager/stateManager.h"
-#include "messageHandler/messageHandler.h"
 #include "pre.h"
 #include "stateEnt/virtual/espnowEnt/espnowEnt.h"
 
