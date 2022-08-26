@@ -1,5 +1,6 @@
 #include "wsEnt.h"
 #include "pre.h"
+#include "stateManager/stateManager.h"
 
 WebSocketClient WSEnt::webSocketClient;
 // Use WiFiClient class to create TCP connections
@@ -71,5 +72,5 @@ void WSEnt::loop()
   }
 
   // wait to fully let the client disconnect
-  delay(3000);
+  // delay(3000);
 }

@@ -23,9 +23,6 @@
 #include <queue>
 #include <map>
 #include <Arduino.h>
-#include <AsyncTCP.h>
-#include <ESPAsyncWebServer.h>
-#include <WebSerial.h>
 
 #include "state/state.h"
 #include "message/message.h"
@@ -39,14 +36,10 @@ class StateManager
   int curState;
   int prevState;
   int requestedState;
-  AsyncWebServer *webServer;
   Base *stateEnt;
   std::map<int, Base *> stateEntMap;
   std::map<String, string_input_handler> stringHandlerMap;
   std::map<int, String> stateNameMap;
-
-protected:
-  static void recvWebSerialMsg(uint8_t *data, size_t len);
 
 public:
   static StateManager &getInstance();
@@ -56,8 +49,6 @@ public:
   static int getRequestedState();
   static void changeToRequestedState();
   static void handleUserInput(String s);
-  static void initWebSerial();
-  static void deinitWebSerial();
   static String stateToString(int s);
   static void setBuiltinLED(bool on);
   static bool handleStateChange(int s);

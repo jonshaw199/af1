@@ -20,9 +20,9 @@
 #ifndef STATEENT_OTA_OTA_H_
 #define STATEENT_OTA_OTA_H_
 
-#include "stateEnt/virtual/base/base.h"
+#include "stateEnt/virtual/wsEnt/wsEnt.h"
 
-class OTA : public Base
+class OTA : public WSEnt
 {
 public:
   void setup();

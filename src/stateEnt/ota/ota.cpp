@@ -28,9 +28,9 @@
 
 void OTA::setup()
 {
-  Base::setup();
-
   StateManager::setBuiltinLED(1);
+
+  WSEnt::setup();
 
   // JS - Issues with Heltec Wifi Kit 32; wouldnt connect
   // https://github.com/espressif/arduino-esp32/issues/1212
@@ -46,31 +46,12 @@ void OTA::setup()
   // Serial.println(WiFi.getMode());
   // End silly stuff !!!
 
-  prepareWifi();
-  WiFi.mode(WIFI_STA);
-  Serial.println("MAC: " + WiFi.macAddress());
-  // delay(1000);
+  // prepareWifi();
+  // WiFi.mode(WIFI_STA);
+  // Serial.println("MAC: " + WiFi.macAddress());
+  //  delay(1000);
 
-#if JS_IP_A
-  // Set your Static IP address
-  IPAddress local_IP(JS_IP_A, JS_IP_B, JS_IP_C, JS_IP_D);
-  // Set your Gateway IP address
-  IPAddress gateway(GATEWAY_A, GATEWAY_B, GATEWAY_C, GATEWAY_D);
-  IPAddress subnet(SUBNET_A, SUBNET_B, SUBNET_C, SUBNET_D);
-  // Configures static IP address
-  if (!WiFi.config(local_IP, gateway, subnet))
-  {
-    Serial.println("Static IP Failed to configure");
-  }
-  else
-  {
-    Serial.println("Static IP config success");
-  }
-#endif
-
-  connectToWifi();
-
-  StateManager::initWebSerial();
+  // connectToWifi();
 
   // Port defaults to 3232
   // ArduinoOTA.setPort(3232);
@@ -119,17 +100,16 @@ void OTA::setup()
 
 void OTA::loop()
 {
-  Base::loop();
+  WSEnt::loop();
 
   ArduinoOTA.handle();
 }
 
 bool OTA::preStateChange(int s)
 {
-  bool baseResult = Base::preStateChange(s);
+  bool baseResult = WSEnt::preStateChange(s);
   if (baseResult)
   {
-    StateManager::deinitWebSerial();
     StateManager::setBuiltinLED(0);
   }
   return baseResult;

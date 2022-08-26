@@ -103,7 +103,6 @@ void StateManager::init()
   int s = STATE_INIT;
   getInstance().curState = s;
   getInstance().requestedState = s;
-  getInstance().webServer = new AsyncWebServer(80);
 
   handleStateChange(s); // Let Init stateEnt handle everything
 }
@@ -134,33 +133,6 @@ void StateManager::handleUserInput(String s)
   {
     Serial.println("String input not recognized");
   }
-}
-
-void StateManager::recvWebSerialMsg(uint8_t *data, size_t len)
-{
-  WebSerial.println("Received Data...");
-  String d = "";
-  for (int i = 0; i < len; i++)
-  {
-    d += char(data[i]);
-  }
-  WebSerial.println(d);
-  handleUserInput(d);
-}
-
-void StateManager::initWebSerial()
-{
-  Serial.println("Initializing WebSerial");
-  // WebSerial is accessible at "<IP Address>/webserial" in browser
-  WebSerial.begin(getInstance().webServer);
-  WebSerial.msgCallback(recvWebSerialMsg);
-  getInstance().webServer->begin();
-}
-
-void StateManager::deinitWebSerial()
-{
-  Serial.println("Deinitializing WebSerial");
-  getInstance().webServer->end();
 }
 
 String StateManager::stateToString(int s)
