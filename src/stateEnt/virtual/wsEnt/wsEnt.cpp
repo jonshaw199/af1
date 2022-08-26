@@ -58,12 +58,8 @@ void WSEnt::loop()
     {
       Serial.print("Received data: ");
       Serial.println(data);
+      StateManager::handleUserInput(data);
     }
-
-    data = "Hello world!";
-    Serial.print("Sending data: ");
-    Serial.println(data);
-    webSocketClient.sendData(data);
   }
   else
   {
