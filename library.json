@@ -13,7 +13,8 @@
   "license": "LGPL-3.0",
   "dependencies": {
     "ESPAsyncWebServer": "https://github.com/me-no-dev/ESPAsyncWebServer.git",
-    "ayushsharma82/WebSerial": "^1.3.0"
+    "ayushsharma82/WebSerial": "^1.3.0",
+    "esp32-websocket": "https://github.com/jonshaw199/esp32-websocket.git"
   },
   "frameworks": "Arduino",
   "platforms": "*",
