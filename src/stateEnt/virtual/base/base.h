@@ -66,6 +66,7 @@ public:
   static void printMac(const uint8_t *m);
   static uint8_t *getMacSTA();
   static uint8_t *getMacAP();
+  static void connectToWifi();
   // From MessageHandler
   static const TSQueue<JSMessage> &getOutbox(); // Read only
   static const TSQueue<JSMessage> &getInbox();  // Read only
