@@ -25,6 +25,7 @@
 #include "stateManager/stateManager.h"
 #include "pre.h"
 #include "stateEnt/virtual/espnowEnt/espnowEnt.h"
+#include "stateEnt/virtual/wsEnt/wsEnt.h"
 
 class Framework
 {
