@@ -50,6 +50,7 @@ JSMessage::JSMessage(DynamicJsonDocument d)
   sendCnt = 0;
   retries = 0;
   maxRetries = 0;
+  json = d;
 }
 
 std::set<int> JSMessage::getRecipients()
@@ -120,4 +121,14 @@ void JSMessage::setData(uint8_t *d)
 const uint8_t *JSMessage::getData()
 {
   return msg.data;
+}
+
+void JSMessage::setJson(DynamicJsonDocument d)
+{
+  json = d;
+}
+
+DynamicJsonDocument JSMessage::getJson()
+{
+  return json;
 }

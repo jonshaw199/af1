@@ -76,6 +76,8 @@ public:
   int getMaxRetries();
   void setData(uint8_t *d);
   const uint8_t *getData();
+  void setJson(DynamicJsonDocument d);
+  DynamicJsonDocument getJson();
 };
 
 #endif // MESSAGE_MESSAGE_H_
