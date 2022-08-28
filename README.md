@@ -1,7 +1,7 @@
 ### Features
 
 - :trident: State management
-- :electric_plug: Websocket client (client-server communication; websocket server coming soon)
+- :electric_plug: Websocket client
 - :handshake: Peer to peer communication (ESPNOW)
 - :stopwatch: Timed event handling (one-time or recurring)
 - :keyboard: Serial input handling
