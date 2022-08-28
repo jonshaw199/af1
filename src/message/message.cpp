@@ -40,11 +40,6 @@ JSMessage::JSMessage(js_espnow_message m)
   maxRetries = 0;
 }
 
-js_espnow_message JSMessage::asStruct()
-{
-  return msg;
-}
-
 std::set<int> JSMessage::getRecipients()
 {
   return recipients;
