@@ -16,7 +16,7 @@ Consumers of this framework use and extend "state entities". A state entity defi
 
 When creating new state entities, setup, loop, and message handling behavior from the virtual classes can be overridden as necessary. As an example, this `Demo` class extends the framework's `WSEnt` class in order to process websocket messages from a server related to LED brightness:
 
-demo.h:
+**demo.h:**
 
 ```
 #include <framework.h>
@@ -29,7 +29,7 @@ class Demo : public WSEnt
 };
 ```
 
-demo.cpp:
+**demo.cpp:**
 
 ```
 #include "demo.h"
@@ -63,7 +63,7 @@ void Demo::setInboxMessageHandler()
 
 ### Getting Started
 
-main.cpp
+**main.cpp**
 
 ```
 
@@ -97,3 +97,5 @@ void loop()
 }
 
 ```
+
+**Build flags also need to be set for Wifi SSID/password, websocket configuration, etc. (see `library.json`)**
