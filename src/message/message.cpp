@@ -31,7 +31,7 @@ JSMessage::JSMessage()
   maxRetries = 0;
 }
 
-JSMessage::JSMessage(js_espnow_message m)
+JSMessage::JSMessage(js_message m)
 {
   msg = m;
   recipients = {};
@@ -40,7 +40,7 @@ JSMessage::JSMessage(js_espnow_message m)
   maxRetries = 0;
 }
 
-js_espnow_message JSMessage::asStruct()
+js_message JSMessage::asStruct()
 {
   return msg;
 }
