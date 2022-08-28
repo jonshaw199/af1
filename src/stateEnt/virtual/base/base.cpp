@@ -70,6 +70,7 @@ bool Base::handleInboxMsg(JSMessage m)
     return true;
   }
 
+#if IMPLICIT_STATE_CHANGE
 #ifndef MASTER
   if (m.getState() != StateManager::getCurState() && m.getState() != StateManager::getRequestedState())
   {
@@ -77,6 +78,7 @@ bool Base::handleInboxMsg(JSMessage m)
     StateManager::setRequestedState(m.getState());
     return true;
   }
+#endif
 #endif
 
   Serial.println("Inbox message going to the abyss");
