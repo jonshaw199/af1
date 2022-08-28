@@ -115,7 +115,7 @@ void ESPNowEnt::onDataRecv(const uint8_t *mac, const uint8_t *incomingData, int 
   // Serial.print("Last Packet Recv from: ");
   // Serial.println(macStr);
   Serial.print(".");
-  js_message msg;
+  js_espnow_message msg;
   memcpy(&msg, incomingData, sizeof(msg));
   JSMessage msgWrapper = msg;
   pushInbox(msg);

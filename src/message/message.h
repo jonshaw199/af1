@@ -34,7 +34,7 @@ enum MessageType
   TYPE_RUN_DATA
 };
 
-typedef struct js_message
+typedef struct js_espnow_message
 {
   // Calculated
   // int msgID;
@@ -44,12 +44,12 @@ typedef struct js_message
   int state;
   // State dependent
   uint8_t data[100];
-} js_message;
+} js_espnow_message;
 
-// This class is a wrapper around the js_message struct that actually gets sent using ESPNOW
+// This class is a wrapper around the js_espnow_message struct that actually gets sent using ESPNOW
 class JSMessage
 {
-  js_message msg;
+  js_espnow_message msg;
   std::set<int> recipients;
   int sendCnt;
   int retries;
@@ -57,10 +57,10 @@ class JSMessage
 
 public:
   JSMessage();
-  JSMessage(js_message m);
+  JSMessage(js_espnow_message m);
   void setRecipients(std::set<int> r);
   std::set<int> getRecipients();
-  js_message asStruct();
+  js_espnow_message asStruct();
   int incrementSendCnt();
   int getSendCnt();
   void setType(int t);
