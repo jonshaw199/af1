@@ -14,25 +14,51 @@
 
 Consumers of this framework use and extend "state entities". A state entity defines the behavior for a particular state, and new state entities can be created by extending the virtual `Base`, `WSEnt`, or `ESPNowEnt` classes (depending on the desired message handling mechanism, if any).
 
-When creating new state entities, setup, loop, and message handling behavior from the virtual classes can be overridden as necessary. As an example, this `Demo` class extends the framework's `WSEnt` class to use a websocket, but it also needs to perform some additional, custom logic during setup (printing to the serial monitor):
+When creating new state entities, setup, loop, and message handling behavior from the virtual classes can be overridden as necessary. As an example, this `Demo` class extends the framework's `WSEnt` class in order to process websocket messages from a server related LED brightness:
 
 demo.h:
 
 ```
+#include <framework.h>
+
 class Demo : public WSEnt
 {
-  void setup();
+  void setup(); // override
+  static bool handleInboxMsg(JSMessage m); // override
+  void setInboxMessageHandler(); // override
 };
 ```
 
 demo.cpp:
 
 ```
+#include "demo.h"
+#include "led/led.h"
+
 void Demo::setup()
 {
   WSEnt::setup();
-  Serial.println("Demo-specific logic here");
+  JSLED::init();
 }
+
+bool Demo::handleInboxMsg(JSMessage m)
+{
+  switch (m.getType())
+  {
+  case TYPE_RUN_DATA:
+    uint8_t b = m.getJson()["brightness"];
+    JSLED::setBrightness(b);
+    return true;
+  }
+
+  return WSEnt::handleInboxMsg(m);
+}
+
+void Demo::setInboxMessageHandler()
+{
+  setInboxMsgHandler(handleInboxMsg);
+}
+
 ```
 
 ### Getting Started
