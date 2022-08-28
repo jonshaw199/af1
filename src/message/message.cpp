@@ -40,9 +40,16 @@ JSMessage::JSMessage(js_message m)
   maxRetries = 0;
 }
 
-js_message JSMessage::asStruct()
+JSMessage::JSMessage(DynamicJsonDocument d)
 {
-  return msg;
+  msg = {};
+  msg.state = d["state"];
+  msg.senderID = d["senderID"];
+  msg.type = d["type"];
+  recipients = {};
+  sendCnt = 0;
+  retries = 0;
+  maxRetries = 0;
 }
 
 std::set<int> JSMessage::getRecipients()

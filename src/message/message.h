@@ -22,6 +22,7 @@
 
 #include <Arduino.h>
 #include <set>
+#include <ArduinoJson.h>
 
 #include "state/state.h"
 
@@ -38,18 +39,20 @@ typedef struct js_message
 {
   // Calculated
   // int msgID;
-  // Required
+  // Required, even for WS (single source of truth)
   int type;
   int senderID;
   int state;
-  // State dependent
+  // State dependent and only used for espnow
   uint8_t data[100];
 } js_message;
 
 // This class is a wrapper around the js_message struct that actually gets sent using ESPNOW
+// ... now also wraps json that gets sent using WS
 class JSMessage
 {
   js_message msg;
+  DynamicJsonDocument json;
   std::set<int> recipients;
   int sendCnt;
   int retries;
@@ -58,9 +61,9 @@ class JSMessage
 public:
   JSMessage();
   JSMessage(js_message m);
+  JSMessage(DynamicJsonDocument d);
   void setRecipients(std::set<int> r);
   std::set<int> getRecipients();
-  js_message asStruct();
   int incrementSendCnt();
   int getSendCnt();
   void setType(int t);
