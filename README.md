@@ -8,6 +8,7 @@
 - :radio: Over-The-Air (OTA) firmware updates
 - :leaves: Lightweight
 - :heavy_plus_sign: Extendable
+- :racing_car: Performant
 
 ### Overview
 
