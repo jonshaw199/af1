@@ -1,6 +1,6 @@
 {
   "name": "AF1",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "An Arduino extension framework for ESP32",
   "keywords": "Arduino, ESP32, IOT, Extension",
   "authors": [
