@@ -43,6 +43,7 @@ main.cpp
 
 #include <Arduino.h>
 #include <framework.h>
+#include "stateEnt/demo/demo.h"
 
 // User-defined states
 enum js_state_extended
