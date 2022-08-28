@@ -71,8 +71,7 @@ void Demo::setInboxMessageHandler()
 #include <framework.h>
 #include "stateEnt/demo/demo.h"
 
-// User-defined states
-enum js_state_extended
+enum user_defined_states
 {
   STATE_DEMO
 };
