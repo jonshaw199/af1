@@ -66,10 +66,7 @@ void WSEnt::loop()
       DynamicJsonDocument doc(1024);
       deserializeJson(doc, data);
 
-      uint8_t b = doc["brightness"];
-
-      Serial.print("Brightness: ");
-      Serial.println(b);
+      pushInbox(doc);
     }
   }
   else
