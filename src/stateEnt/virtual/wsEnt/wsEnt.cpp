@@ -1,3 +1,5 @@
+#include <ArduinoJson.h>
+
 #include "wsEnt.h"
 #include "pre.h"
 #include "stateManager/stateManager.h"
@@ -59,7 +61,15 @@ void WSEnt::loop()
     {
       Serial.print("Received data: ");
       Serial.println(data);
-      StateManager::handleUserInput(data);
+      // StateManager::handleUserInput(data);
+
+      DynamicJsonDocument doc(1024);
+      deserializeJson(doc, data);
+
+      uint8_t b = doc["brightness"];
+
+      Serial.print("Brightness: ");
+      Serial.println(b);
     }
   }
   else
