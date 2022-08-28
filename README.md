@@ -34,3 +34,39 @@ void Demo::setup()
   Serial.println("Demo-specific logic here");
 }
 ```
+
+### Getting Started
+
+main.cpp
+
+```
+
+#include <Arduino.h>
+#include <framework.h>
+
+// User-defined states
+enum js_state_extended
+{
+  STATE_DEMO
+};
+
+void setStateDemo()
+{
+  StateManager::getInstance().setRequestedState(STATE_DEMO);
+}
+
+void setup()
+{
+  Serial.begin(115200);
+  Framework::setup(); // REQUIRED
+  Framework::registerStateEnt(STATE_DEMO, new Demo(), "STATE_DEMO");
+  // The state is changed to STATE_DEMO when "4" is entered into the serial monitor
+  Framework::registerStringHandler("4", setStateDemo);
+}
+
+void loop()
+{
+  Framework::loop(); // REQUIRED
+}
+
+```
