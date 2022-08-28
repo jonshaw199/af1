@@ -60,6 +60,7 @@ public:
   JSMessage(js_espnow_message m);
   void setRecipients(std::set<int> r);
   std::set<int> getRecipients();
+  js_espnow_message asStruct();
   int incrementSendCnt();
   int getSendCnt();
   void setType(int t);
