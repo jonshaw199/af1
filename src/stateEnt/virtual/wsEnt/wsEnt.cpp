@@ -59,13 +59,8 @@ void WSEnt::loop()
     webSocketClient.getData(data);
     if (data.length() > 0)
     {
-      Serial.print("Received data: ");
-      Serial.println(data);
-      // StateManager::handleUserInput(data);
-
       DynamicJsonDocument doc(1024);
       deserializeJson(doc, data);
-
       pushInbox(doc);
     }
   }
