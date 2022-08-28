@@ -19,7 +19,7 @@
 
 #include "message.h"
 
-JSMessage::JSMessage()
+JSMessage::JSMessage() : json(1024)
 {
   msg = {};
   msg.state = STATE_NONE;
@@ -31,7 +31,7 @@ JSMessage::JSMessage()
   maxRetries = 0;
 }
 
-JSMessage::JSMessage(js_message m)
+JSMessage::JSMessage(js_message m) : json(1024)
 {
   msg = m;
   recipients = {};
@@ -40,7 +40,7 @@ JSMessage::JSMessage(js_message m)
   maxRetries = 0;
 }
 
-JSMessage::JSMessage(DynamicJsonDocument d)
+JSMessage::JSMessage(DynamicJsonDocument d) : json(1024)
 {
   msg = {};
   msg.state = d["state"];
