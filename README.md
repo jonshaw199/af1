@@ -1,3 +1,7 @@
+# AF1 - An Arduino extension framework for ESP32
+
+## Getting Started
+
 ### Features
 
 - :trident: State management
@@ -60,8 +64,6 @@ void Demo::setInboxMessageHandler()
 }
 ```
 
-### Getting Started
-
 **main.cpp**
 
 ```
@@ -96,6 +98,8 @@ void loop()
 ```
 
 **Build flags also need to be set for Wifi SSID/password, websocket configuration, etc. (see `library.json`)**
+
+## API Docs
 
 ### Scheduling Events
 
