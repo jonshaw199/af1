@@ -19,12 +19,12 @@ When creating new state entities, setup, loop, and message handling behavior fro
 **demo.h:**
 
 ```
-#include <framework.h>
+#include <AF1.h>
 
 class Demo : public WSEnt
 {
   void setup(); // override
-  static bool handleInboxMsg(JSMessage m); // override
+  static bool handleInboxMsg(JSMessage m);
   void setInboxMessageHandler(); // override
 };
 ```
@@ -68,7 +68,7 @@ void Demo::setInboxMessageHandler()
 ```
 
 #include <Arduino.h>
-#include <framework.h>
+#include <AF1.h>
 #include "stateEnt/demo/demo.h"
 
 enum user_defined_states
@@ -78,21 +78,21 @@ enum user_defined_states
 
 void setStateDemo()
 {
-  StateManager::setRequestedState(STATE_DEMO);
+  AF1::setRequestedState(STATE_DEMO);
 }
 
 void setup()
 {
   Serial.begin(115200);
-  StateManager::setup(); // REQUIRED
-  StateManager::registerStateEnt(STATE_DEMO, new Demo(), "STATE_DEMO");
+  AF1::setup(); // REQUIRED
+  AF1::registerStateEnt(STATE_DEMO, new Demo(), "STATE_DEMO");
   // The state is changed to STATE_DEMO when "4" is entered into the serial monitor
-  StateManager::registerStringHandler("4", setStateDemo);
+  AF1::registerStringHandler("4", setStateDemo);
 }
 
 void loop()
 {
-  StateManager::loop(); // REQUIRED
+  AF1::loop(); // REQUIRED
 }
 
 ```
