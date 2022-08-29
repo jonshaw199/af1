@@ -25,6 +25,7 @@
 #include "stateEnt/handshake/slave/slaveHandshake.h"
 #include "stateEnt/init/init.h"
 #include "stateEnt/purg/purg.h"
+#include "stateEnt/virtual/wsEnt/wsEnt.h"
 
 StateManager &StateManager::getInstance()
 {
@@ -68,6 +69,11 @@ void setStateInit()
   StateManager::getInstance().setRequestedState(STATE_INIT);
 }
 
+void setStateWSIdle()
+{
+  StateManager::getInstance().setRequestedState(STATE_IDLE_WS);
+}
+
 StateManager::StateManager()
 {
   stateEntMap[STATE_INIT] = new Init();
@@ -81,12 +87,14 @@ StateManager::StateManager()
   stateEntMap[STATE_IDLE_ESPNOW] = new ESPNowEnt();
   stateEntMap[STATE_PURG_OTA] = new Purg(STATE_OTA);
   stateEntMap[STATE_PURG_RESTART] = new Purg(STATE_RESTART);
+  stateEntMap[STATE_IDLE_WS] = new WSEnt();
 
   stringHandlerMap["s"] = setStateInit;
   stringHandlerMap["o"] = setStatePurgOTA;
   stringHandlerMap["h"] = setStateHandshake;
   stringHandlerMap["k"] = setStatePurgRestart;
   stringHandlerMap["i"] = setstateESPNowIdle;
+  stringHandlerMap["w"] = setStateWSIdle;
 
   stateNameMap[STATE_NONE] = "STATE_NONE";
   stateNameMap[STATE_INIT] = "STATE_INIT";
@@ -96,6 +104,7 @@ StateManager::StateManager()
   stateNameMap[STATE_PURG_RESTART] = "STATE_PURG_RESTART";
   stateNameMap[STATE_RESTART] = "STATE_RESTART";
   stateNameMap[STATE_HANDSHAKE] = "STATE_HANDSHAKE";
+  stateNameMap[STATE_IDLE_WS] = "STATE_IDLE_WS";
 }
 
 void StateManager::init()
