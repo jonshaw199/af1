@@ -100,7 +100,7 @@ void loop()
 ### Scheduling Events
 
 ```
-class Demo : public Base
+class Demo2 : public Base
 {
   int intervalMs = 3000;
   bool demoCb(IECBArg a)
@@ -110,7 +110,7 @@ class Demo : public Base
   }
 
 public:
-  Demo()
+  Demo2()
   {
     intervalEvents.push_back(IntervalEvent(intervalMs, demoCb/*, maxCbCnt*/));
   }
