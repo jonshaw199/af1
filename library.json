@@ -1,6 +1,6 @@
 {
   "name": "AF1",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "An Arduino extension framework for ESP32",
   "keywords": "arduino, esp32, iot, espnow, websocket, client, server, OTA, state, event",
   "authors": [
