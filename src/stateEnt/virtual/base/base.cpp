@@ -116,7 +116,7 @@ void Base::resetIntervalEvents()
 void Base::prepareWifi()
 {
   WiFi.disconnect(true);
-  delay(DELAY_PREPARE_WIFI);
+  // delay(DELAY_PREPARE_WIFI);
 }
 
 void Base::setSTAMode()
@@ -179,6 +179,8 @@ uint8_t *Base::getMacAP()
 
 void Base::connectToWifi()
 {
+  prepareWifi();
+
 #if JS_IP_A
   // Set your Static IP address
   IPAddress local_IP(JS_IP_A, JS_IP_B, JS_IP_C, JS_IP_D);

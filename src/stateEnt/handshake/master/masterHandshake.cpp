@@ -33,7 +33,6 @@ void MasterHandshake::setup()
   Base::setup();
   prepareWifi();
   setAPMode();
-  delay(DELAY_PREPARE_WIFI);
   initEspNow();
   intervalEvents.push_back(IntervalEvent(MS_MASTER_HANDSHAKE_LOOP, handleHandshakesInternal));
 }

@@ -46,13 +46,6 @@ void OTA::setup()
   // Serial.println(WiFi.getMode());
   // End silly stuff !!!
 
-  // prepareWifi();
-  // WiFi.mode(WIFI_STA);
-  // Serial.println("MAC: " + WiFi.macAddress());
-  //  delay(1000);
-
-  // connectToWifi();
-
   // Port defaults to 3232
   // ArduinoOTA.setPort(3232);
 
