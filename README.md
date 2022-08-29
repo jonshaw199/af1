@@ -112,7 +112,7 @@ class Demo : public Base
 public:
   Demo()
   {
-    intervalEvents.push_back(IntervalEvent(intervalMs, demoCb)); // Overloaded IntervalEvent constructor also accepts 3rd arg for max number of callbacks if desired
+    intervalEvents.push_back(IntervalEvent(intervalMs, demoCb/*, maxCbCnt*/));
   }
 }
 ```
