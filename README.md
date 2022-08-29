@@ -96,3 +96,23 @@ void loop()
 ```
 
 **Build flags also need to be set for Wifi SSID/password, websocket configuration, etc. (see `library.json`)**
+
+### Scheduling Events
+
+```
+class Demo : public Base
+{
+  int intervalMs = 3000;
+  bool demoCb(IECBArg a)
+  {
+    // Do something here every 3 seconds indefinitely
+    return true;
+  }
+
+public:
+  Demo()
+  {
+    intervalEvents.push_back(IntervalEvent(intervalMs, demoCb)); // Overloaded IntervalEvent constructor also accepts 3rd arg for max number of callbacks if desired
+  }
+}
+```
