@@ -17,25 +17,15 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#ifndef FRAMEWORK_FRAMEWORK_H_
+#define FRAMEWORK_FRAMEWORK_H_
+
+#include "pre.h"
+
 #include "stateManager/stateManager.h"
-#include "framework.h"
+#include "stateEnt/virtual/espnowEnt/espnowEnt.h"
+#include "stateEnt/virtual/wsEnt/wsEnt.h"
 
-void Framework::setup()
-{
-  StateManager::init();
-}
+typedef AF1 StateManager;
 
-void Framework::loop()
-{
-  StateManager::loop();
-}
-
-void Framework::registerStateEnt(int i, Base *s, String n)
-{
-  StateManager::registerStateEnt(i, s, n);
-}
-
-void Framework::registerStringHandler(String s, string_input_handler h)
-{
-  StateManager::registerStringHandler(s, h);
-}
+#endif // FRAMEWORK_FRAMEWORK_H_

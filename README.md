@@ -84,15 +84,15 @@ void setStateDemo()
 void setup()
 {
   Serial.begin(115200);
-  Framework::setup(); // REQUIRED
-  Framework::registerStateEnt(STATE_DEMO, new Demo(), "STATE_DEMO");
+  StateManager::setup(); // REQUIRED
+  StateManager::registerStateEnt(STATE_DEMO, new Demo(), "STATE_DEMO");
   // The state is changed to STATE_DEMO when "4" is entered into the serial monitor
-  Framework::registerStringHandler("4", setStateDemo);
+  StateManager::registerStringHandler("4", setStateDemo);
 }
 
 void loop()
 {
-  Framework::loop(); // REQUIRED
+  StateManager::loop(); // REQUIRED
 }
 
 ```
