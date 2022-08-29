@@ -58,7 +58,6 @@ void Demo::setInboxMessageHandler()
 {
   setInboxMsgHandler(handleInboxMsg);
 }
-
 ```
 
 ### Getting Started
