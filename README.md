@@ -7,7 +7,7 @@
 - :trident: State management
 - :electric_plug: Websocket client
 - :handshake: Peer to peer communication (ESPNOW)
-- :stopwatch: Event scheduling (one-time or recurring)
+- :stopwatch: [Event scheduling](#event-scheduling) ((one-time or recurring))
 - :keyboard: Serial input handling
 - :radio: Over-The-Air (OTA) firmware updates
 - :leaves: Lightweight
@@ -101,7 +101,7 @@ void loop()
 
 ## API Docs
 
-### Scheduling Events
+### Event Scheduling
 
 ```
 class Demo2 : public Base
