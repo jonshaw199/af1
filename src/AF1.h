@@ -26,6 +26,4 @@
 #include "stateEnt/virtual/espnowEnt/espnowEnt.h"
 #include "stateEnt/virtual/wsEnt/wsEnt.h"
 
-typedef AF1 StateManager;
-
 #endif // FRAMEWORK_FRAMEWORK_H_

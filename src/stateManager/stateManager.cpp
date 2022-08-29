@@ -107,7 +107,7 @@ StateManager::StateManager()
   stateNameMap[STATE_IDLE_WS] = "STATE_IDLE_WS";
 }
 
-void StateManager::init()
+void StateManager::setup()
 {
   int s = STATE_INIT;
   getInstance().curState = s;

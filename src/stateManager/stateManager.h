@@ -52,7 +52,7 @@ public:
   static String stateToString(int s);
   static void setBuiltinLED(bool on);
   static bool handleStateChange(int s);
-  static void init();
+  static void setup();
   static void loop();
   static void registerStateEnt(int i, Base *s, String n);
   static void registerStringHandler(String s, string_input_handler h);
