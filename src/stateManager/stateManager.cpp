@@ -46,32 +46,32 @@ int StateManager::getPrevState()
 
 void setStatePurgOTA()
 {
-  StateManager::getInstance().setRequestedState(STATE_PURG_OTA);
+  StateManager::setRequestedState(STATE_PURG_OTA);
 }
 
 void setstateESPNowIdle()
 {
-  StateManager::getInstance().setRequestedState(STATE_IDLE_ESPNOW);
+  StateManager::setRequestedState(STATE_IDLE_ESPNOW);
 }
 
 void setStatePurgRestart()
 {
-  StateManager::getInstance().setRequestedState(STATE_PURG_RESTART);
+  StateManager::setRequestedState(STATE_PURG_RESTART);
 }
 
 void setStateHandshake()
 {
-  StateManager::getInstance().setRequestedState(STATE_HANDSHAKE);
+  StateManager::setRequestedState(STATE_HANDSHAKE);
 }
 
 void setStateInit()
 {
-  StateManager::getInstance().setRequestedState(STATE_INIT);
+  StateManager::setRequestedState(STATE_INIT);
 }
 
 void setStateWSIdle()
 {
-  StateManager::getInstance().setRequestedState(STATE_IDLE_WS);
+  StateManager::setRequestedState(STATE_IDLE_WS);
 }
 
 StateManager::StateManager()

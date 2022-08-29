@@ -78,7 +78,7 @@ enum user_defined_states
 
 void setStateDemo()
 {
-  StateManager::getInstance().setRequestedState(STATE_DEMO);
+  StateManager::setRequestedState(STATE_DEMO);
 }
 
 void setup()
