@@ -65,7 +65,6 @@ void Demo::setInboxMessageHandler()
 **main.cpp**
 
 ```
-
 #include <Arduino.h>
 #include <AF1.h>
 #include "stateEnt/demo/demo.h"
