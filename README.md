@@ -4,11 +4,11 @@
 
 ### Features
 
-- :trident: State management
-- :electric_plug: Websocket client
+- :trident: [State management](#overview)
+- :electric_plug: [Websocket client](#overview)
 - :handshake: Peer to peer communication (ESPNOW)
-- :stopwatch: [Event scheduling](#event-scheduling) ((one-time or recurring))
-- :keyboard: Serial input handling
+- :stopwatch: [Event scheduling (one-time or recurring)](#event-scheduling)
+- :keyboard: [Serial input handling](#overview)
 - :radio: Over-The-Air (OTA) firmware updates
 - :leaves: Lightweight
 - :heavy_plus_sign: Extendable
