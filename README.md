@@ -103,7 +103,6 @@ void loop()
 **Example setting build flags in main.cpp (can also be set in platformio.ini. library.json, etc.)**
 
 ```
-
 #include <Arduino.h>
 #include <AF1.h>
 #include "state.h"
