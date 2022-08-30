@@ -26,6 +26,8 @@
 
 class WSEnt : public Base
 {
+  void connectToWS();
+
 public:
   static WebSocketClient webSocketClient;
   // Use WiFiClient class to create TCP connections

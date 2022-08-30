@@ -35,20 +35,7 @@ void WSEnt::setup()
   Base::setup();
 
   connectToWifi();
-
-  // Connect to the websocket server
-  if (client.connect(STRINGIFY(WS_HOST), WS_PORT))
-  {
-    Serial.println("Connected");
-  }
-  else
-  {
-    Serial.println("Connection failed.");
-    while (1)
-    {
-      // Hang on failure
-    }
-  }
+  connectToWS();
 
   // Handshake with the server
   webSocketClient.path = path;
@@ -73,7 +60,7 @@ void WSEnt::loop()
 
   String data;
 
-  if (client.connected())
+  if (client)
   {
     webSocketClient.getData(data);
     if (data.length() > 0)
@@ -94,4 +81,27 @@ void WSEnt::loop()
 
   // wait to fully let the client disconnect
   // delay(3000);
+}
+
+void WSEnt::connectToWS()
+{
+  if (client) // Using WifiClient bool() operator
+  {
+    Serial.println("Already connected to WS");
+    return;
+  }
+
+  // Connect to the websocket server
+  if (client.connect(STRINGIFY(WS_HOST), WS_PORT))
+  {
+    Serial.println("Connected");
+  }
+  else
+  {
+    Serial.println("Connection failed.");
+    while (1)
+    {
+      // Hang on failure
+    }
+  }
 }

@@ -28,6 +28,7 @@
 #include <esp_now.h>
 #include <WiFi.h>
 #include <mutex>
+#include <HTTPClient.h>
 
 #include "intervalEvent/intervalEvent.h"
 #include "state/state.h"
@@ -47,6 +48,8 @@ protected:
   // From MessageHandler
   static Box inbox;
   static Box outbox;
+  // New
+  static HTTPClient httpClient;
 
 public:
   Base();
@@ -76,6 +79,8 @@ public:
   static void setOutboxMsgHandler(msg_handler h);
   static void pushOutbox(JSMessage m);
   static void pushInbox(JSMessage m);
+  // New
+  static String httpFetch(String url);
 };
 
 #endif // STATEENT_VIRTUAL_BASE_BASE_H_

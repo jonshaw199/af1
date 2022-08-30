@@ -27,6 +27,8 @@ uint8_t Base::macSTA[6];
 Box Base::inbox;
 Box Base::outbox;
 
+HTTPClient Base::httpClient;
+
 Base::Base()
 {
 }
@@ -179,7 +181,11 @@ uint8_t *Base::getMacAP()
 
 void Base::connectToWifi()
 {
-  prepareWifi();
+  if (WiFi.status() == WL_CONNECTED)
+  {
+    Serial.println("Already connected to wifi");
+    return;
+  }
 
 #if JS_IP_A
   // Set your Static IP address
@@ -240,4 +246,35 @@ void Base::pushOutbox(JSMessage m)
 void Base::pushInbox(JSMessage m)
 {
   inbox.enqueue(m);
+}
+
+/*
+  New
+*/
+
+String Base::httpFetch(String url)
+{
+  String result;
+  connectToWifi();
+  if ((WiFi.status() == WL_CONNECTED))
+  {
+    httpClient.begin(url);
+    int httpCode = httpClient.GET();
+    if (httpCode > 0)
+    {
+      result = httpClient.getString();
+      Serial.println(httpCode);
+    }
+    else
+    {
+      result = "Error on HTTP request";
+    }
+    httpClient.end();
+  }
+  else
+  {
+    result = "Cannot connect to wifi";
+  }
+  Serial.println(result);
+  return result;
 }
