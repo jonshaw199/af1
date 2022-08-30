@@ -10,14 +10,10 @@ const uint8_t Demo2Master::maxBrightness = 150;
 
 Demo2Master::Demo2Master()
 {
-  intervalEvents.push_back(IntervalEvent(MS_DEMO2_LOOP, demo2));
-}
-
-bool Demo2Master::demo2(IECBArg a)
-{
-  uint8_t brightness = getCurCoef(a.getElapsedMs()) * maxBrightness;
+  intervalEvents.push_back(IntervalEvent(MS_DEMO2_LOOP, [](IECBArg a)
+                                         {uint8_t brightness = getCurCoef(a.getElapsedMs()) * maxBrightness;
   sendMsg(brightness);
-  return true;
+  return true; }));
 }
 
 void Demo2Master::setup()
