@@ -88,7 +88,7 @@ void loop()
 
 ```
 
-**Build flags also need to be set (only as needed) for Wifi SSID/password, websocket configuration, etc:**
+**Build flags should also be set as needed for Wifi SSID/password, websocket configuration, etc:**
 
 | Flag                  | Description                  |
 | --------------------- | ---------------------------- |
@@ -99,6 +99,33 @@ void loop()
 | WS_PORT               | Websocket server port        |
 | INITIAL_STATE         | First state after boot       |
 | STATE_AFTER_HANDSHAKE | State after ESPNOW handshake |
+
+**Example main.cpp (notice the `#define`'s)**
+
+```
+
+#include <Arduino.h>
+#include <AF1.h>
+#include "state.h"
+#include "stateEnt/rc1/rc1.h"
+
+#define JSSSID my-wifi-name-here        // <----
+#define JSPASS my_wifi+Password-here!   // <----
+
+void setup()
+{
+  Serial.begin(JS_BAUD);
+  AF1::setup();
+  AF1::registerStateEnt(STATE_RC1, new RC1(), "STATE_RC1");
+  AF1::registerStringHandler("1", []()
+                             { AF1::setRequestedState(STATE_RC1); });
+}
+
+void loop()
+{
+  AF1::loop();
+}
+```
 
 ## API Docs
 
