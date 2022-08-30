@@ -260,6 +260,9 @@ DynamicJsonDocument Base::httpFetch(String url)
   if ((WiFi.status() == WL_CONNECTED))
   {
     httpClient.begin(url);
+    Serial.println("Making HTTP GET request...");
+    Serial.print("URL: ");
+    Serial.println(url);
     int httpCode = httpClient.GET();
     if (httpCode > 0)
     {
