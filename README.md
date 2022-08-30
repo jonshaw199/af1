@@ -100,7 +100,7 @@ void loop()
 | INITIAL_STATE         | First state after boot       |
 | STATE_AFTER_HANDSHAKE | State after ESPNOW handshake |
 
-**Example main.cpp (notice the `#define`'s)**
+**Example setting build flags in main.cpp (can also be set in platformio.ini. library.json, etc.)**
 
 ```
 
@@ -109,8 +109,8 @@ void loop()
 #include "state.h"
 #include "stateEnt/rc1/rc1.h"
 
-#define JSSSID my-wifi-name-here        // <----
-#define JSPASS my_wifi+Password-here!   // <----
+#define JSSSID my-wifi-name-here        // <---- Set SSID
+#define JSPASS my_wifi+Password-here!   // <---- Set Password
 
 void setup()
 {
