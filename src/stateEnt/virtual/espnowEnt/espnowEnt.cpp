@@ -4,33 +4,40 @@
 // From espnowHandler
 static std::map<int, js_peer_info> peerInfoMap;
 static std::map<String, int> macToIDMap;
+// End ?
+
+bool ESPNowEnt::handleInboxMsg(JSMessage m)
+{
+  switch (m.getType())
+  {
+  case TYPE_HANDSHAKE_REQUEST:
+    Serial.println("Handshake request message in inbox");
+    receiveHandshakeRequest(m);
+    sendHandshakeResponses({m.getSenderID()});
+    return true;
+  case TYPE_HANDSHAKE_RESPONSE:
+    Serial.println("Handshake response message in inbox");
+    receiveHandshakeResponse(m);
+    return true;
+  }
+
+  return Base::handleInboxMsg(m);
+}
 
 void ESPNowEnt::setInboxMessageHandler()
 {
-  setInboxMsgHandler([](JSMessage m)
-                     {
-    switch (m.getType())
-    {
-    case TYPE_HANDSHAKE_REQUEST:
-      Serial.println("Handshake request message in inbox");
-      receiveHandshakeRequest(m);
-      sendHandshakeResponses({m.getSenderID()});
-      return true;
-    case TYPE_HANDSHAKE_RESPONSE:
-      Serial.println("Handshake response message in inbox");
-      receiveHandshakeResponse(m);
-      return true;
-    }
+  setInboxMsgHandler(handleInboxMsg);
+}
 
-    return Base::handleInboxMsg(m); });
+bool ESPNowEnt::handleOutboxMsg(JSMessage m)
+{
+  sendMsg(m);
+  return true;
 }
 
 void ESPNowEnt::setOutboxMessageHandler()
 {
-  setOutboxMsgHandler([](JSMessage m)
-                      {
-  sendMsg(m);
-  return true; });
+  setOutboxMsgHandler(handleOutboxMsg);
 }
 
 bool ESPNowEnt::preStateChange(int s)

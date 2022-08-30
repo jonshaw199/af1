@@ -22,16 +22,19 @@
 #include "stateEnt/virtual/base/intervalEvent/intervalEvent.h"
 #include "pre.h"
 
+bool handleHandshakesInternal(IECBArg a)
+{
+  ESPNowEnt::handleHandshakes();
+  return true;
+}
+
 void MasterHandshake::setup()
 {
   Base::setup();
   prepareWifi();
   setAPMode();
   initEspNow();
-  intervalEvents.push_back(IntervalEvent(MS_MASTER_HANDSHAKE_LOOP, [](IECBArg a)
-                                         {
-  ESPNowEnt::handleHandshakes();
-  return true; }));
+  intervalEvents.push_back(IntervalEvent(MS_MASTER_HANDSHAKE_LOOP, handleHandshakesInternal));
 }
 
 void MasterHandshake::loop()
