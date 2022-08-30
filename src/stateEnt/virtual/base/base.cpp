@@ -303,7 +303,8 @@ DynamicJsonDocument Base::httpPost(String url, DynamicJsonDocument body)
     }
     else
     {
-      Serial.println("HTTP POST error");
+      Serial.print("HTTP POST error: ");
+      Serial.println(httpClient.errorToString(httpCode));
     }
     httpClient.end();
   }
