@@ -90,15 +90,15 @@ void loop()
 
 **Build flags also need to be set (only as needed) for Wifi SSID/password, websocket configuration, etc:**
 
-| Flag                  | Description                  | Default |
-| --------------------- | ---------------------------- | ------- |
-| JSSSID                | Wifi SSID                    |         |
-| JSPASS                | Wifi Password                |         |
-| WS_HOST               | Websocket server hostname    |         |
-| WS_PATH               | Websocket server endpoint    |         |
-| WS_PORT               | Websocket server port        |         |
-| INITIAL_STATE         | First state after boot       |         |
-| STATE_AFTER_HANDSHAKE | State after ESPNOW handshake |         |
+| Flag                  | Description                  |
+| --------------------- | ---------------------------- |
+| JSSSID                | Wifi SSID                    |
+| JSPASS                | Wifi Password                |
+| WS_HOST               | Websocket server hostname    |
+| WS_PATH               | Websocket server endpoint    |
+| WS_PORT               | Websocket server port        |
+| INITIAL_STATE         | First state after boot       |
+| STATE_AFTER_HANDSHAKE | State after ESPNOW handshake |
 
 ## API Docs
 
