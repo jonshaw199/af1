@@ -88,11 +88,11 @@ void WSEnt::connectToWS()
   // Connect to the websocket server
   if (client.connect(STRINGIFY(WS_HOST), WS_PORT))
   {
-    Serial.println("Connected");
+    Serial.println("Websocket connected");
   }
   else
   {
-    Serial.println("Connection failed.");
+    Serial.println("Websocket connection failed.");
     while (1)
     {
       // Hang on failure
