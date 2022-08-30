@@ -18,9 +18,10 @@ bool Demo4::preStateChange(int s)
   return baseResult;
 }
 
-bool Demo4::handleInboxMsg(JSMessage m)
+void Demo4::setInboxMessageHandler()
 {
-  switch (m.getType())
+  setInboxMsgHandler([](JSMessage m)
+                     {  switch (m.getType())
   {
   case TYPE_RUN_DATA:
     uint8_t b = m.getJson()["brightness"];
@@ -32,10 +33,5 @@ bool Demo4::handleInboxMsg(JSMessage m)
     return true;
   }
 
-  return WSEnt::handleInboxMsg(m);
-}
-
-void Demo4::setInboxMessageHandler()
-{
-  setInboxMsgHandler(handleInboxMsg);
+  return WSEnt::handleInboxMsg(m); });
 }

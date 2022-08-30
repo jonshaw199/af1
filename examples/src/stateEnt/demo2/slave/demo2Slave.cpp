@@ -20,9 +20,10 @@ bool Demo2Slave::preStateChange(int s)
   return baseResult;
 }
 
-bool Demo2Slave::handleInboxMsg(JSMessage m)
+void Demo2Slave::setInboxMessageHandler()
 {
-  switch (m.getType())
+  setInboxMsgHandler([](JSMessage m)
+                     {  switch (m.getType())
   {
   case TYPE_RUN_DATA:
     demo2_data d;
@@ -32,10 +33,5 @@ bool Demo2Slave::handleInboxMsg(JSMessage m)
     return true;
   }
 
-  return Base::handleInboxMsg(m);
-}
-
-void Demo2Slave::setInboxMessageHandler()
-{
-  setInboxMsgHandler(handleInboxMsg);
+  return Base::handleInboxMsg(m); });
 }
