@@ -212,6 +212,7 @@ void Base::connectToWifi()
     delay(3000);
     ESP.restart();
   }
+  Serial.println("Wifi connection successful");
 }
 
 /*
@@ -252,9 +253,9 @@ void Base::pushInbox(JSMessage m)
   New
 */
 
-String Base::httpFetch(String url)
+DynamicJsonDocument Base::httpFetch(String url)
 {
-  String result;
+  DynamicJsonDocument result(1024);
   connectToWifi();
   if ((WiFi.status() == WL_CONNECTED))
   {
@@ -262,19 +263,46 @@ String Base::httpFetch(String url)
     int httpCode = httpClient.GET();
     if (httpCode > 0)
     {
-      result = httpClient.getString();
-      Serial.println(httpCode);
+      String resBody = httpClient.getString();
+      deserializeJson(result, resBody);
+      Serial.println(resBody);
     }
     else
     {
-      result = "Error on HTTP request";
+      Serial.println("HTTP GET error");
     }
     httpClient.end();
   }
-  else
+  return result;
+}
+
+DynamicJsonDocument Base::httpPost(String url, DynamicJsonDocument body)
+{
+  DynamicJsonDocument result(1024);
+  connectToWifi();
+  if ((WiFi.status() == WL_CONNECTED))
   {
-    result = "Cannot connect to wifi";
+    httpClient.begin(url);
+    httpClient.addHeader("Content-Type", "application/json");
+    String serializedBody;
+    serializeJson(body, serializedBody);
+    Serial.println("Making HTTP POST request...");
+    Serial.print("URL: ");
+    Serial.println(url);
+    Serial.print("Body: ");
+    Serial.println(serializedBody);
+    int httpCode = httpClient.POST(serializedBody);
+    if (httpCode > 0)
+    {
+      String resBody = httpClient.getString();
+      deserializeJson(result, resBody);
+      Serial.println(resBody);
+    }
+    else
+    {
+      Serial.println("HTTP POST error");
+    }
+    httpClient.end();
   }
-  Serial.println(result);
   return result;
 }

@@ -29,6 +29,7 @@
 #include <WiFi.h>
 #include <mutex>
 #include <HTTPClient.h>
+#include <ArduinoJson.h>
 
 #include "intervalEvent/intervalEvent.h"
 #include "state/state.h"
@@ -80,7 +81,8 @@ public:
   static void pushOutbox(JSMessage m);
   static void pushInbox(JSMessage m);
   // New
-  static String httpFetch(String url);
+  static DynamicJsonDocument httpFetch(String url);
+  static DynamicJsonDocument httpPost(String url, DynamicJsonDocument body);
 };
 
 #endif // STATEENT_VIRTUAL_BASE_BASE_H_
