@@ -100,10 +100,9 @@ void loop()
 | INITIAL_STATE         | First state after boot       |
 | STATE_AFTER_HANDSHAKE | State after ESPNOW handshake |
 
-**Example setting build flags in main.cpp (can also be set in platformio.ini. library.json, etc.)**
+**Example setting build flags in main.cpp (can also be set in platformio.ini. library.json, etc.):**
 
 ```
-
 #include <Arduino.h>
 #include <AF1.h>
 #include "state.h"
@@ -137,7 +136,8 @@ class Demo2 : public Base
 public:
   Demo2()
   {
-    intervalEvents.push_back(IntervalEvent(intervalMs, [](IECBArg a) { // Do something here every 3 seconds indefinitely
+    intervalEvents.push_back(IntervalEvent(intervalMs, [](IECBArg a) {
+      // Do something here every 3 seconds indefinitely
       return true;
     } /*, maxCbCnt*/));
   }
