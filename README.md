@@ -103,6 +103,7 @@ void loop()
 **Example setting build flags in main.cpp (can also be set in platformio.ini. library.json, etc.)**
 
 ```
+
 #include <Arduino.h>
 #include <AF1.h>
 #include "state.h"
@@ -116,8 +117,6 @@ void setup()
   Serial.begin(JS_BAUD);
   AF1::setup();
   AF1::registerStateEnt(STATE_RC1, new RC1(), "STATE_RC1");
-  AF1::registerStringHandler("1", []()
-                             { AF1::setRequestedState(STATE_RC1); });
 }
 
 void loop()
