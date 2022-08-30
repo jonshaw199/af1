@@ -46,16 +46,17 @@ void Demo::setup()
 
 void Demo::setInboxMessageHandler()
 {
-  setInboxMsgHandler([](JSMessage m)
-                     {switch (m.getType())
-  {
-  case TYPE_RUN_DATA:
-    uint8_t b = m.getJson()["brightness"];
-    JSLED::setBrightness(b);
-    return true;
-  }
+  setInboxMsgHandler([](JSMessage m) {
+    switch (m.getType())
+    {
+    case TYPE_RUN_DATA:
+      uint8_t b = m.getJson()["brightness"];
+      JSLED::setBrightness(b);
+      return true;
+    }
 
-  return WSEnt::handleInboxMsg(m); });
+    return WSEnt::handleInboxMsg(m);
+  });
 }
 ```
 
