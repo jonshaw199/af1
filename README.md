@@ -28,7 +28,6 @@ When creating new state entities, setup, loop, and message handling behavior fro
 class Demo : public WSEnt
 {
   void setup(); // override
-  static bool handleInboxMsg(JSMessage m);
   void setInboxMessageHandler(); // override
 };
 ```
@@ -45,9 +44,10 @@ void Demo::setup()
   JSLED::init();
 }
 
-bool Demo::handleInboxMsg(JSMessage m)
+void Demo::setInboxMessageHandler()
 {
-  switch (m.getType())
+  setInboxMsgHandler([](JSMessage m)
+                     {switch (m.getType())
   {
   case TYPE_RUN_DATA:
     uint8_t b = m.getJson()["brightness"];
@@ -55,12 +55,7 @@ bool Demo::handleInboxMsg(JSMessage m)
     return true;
   }
 
-  return WSEnt::handleInboxMsg(m);
-}
-
-void Demo::setInboxMessageHandler()
-{
-  setInboxMsgHandler(handleInboxMsg);
+  return WSEnt::handleInboxMsg(m); });
 }
 ```
 
@@ -76,18 +71,14 @@ enum user_defined_states
   STATE_DEMO
 };
 
-void setStateDemo()
-{
-  AF1::setRequestedState(STATE_DEMO);
-}
-
 void setup()
 {
   Serial.begin(115200);
   AF1::setup(); // REQUIRED
   AF1::registerStateEnt(STATE_DEMO, new Demo(), "STATE_DEMO");
   // The state is changed to STATE_DEMO when "4" is entered into the serial monitor
-  AF1::registerStringHandler("4", setStateDemo);
+  AF1::registerStringHandler("4", []()
+                           { AF1::setRequestedState(STATE_DEMO); });
 }
 
 void loop()
@@ -107,16 +98,13 @@ void loop()
 class Demo2 : public Base
 {
   int intervalMs = 3000;
-  bool demoCb(IECBArg a)
-  {
-    // Do something here every 3 seconds indefinitely
-    return true;
-  }
 
 public:
   Demo2()
   {
-    intervalEvents.push_back(IntervalEvent(intervalMs, demoCb/*, maxCbCnt*/));
+    intervalEvents.push_back(IntervalEvent(intervalMs, [](IECBArg a) { // Do something here every 3 seconds indefinitely
+      return true;
+    } /*, maxCbCnt*/));
   }
 }
 ```
