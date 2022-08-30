@@ -85,12 +85,6 @@ void WSEnt::loop()
 
 void WSEnt::connectToWS()
 {
-  if (client) // Using WifiClient bool() operator
-  {
-    Serial.println("Already connected to WS");
-    return;
-  }
-
   // Connect to the websocket server
   if (client.connect(STRINGIFY(WS_HOST), WS_PORT))
   {

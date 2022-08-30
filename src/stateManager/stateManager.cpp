@@ -44,9 +44,13 @@ int StateManager::getPrevState()
   return getInstance().prevState;
 }
 
-void setStatePurgOTA()
+void setStateOTA()
 {
+#if MASTER
   StateManager::setRequestedState(STATE_PURG_OTA);
+#else
+  StateManager::setRequestedState(STATE_OTA);
+#endif
 }
 
 void setstateESPNowIdle()
@@ -54,9 +58,13 @@ void setstateESPNowIdle()
   StateManager::setRequestedState(STATE_IDLE_ESPNOW);
 }
 
-void setStatePurgRestart()
+void setStateRestart()
 {
+#if MASTER
   StateManager::setRequestedState(STATE_PURG_RESTART);
+#else
+  StateManager::setRequestedState(STATE_RESTART);
+#endif
 }
 
 void setStateHandshake()
@@ -78,7 +86,7 @@ StateManager::StateManager()
 {
   stateEntMap[STATE_INIT] = new Init();
   stateEntMap[STATE_OTA] = new OTA();
-#ifdef MASTER
+#if MASTER
   stateEntMap[STATE_HANDSHAKE] = new MasterHandshake();
 #else
   stateEntMap[STATE_HANDSHAKE] = new SlaveHandshake();
@@ -90,9 +98,9 @@ StateManager::StateManager()
   stateEntMap[STATE_IDLE_WS] = new WSEnt();
 
   stringHandlerMap["s"] = setStateInit;
-  stringHandlerMap["o"] = setStatePurgOTA;
+  stringHandlerMap["o"] = setStateOTA;
   stringHandlerMap["h"] = setStateHandshake;
-  stringHandlerMap["k"] = setStatePurgRestart;
+  stringHandlerMap["k"] = setStateRestart;
   stringHandlerMap["i"] = setstateESPNowIdle;
   stringHandlerMap["w"] = setStateWSIdle;
 

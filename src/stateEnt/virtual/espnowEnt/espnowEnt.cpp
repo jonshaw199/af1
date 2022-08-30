@@ -42,7 +42,7 @@ void ESPNowEnt::setOutboxMessageHandler()
 
 bool ESPNowEnt::preStateChange(int s)
 {
-#ifdef MASTER
+#if MASTER
   bool baseResult = Base::preStateChange(s);
   if (baseResult)
   {

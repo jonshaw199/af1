@@ -3,7 +3,7 @@
 
 #include <AF1.h>
 
-#ifdef MASTER
+#if MASTER
 #include "stateEnt/demo2/master/demo2Master.h"
 #else
 #include "stateEnt/demo2/slave/demo2Slave.h"
@@ -25,7 +25,7 @@ void setup()
 {
   Serial.begin(JS_BAUD);
   AF1::setup();
-#ifdef MASTER
+#if MASTER
   AF1::registerStateEnt(STATE_DEMO2, new Demo2Master(), "STATE_DEMO2");
 #else
   AF1::registerStateEnt(STATE_DEMO2, new Demo2Slave(), "STATE_DEMO2");
