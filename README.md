@@ -1,4 +1,4 @@
-# AF1 - An Arduino extension framework for ESP32
+# AF1 - An Arduino/ESP32 Framework
 
 ## Getting Started
 
