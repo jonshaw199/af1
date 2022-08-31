@@ -4,12 +4,12 @@
 
 ### Features
 
-- :trident: [State management](#overview)
-- :electric_plug: [Websocket client](#overview)
-- :handshake: Peer to peer communication (ESPNOW)
-- :stopwatch: [Event scheduling (one-time or recurring)](#event-scheduling)
-- :keyboard: [Serial input handling](#overview)
+- :trident: [State Management](#overview)
+- :electric_plug: [Websocket Client](#overview)
+- :handshake: ESP-Now P2P Communication
+- :stopwatch: [Event Scheduling](#event-scheduling)
 - :radio: Over-The-Air (OTA) firmware updates
+- :keyboard: [Serial Input Handling](#overview)
 - :leaves: Lightweight
 - :heavy_plus_sign: Extendable
 - :racing_car: Performant
