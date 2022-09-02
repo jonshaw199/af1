@@ -189,31 +189,41 @@ void Base::connectToWifi()
     return;
   }
 
-#if JS_IP_A
-  // Set your Static IP address
-  IPAddress local_IP(JS_IP_A, JS_IP_B, JS_IP_C, JS_IP_D);
-  // Set your Gateway IP address
-  IPAddress gateway(GATEWAY_A, GATEWAY_B, GATEWAY_C, GATEWAY_D);
-  IPAddress subnet(SUBNET_A, SUBNET_B, SUBNET_C, SUBNET_D);
-  // Configures static IP address
-  if (!WiFi.config(local_IP, gateway, subnet))
+  /*
+    To do: figure out how to handle static IP and WifiMulti properly
+    Currently the static IP must be the same for all APs
+  */
+
+  std::vector<wifi_ap_info> v = StateManager::getWifiAPs();
+
+  if (v.size() && v[0].staticIP[0] >= 0)
   {
-    Serial.println("Static IP Failed to configure");
+    // Set your Static IP address
+    IPAddress local_IP(v[0].staticIP[0], v[0].staticIP[1], v[0].staticIP[2], v[0].staticIP[3]);
+    // Set your Gateway IP address
+    IPAddress gateway(v[0].gatewayIP[0], v[0].gatewayIP[1], v[0].gatewayIP[2], v[0].gatewayIP[3]);
+    IPAddress subnet(v[0].subnetIP[0], v[0].subnetIP[1], v[0].subnetIP[2], v[0].subnetIP[3]);
+    // Configures static IP address
+    if (!WiFi.config(local_IP, gateway, subnet))
+    {
+      Serial.println("Static IP Failed to configure");
+    }
+    else
+    {
+      Serial.println("Static IP config success");
+    }
   }
-  else
-  {
-    Serial.println("Static IP config success");
-  }
-#endif
 
   // Connect to Wi-Fi network with SSID and password
-  for (wifi_ap_info i : StateManager::getWifiAPs())
+  for (wifi_ap_info i : v)
   {
     wifiMulti.addAP(i.ssid.c_str(), i.pass.c_str());
   }
   if (wifiMulti.run() == WL_CONNECTED)
   {
     Serial.println("Wifi connection successful");
+    Serial.print("Local IP: ");
+    Serial.println(WiFi.localIP());
   }
 }
 

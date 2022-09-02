@@ -21,15 +21,6 @@
     "flags": [
       "-D DEVICE_PREFIX=JS",
       "-D DEVICE_AP_PASS=1234567890",
-
-      "-D GATEWAY_A=192",
-      "-D GATEWAY_B=168",
-      "-D GATEWAY_C=1",
-      "-D GATEWAY_D=254",
-      "-D SUBNET_A=255",
-      "-D SUBNET_B=255",
-      "-D SUBNET_C=255",
-      "-D SUBNET_D=0",
       "-D PRINT_WIFI_SCAN_RESULTS=false",
 
       "-D ESPNOW_CHANNEL=0",

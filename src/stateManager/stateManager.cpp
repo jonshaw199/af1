@@ -226,7 +226,42 @@ void StateManager::registerStringHandler(String s, string_input_handler h)
 
 void StateManager::registerWifiAP(String s, String p)
 {
-  wifiAPs.push_back({s, p});
+  wifi_ap_info i;
+  i.ssid = s;
+  i.pass = p;
+  i.staticIP[0] = -1;
+  i.staticIP[1] = -1;
+  i.staticIP[2] = -1;
+  i.staticIP[3] = -1;
+  i.gatewayIP[0] = -1;
+  i.gatewayIP[1] = -1;
+  i.gatewayIP[2] = -1;
+  i.gatewayIP[3] = -1;
+  i.subnetIP[0] = -1;
+  i.subnetIP[1] = -1;
+  i.subnetIP[2] = -1;
+  i.subnetIP[3] = -1;
+  wifiAPs.push_back(i);
+}
+
+void StateManager::registerWifiAP(String s, String p, int a, int b, int c, int d, int ga, int gb, int gc, int gd, int sa, int sb, int sc, int sd)
+{
+  wifi_ap_info i;
+  i.ssid = s;
+  i.pass = p;
+  i.staticIP[0] = a;
+  i.staticIP[1] = b;
+  i.staticIP[2] = c;
+  i.staticIP[3] = d;
+  i.gatewayIP[0] = ga;
+  i.gatewayIP[1] = gb;
+  i.gatewayIP[2] = gc;
+  i.gatewayIP[3] = gd;
+  i.subnetIP[0] = sa;
+  i.subnetIP[1] = sb;
+  i.subnetIP[2] = sc;
+  i.subnetIP[3] = sd;
+  wifiAPs.push_back(i);
 }
 
 void StateManager::registerWSServer(String h, String p, int p2)
