@@ -76,12 +76,12 @@ void setup()
 {
   Serial.begin(115200);
   AF1::setup(); // REQUIRED
-  AF1::registerWifiAP("ssid-here", "pass-here"); // Required when using wifi
-  AF1::registerWSServer("192.168.1.123", "/", 3000); // Required when using websockets (extending WSEnt)
+  AF1::registerWifiAP("ssid-here", "pass-here");
+  AF1::registerWSServer("192.168.1.123", "/", 3000);
   AF1::registerStateEnt(STATE_DEMO, new Demo(), "STATE_DEMO");
-  // The state is changed to STATE_DEMO when "4" is entered into the serial monitor
-  AF1::registerStringHandler("4", []()
-                           { AF1::setRequestedState(STATE_DEMO); });
+  AF1::registerStringHandler("4", [](){
+    AF1::setRequestedState(STATE_DEMO);
+  });
 }
 
 void loop()
