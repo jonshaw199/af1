@@ -34,14 +34,14 @@ void WSEnt::setup()
   connectToWifi();
   connectToWS();
 
-  const char *h = StateManager::getWSServerInfo().host.c_str();
-  const char *p = StateManager::getWSServerInfo().path.c_str();
-  char h2[sizeof(h) / sizeof(char)];
-  char p2[sizeof(p) / sizeof(char)];
-  memcpy(&h2, h, sizeof(h2));
-  memcpy(&p2, p, sizeof(p2));
-  webSocketClient.host = h2;
-  webSocketClient.path = p2;
+  int lenH = StateManager::getWSServerInfo().host.length() + 1;
+  int lenP = StateManager::getWSServerInfo().path.length() + 1;
+  char h[lenH];
+  char p[lenP];
+  StateManager::getWSServerInfo().host.toCharArray(h, lenH);
+  StateManager::getWSServerInfo().path.toCharArray(p, lenP);
+  webSocketClient.host = h;
+  webSocketClient.path = p;
 
   if (webSocketClient.handshake(client))
   {
