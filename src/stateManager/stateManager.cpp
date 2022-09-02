@@ -30,8 +30,8 @@
 int StateManager::curState;
 int StateManager::prevState;
 int StateManager::requestedState;
-int StateManager::initialState = STATE_IDLE_BASE;
-int StateManager::stateAfterHandshake = STATE_IDLE_ESPNOW;
+int StateManager::initialState;
+int StateManager::stateAfterHandshake;
 Base *StateManager::stateEnt;
 std::map<int, Base *> StateManager::stateEntMap;
 std::map<String, string_input_handler> StateManager::stringHandlerMap;
@@ -102,6 +102,9 @@ StateManager::StateManager()
   stateNameMap[STATE_HANDSHAKE] = "STATE_HANDSHAKE";
   stateNameMap[STATE_IDLE_WS] = "STATE_IDLE_WS";
   stateNameMap[STATE_IDLE_BASE] = "STATE_IDLE_BASE";
+
+  initialState = STATE_IDLE_BASE;
+  stateAfterHandshake = STATE_IDLE_ESPNOW;
 }
 
 StateManager &StateManager::getInstance()
