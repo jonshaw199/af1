@@ -27,6 +27,7 @@
 #include <set>
 #include <esp_now.h>
 #include <WiFi.h>
+#include <WiFiMulti.h>
 #include <mutex>
 #include <HTTPClient.h>
 #include <ArduinoJson.h>
@@ -51,6 +52,7 @@ protected:
   static Box outbox;
   // New
   static HTTPClient httpClient;
+  static WiFiMulti wifiMulti;
 
 public:
   Base();

@@ -29,6 +29,8 @@ Box Base::outbox;
 
 HTTPClient Base::httpClient;
 
+WiFiMulti Base::wifiMulti;
+
 Base::Base()
 {
 }
@@ -205,14 +207,11 @@ void Base::connectToWifi()
 #endif
 
   // Connect to Wi-Fi network with SSID and password
-  WiFi.begin(STRINGIFY(JSSSID), STRINGIFY(JSPASS));
-  while (WiFi.waitForConnectResult() != WL_CONNECTED)
+  wifiMulti.addAP(STRINGIFY(JSSSID), STRINGIFY(JSPASS));
+  if (wifiMulti.run() == WL_CONNECTED)
   {
-    Serial.println("Connection Failed! Rebooting...");
-    delay(3000);
-    ESP.restart();
+    Serial.println("Wifi connection successful");
   }
-  Serial.println("Wifi connection successful");
 }
 
 /*
