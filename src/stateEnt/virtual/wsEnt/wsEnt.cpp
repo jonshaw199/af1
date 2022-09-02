@@ -47,10 +47,6 @@ void WSEnt::setup()
   else
   {
     Serial.println("Handshake failed.");
-    while (1)
-    {
-      // Hang on failure
-    }
   }
 }
 
@@ -73,10 +69,6 @@ void WSEnt::loop()
   else
   {
     Serial.println("Client disconnected.");
-    while (1)
-    {
-      // Hang on disconnect.
-    }
   }
 
   // wait to fully let the client disconnect
@@ -93,9 +85,5 @@ void WSEnt::connectToWS()
   else
   {
     Serial.println("Websocket connection failed.");
-    while (1)
-    {
-      // Hang on failure
-    }
   }
 }
