@@ -27,60 +27,15 @@
 #include "stateEnt/purg/purg.h"
 #include "stateEnt/virtual/wsEnt/wsEnt.h"
 
-StateManager &StateManager::getInstance()
-{
-  static StateManager instance; // Guaranteed to be destroyed.
-                                // Instantiated on first use.
-  return instance;
-}
-
-int StateManager::getCurState()
-{
-  return getInstance().curState;
-}
-
-int StateManager::getPrevState()
-{
-  return getInstance().prevState;
-}
-
-void setStateOTA()
-{
-#if MASTER
-  StateManager::setRequestedState(STATE_PURG_OTA);
-#else
-  StateManager::setRequestedState(STATE_OTA);
-#endif
-}
-
-void setstateESPNowIdle()
-{
-  StateManager::setRequestedState(STATE_IDLE_ESPNOW);
-}
-
-void setStateRestart()
-{
-#if MASTER
-  StateManager::setRequestedState(STATE_PURG_RESTART);
-#else
-  StateManager::setRequestedState(STATE_RESTART);
-#endif
-}
-
-void setStateHandshake()
-{
-  StateManager::setRequestedState(STATE_HANDSHAKE);
-}
-
-void setStateInit()
-{
-  StateManager::setRequestedState(STATE_INIT);
-}
-
-void setStateWSIdle()
-{
-  StateManager::setRequestedState(STATE_IDLE_WS);
-}
+int StateManager::curState;
+int StateManager::prevState;
+int StateManager::requestedState;
+Base *StateManager::stateEnt;
+std::map<int, Base *> StateManager::stateEntMap;
+std::map<String, string_input_handler> StateManager::stringHandlerMap;
+std::map<int, String> StateManager::stateNameMap;
+std::vector<wifi_ap_info> StateManager::wifiAPs;
+ws_server_info StateManager::wsServerInfo;
 
 StateManager::StateManager()
 {
@@ -97,12 +52,38 @@ StateManager::StateManager()
   stateEntMap[STATE_PURG_RESTART] = new Purg(STATE_RESTART);
   stateEntMap[STATE_IDLE_WS] = new WSEnt();
 
-  stringHandlerMap["s"] = setStateInit;
-  stringHandlerMap["o"] = setStateOTA;
-  stringHandlerMap["h"] = setStateHandshake;
-  stringHandlerMap["k"] = setStateRestart;
-  stringHandlerMap["i"] = setstateESPNowIdle;
-  stringHandlerMap["w"] = setStateWSIdle;
+  stringHandlerMap["s"] = []()
+  {
+    StateManager::setRequestedState(STATE_INIT);
+  };
+  stringHandlerMap["o"] = []()
+  {
+#if MASTER
+    setRequestedState(STATE_PURG_OTA);
+#else
+    setRequestedState(STATE_OTA);
+#endif
+  };
+  stringHandlerMap["h"] = []()
+  {
+    StateManager::setRequestedState(STATE_HANDSHAKE);
+  };
+  stringHandlerMap["k"] = []()
+  {
+#if MASTER
+    StateManager::setRequestedState(STATE_PURG_RESTART);
+#else
+    StateManager::setRequestedState(STATE_RESTART);
+#endif
+  };
+  stringHandlerMap["i"] = []()
+  {
+    setRequestedState(STATE_IDLE_ESPNOW);
+  };
+  stringHandlerMap["w"] = []()
+  {
+    StateManager::setRequestedState(STATE_IDLE_WS);
+  };
 
   stateNameMap[STATE_NONE] = "STATE_NONE";
   stateNameMap[STATE_INIT] = "STATE_INIT";
@@ -115,68 +96,27 @@ StateManager::StateManager()
   stateNameMap[STATE_IDLE_WS] = "STATE_IDLE_WS";
 }
 
+StateManager &StateManager::getInstance()
+{
+  static StateManager instance; // Guaranteed to be destroyed.
+                                // Instantiated on first use.
+  return instance;
+}
+
 void StateManager::setup()
 {
+  getInstance(); // Ensuring instantiation
   int s = STATE_INIT;
-  getInstance().curState = s;
-  getInstance().requestedState = s;
+  curState = s;
+  requestedState = s;
 
   handleStateChange(s); // Let Init stateEnt handle everything
-}
-
-void StateManager::setRequestedState(int s)
-{
-  getInstance().requestedState = s;
-}
-
-int StateManager::getRequestedState()
-{
-  return getInstance().requestedState;
-}
-
-void StateManager::changeToRequestedState()
-{
-  getInstance().prevState = getInstance().curState;
-  getInstance().curState = getInstance().requestedState;
-}
-
-void StateManager::handleUserInput(String s)
-{
-  if (getInstance().stringHandlerMap.count(s))
-  {
-    getInstance().stringHandlerMap[s]();
-  }
-  else
-  {
-    Serial.println("String input not recognized");
-  }
-}
-
-String StateManager::stateToString(int s)
-{
-  return getInstance().stateNameMap[s];
-}
-
-void StateManager::setBuiltinLED(bool on)
-{
-#ifdef LED_BUILTIN
-  digitalWrite(LED_BUILTIN, on);
-#endif
-}
-
-bool StateManager::handleStateChange(int s)
-{
-  getInstance().stateEnt = getInstance().stateEntMap[s];
-  getInstance().stateEnt->setup();
-  getInstance().stateEnt->setInboxMessageHandler();
-  getInstance().stateEnt->setOutboxMessageHandler();
-  return true;
 }
 
 void StateManager::loop()
 {
   // Handling this first instead of last; allows us to use init.loop() if we need it before switching to the requested state (or maybe we don't want to request a new state during init at all?)
-  getInstance().stateEnt->loop();
+  stateEnt->loop();
 
   // Check if state change requested and proceed if stateEnt->preStateChange() says its ok
   int curState = getCurState();
@@ -184,7 +124,7 @@ void StateManager::loop()
   if (curState != requestedState)
   {
     Serial.println("Requested state change: " + StateManager::stateToString(requestedState));
-    if (getInstance().stateEnt->preStateChange(requestedState))
+    if (stateEnt->preStateChange(requestedState))
     {
       StateManager::changeToRequestedState();
       StateManager::handleStateChange(requestedState);
@@ -203,23 +143,92 @@ void StateManager::loop()
   }
 }
 
+int StateManager::getCurState()
+{
+  return curState;
+}
+
+int StateManager::getPrevState()
+{
+  return prevState;
+}
+
+void StateManager::setRequestedState(int s)
+{
+  requestedState = s;
+}
+
+int StateManager::getRequestedState()
+{
+  return requestedState;
+}
+
+void StateManager::changeToRequestedState()
+{
+  prevState = curState;
+  curState = requestedState;
+}
+
+void StateManager::handleUserInput(String s)
+{
+  if (stringHandlerMap.count(s))
+  {
+    stringHandlerMap[s]();
+  }
+  else
+  {
+    Serial.println("String input not recognized");
+  }
+}
+
+String StateManager::stateToString(int s)
+{
+  return stateNameMap[s];
+}
+
+void StateManager::setBuiltinLED(bool on)
+{
+#ifdef LED_BUILTIN
+  digitalWrite(LED_BUILTIN, on);
+#endif
+}
+
+bool StateManager::handleStateChange(int s)
+{
+  stateEnt = stateEntMap[s];
+  stateEnt->setup();
+  stateEnt->setInboxMessageHandler();
+  stateEnt->setOutboxMessageHandler();
+  return true;
+}
+
 void StateManager::registerStateEnt(int i, Base *s, String n)
 {
-  getInstance().stateEntMap[i] = s;
-  getInstance().stateNameMap[i] = n;
+  stateEntMap[i] = s;
+  stateNameMap[i] = n;
 }
 
 void StateManager::registerStringHandler(String s, string_input_handler h)
 {
-  getInstance().stringHandlerMap[s] = h;
+  stringHandlerMap[s] = h;
 }
 
 void StateManager::registerWifiAP(String s, String p)
 {
-  getInstance().wifiAPs.push_back({s, p});
+  wifiAPs.push_back({s, p});
+}
+
+void StateManager::registerWSServer(String h, String p, int p2)
+{
+  wsServerInfo = {h, p, p2};
 }
 
 const std::vector<wifi_ap_info> StateManager::getWifiAPs()
 {
-  return getInstance().wifiAPs;
+  return wifiAPs;
+}
+
+const ws_server_info StateManager::getWSServerInfo()
+{
+  return wsServerInfo;
 }

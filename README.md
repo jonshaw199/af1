@@ -76,6 +76,8 @@ void setup()
 {
   Serial.begin(115200);
   AF1::setup(); // REQUIRED
+  AF1::registerWifiAP("ssid-here", "pass-here"); // Required when using wifi
+  AF1::registerWSServer("192.168.1.123", "/", 3000); // Required when using websockets (extending WSEnt)
   AF1::registerStateEnt(STATE_DEMO, new Demo(), "STATE_DEMO");
   // The state is changed to STATE_DEMO when "4" is entered into the serial monitor
   AF1::registerStringHandler("4", []()
@@ -87,42 +89,6 @@ void loop()
   AF1::loop(); // REQUIRED
 }
 
-```
-
-**Build flags should also be set as needed for Wifi SSID/password, websocket configuration, etc:**
-
-| Flag                  | Description                  |
-| --------------------- | ---------------------------- |
-| JSSSID                | Wifi SSID                    |
-| JSPASS                | Wifi Password                |
-| WS_HOST               | Websocket server hostname    |
-| WS_PATH               | Websocket server endpoint    |
-| WS_PORT               | Websocket server port        |
-| INITIAL_STATE         | First state after boot       |
-| STATE_AFTER_HANDSHAKE | State after ESPNOW handshake |
-
-**Example setting build flags in main.cpp (can also be set in platformio.ini. library.json, etc.):**
-
-```
-#include <Arduino.h>
-#include <AF1.h>
-#include "state.h"
-#include "stateEnt/rc1/rc1.h"
-
-#define JSSSID my-wifi-name-here        // <---- Set SSID
-#define JSPASS my_wifi+Password-here!   // <---- Set Password
-
-void setup()
-{
-  Serial.begin(JS_BAUD);
-  AF1::setup();
-  AF1::registerStateEnt(STATE_RC1, new RC1(), "STATE_RC1");
-}
-
-void loop()
-{
-  AF1::loop();
-}
 ```
 
 ## API Docs

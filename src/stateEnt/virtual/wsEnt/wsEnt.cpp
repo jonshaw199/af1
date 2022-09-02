@@ -27,9 +27,6 @@ WebSocketClient WSEnt::webSocketClient;
 // Use WiFiClient class to create TCP connections
 WiFiClient WSEnt::client;
 
-char path[] = STRINGIFY(WS_PATH);
-char host[] = STRINGIFY(WS_HOST);
-
 void WSEnt::setup()
 {
   Base::setup();
@@ -37,9 +34,15 @@ void WSEnt::setup()
   connectToWifi();
   connectToWS();
 
-  // Handshake with the server
-  webSocketClient.path = path;
-  webSocketClient.host = host;
+  const char *h = StateManager::getWSServerInfo().host.c_str();
+  const char *p = StateManager::getWSServerInfo().path.c_str();
+  char h2[sizeof(h) / sizeof(char)];
+  char p2[sizeof(p) / sizeof(char)];
+  memcpy(&h2, h, sizeof(h2));
+  memcpy(&p2, p, sizeof(p2));
+  webSocketClient.host = h2;
+  webSocketClient.path = p2;
+
   if (webSocketClient.handshake(client))
   {
     Serial.println("Handshake successful");
@@ -78,7 +81,7 @@ void WSEnt::loop()
 void WSEnt::connectToWS()
 {
   // Connect to the websocket server
-  if (client.connect(STRINGIFY(WS_HOST), WS_PORT))
+  if (client.connect(StateManager::getWSServerInfo().host.c_str(), StateManager::getWSServerInfo().port))
   {
     Serial.println("Websocket connected");
   }

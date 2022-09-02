@@ -37,20 +37,32 @@ struct wifi_ap_info
   String pass;
 };
 
+struct ws_server_info
+{
+  String host;
+  String path;
+  int port;
+};
+
 class StateManager
 {
-  StateManager(); // constructor
-  int curState;
-  int prevState;
-  int requestedState;
-  Base *stateEnt;
-  std::map<int, Base *> stateEntMap;
-  std::map<String, string_input_handler> stringHandlerMap;
-  std::map<int, String> stateNameMap;
-  std::vector<wifi_ap_info> wifiAPs;
+  StateManager();
+
+protected:
+  static int curState;
+  static int prevState;
+  static int requestedState;
+  static Base *stateEnt;
+  static std::map<int, Base *> stateEntMap;
+  static std::map<String, string_input_handler> stringHandlerMap;
+  static std::map<int, String> stateNameMap;
+  static std::vector<wifi_ap_info> wifiAPs;
+  static ws_server_info wsServerInfo;
 
 public:
   static StateManager &getInstance();
+  static void setup();
+  static void loop();
   static int getCurState();
   static int getPrevState();
   static void setRequestedState(int s);
@@ -60,12 +72,13 @@ public:
   static String stateToString(int s);
   static void setBuiltinLED(bool on);
   static bool handleStateChange(int s);
-  static void setup();
-  static void loop();
+  static const std::vector<wifi_ap_info> getWifiAPs();
+  static const ws_server_info getWSServerInfo();
+
   static void registerStateEnt(int i, Base *s, String n);
   static void registerStringHandler(String s, string_input_handler h);
   static void registerWifiAP(String s, String p);
-  static const std::vector<wifi_ap_info> getWifiAPs();
+  static void registerWSServer(String h, String p, int p2);
 };
 
 #endif // STATEMANAGER_STATEMANAGER_H_

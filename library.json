@@ -42,11 +42,7 @@
       "-D DELAY_PREPARE_WIFI=500",
       "-D DELAY_SEND=2",
       "-D MS_PURG_DEFAULT=5000",
-      "-D MS_MASTER_HANDSHAKE_LOOP=333",
-
-      "-D WS_HOST_DEF=192.168.1.65",
-      "-D WS_PATH_DEF=/ws",
-      "-D WS_PORT_DEF=3000"
+      "-D MS_MASTER_HANDSHAKE_LOOP=333"
     ]
   }
 }
