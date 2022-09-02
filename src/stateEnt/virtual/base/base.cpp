@@ -207,7 +207,10 @@ void Base::connectToWifi()
 #endif
 
   // Connect to Wi-Fi network with SSID and password
-  wifiMulti.addAP(STRINGIFY(JSSSID), STRINGIFY(JSPASS));
+  for (wifi_ap_info i : StateManager::getWifiAPs())
+  {
+    wifiMulti.addAP(i.ssid.c_str(), i.pass.c_str());
+  }
   if (wifiMulti.run() == WL_CONNECTED)
   {
     Serial.println("Wifi connection successful");

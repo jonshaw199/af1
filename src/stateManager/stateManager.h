@@ -33,9 +33,9 @@ typedef void (*string_input_handler)();
 
 struct wifi_ap_info
 {
-  ssid : String;
-  pass : String;
-}
+  String ssid;
+  String pass;
+};
 
 class StateManager
 {
@@ -65,6 +65,7 @@ public:
   static void registerStateEnt(int i, Base *s, String n);
   static void registerStringHandler(String s, string_input_handler h);
   static void registerWifiAP(String s, String p);
+  static const std::vector<wifi_ap_info> getWifiAPs();
 };
 
 #endif // STATEMANAGER_STATEMANAGER_H_

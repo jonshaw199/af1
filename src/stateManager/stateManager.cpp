@@ -218,3 +218,8 @@ void StateManager::registerWifiAP(String s, String p)
 {
   getInstance().wifiAPs.push_back({s, p});
 }
+
+const std::vector<wifi_ap_info> StateManager::getWifiAPs()
+{
+  return getInstance().wifiAPs;
+}
