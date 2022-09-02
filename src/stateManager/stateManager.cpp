@@ -30,6 +30,7 @@
 int StateManager::curState;
 int StateManager::prevState;
 int StateManager::requestedState;
+int StateManager::initialState = STATE_IDLE_BASE;
 Base *StateManager::stateEnt;
 std::map<int, Base *> StateManager::stateEntMap;
 std::map<String, string_input_handler> StateManager::stringHandlerMap;
@@ -51,6 +52,7 @@ StateManager::StateManager()
   stateEntMap[STATE_PURG_OTA] = new Purg(STATE_OTA);
   stateEntMap[STATE_PURG_RESTART] = new Purg(STATE_RESTART);
   stateEntMap[STATE_IDLE_WS] = new WSEnt();
+  stateEntMap[STATE_IDLE_BASE] = new Base();
 
   stringHandlerMap["s"] = []()
   {
@@ -84,6 +86,10 @@ StateManager::StateManager()
   {
     StateManager::setRequestedState(STATE_IDLE_WS);
   };
+  stringHandlerMap["b"] = []()
+  {
+    StateManager::setRequestedState(STATE_IDLE_BASE);
+  };
 
   stateNameMap[STATE_NONE] = "STATE_NONE";
   stateNameMap[STATE_INIT] = "STATE_INIT";
@@ -94,6 +100,7 @@ StateManager::StateManager()
   stateNameMap[STATE_RESTART] = "STATE_RESTART";
   stateNameMap[STATE_HANDSHAKE] = "STATE_HANDSHAKE";
   stateNameMap[STATE_IDLE_WS] = "STATE_IDLE_WS";
+  stateNameMap[STATE_IDLE_BASE] = "STATE_IDLE_BASE";
 }
 
 StateManager &StateManager::getInstance()
@@ -231,4 +238,14 @@ const std::vector<wifi_ap_info> StateManager::getWifiAPs()
 const ws_server_info StateManager::getWSServerInfo()
 {
   return wsServerInfo;
+}
+
+void StateManager::setInitialState(int s)
+{
+  initialState = s;
+}
+
+int StateManager::getInitialState()
+{
+  return initialState;
 }

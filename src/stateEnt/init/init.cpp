@@ -48,5 +48,5 @@ void Init::setup()
   pinMode(LED_BUILTIN, OUTPUT);
 #endif
   // setupDisplay();
-  StateManager::setRequestedState(INITIAL_STATE);
+  StateManager::setRequestedState(StateManager::getInitialState());
 }

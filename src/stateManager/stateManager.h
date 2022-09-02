@@ -52,6 +52,7 @@ protected:
   static int curState;
   static int prevState;
   static int requestedState;
+  static int initialState;
   static Base *stateEnt;
   static std::map<int, Base *> stateEntMap;
   static std::map<String, string_input_handler> stringHandlerMap;
@@ -74,6 +75,8 @@ public:
   static bool handleStateChange(int s);
   static const std::vector<wifi_ap_info> getWifiAPs();
   static const ws_server_info getWSServerInfo();
+  static void setInitialState(int s);
+  static int getInitialState();
 
   static void registerStateEnt(int i, Base *s, String n);
   static void registerStringHandler(String s, string_input_handler h);
