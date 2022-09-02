@@ -19,9 +19,5 @@
 
 #define AF1 StateManager
 
-#ifndef STATE_AFTER_HANDSHAKE
-#define STATE_AFTER_HANDSHAKE STATE_AFTER_HANDSHAKE_DEF
-#endif
-
 #define STRINGIFY(s) STRINGIFY1(s)
 #define STRINGIFY1(s) #s

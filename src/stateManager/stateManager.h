@@ -53,6 +53,7 @@ protected:
   static int prevState;
   static int requestedState;
   static int initialState;
+  static int stateAfterHandshake;
   static Base *stateEnt;
   static std::map<int, Base *> stateEntMap;
   static std::map<String, string_input_handler> stringHandlerMap;
@@ -77,6 +78,8 @@ public:
   static const ws_server_info getWSServerInfo();
   static void setInitialState(int s);
   static int getInitialState();
+  static void setStateAfterHandshake(int s);
+  static int getStateAfterHandshake();
 
   static void registerStateEnt(int i, Base *s, String n);
   static void registerStringHandler(String s, string_input_handler h);

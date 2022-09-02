@@ -31,6 +31,7 @@ int StateManager::curState;
 int StateManager::prevState;
 int StateManager::requestedState;
 int StateManager::initialState = STATE_IDLE_BASE;
+int StateManager::stateAfterHandshake = STATE_IDLE_ESPNOW;
 Base *StateManager::stateEnt;
 std::map<int, Base *> StateManager::stateEntMap;
 std::map<String, string_input_handler> StateManager::stringHandlerMap;
@@ -248,4 +249,14 @@ void StateManager::setInitialState(int s)
 int StateManager::getInitialState()
 {
   return initialState;
+}
+
+void StateManager::setStateAfterHandshake(int s)
+{
+  stateAfterHandshake = s;
+}
+
+int StateManager::getStateAfterHandshake()
+{
+  return stateAfterHandshake;
 }
