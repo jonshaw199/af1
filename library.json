@@ -19,8 +19,6 @@
   "platforms": "*",
   "build": {
     "flags": [
-      "-D JSSSID_DEF=js-guest",
-      "-D JSPASS_DEF=B1g5lams!",
       "-D DEVICE_PREFIX=JS",
       "-D DEVICE_AP_PASS=1234567890",
 

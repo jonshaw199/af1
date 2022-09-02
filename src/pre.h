@@ -19,14 +19,6 @@
 
 #define AF1 StateManager
 
-#ifndef JSSSID
-#define JSSSID JSSSID_DEF
-#endif
-
-#ifndef JSPASS
-#define JSPASS JSPASS_DEF
-#endif
-
 #ifndef INITIAL_STATE
 #define INITIAL_STATE INITIAL_STATE_DEF
 #endif
