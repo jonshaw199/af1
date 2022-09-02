@@ -1,5 +1,5 @@
 /*
-  AF1 - An Arduino extension framework
+  AF1
   Copyright (c) 2022 Jon Shaw. All rights reserved.
 
   This library is free software; you can redistribute it and/or
