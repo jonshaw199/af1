@@ -22,6 +22,7 @@
 
 #include <queue>
 #include <map>
+#include <vector>
 #include <Arduino.h>
 
 #include "state/state.h"
@@ -29,6 +30,12 @@
 #include "stateEnt/virtual/base/base.h"
 
 typedef void (*string_input_handler)();
+
+struct wifi_ap_info
+{
+  ssid : String;
+  pass : String;
+}
 
 class StateManager
 {
@@ -40,6 +47,7 @@ class StateManager
   std::map<int, Base *> stateEntMap;
   std::map<String, string_input_handler> stringHandlerMap;
   std::map<int, String> stateNameMap;
+  std::vector<wifi_ap_info> wifiAPs;
 
 public:
   static StateManager &getInstance();
@@ -56,6 +64,7 @@ public:
   static void loop();
   static void registerStateEnt(int i, Base *s, String n);
   static void registerStringHandler(String s, string_input_handler h);
+  static void registerWifiAP(String s, String p);
 };
 
 #endif // STATEMANAGER_STATEMANAGER_H_

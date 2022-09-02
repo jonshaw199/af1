@@ -213,3 +213,8 @@ void StateManager::registerStringHandler(String s, string_input_handler h)
 {
   getInstance().stringHandlerMap[s] = h;
 }
+
+void StateManager::registerWifiAP(String s, String p)
+{
+  getInstance().wifiAPs.push_back({s, p});
+}
