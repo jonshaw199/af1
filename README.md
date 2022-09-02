@@ -27,8 +27,8 @@ When creating new state entities, setup, loop, and message handling behavior fro
 
 class Demo : public WSEnt
 {
-  void setup(); // override
-  void overrideInboxHandler(); // override
+  void setup();
+  void overrideInboxHandler();
 };
 ```
 
