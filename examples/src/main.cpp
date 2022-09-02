@@ -15,6 +15,8 @@ void setup()
 {
   Serial.begin(JS_BAUD);
   AF1::setup();
+  AF1::registerWifiAP("js-guest", "B1g5lams!");
+  AF1::registerWSServer("192.168.1.65", "/ws", 3000);
 #if MASTER
   AF1::registerStateEnt(STATE_DEMO2, new Demo2Master(), "STATE_DEMO2");
 #else
