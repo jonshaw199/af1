@@ -43,7 +43,7 @@ bool ESPNowEnt::handleInboxMsg(JSMessage m)
   return Base::handleInboxMsg(m);
 }
 
-void ESPNowEnt::setInboxMessageHandler()
+void ESPNowEnt::overrideInboxHandler()
 {
   setInboxMsgHandler(handleInboxMsg);
 }
@@ -54,7 +54,7 @@ bool ESPNowEnt::handleOutboxMsg(JSMessage m)
   return true;
 }
 
-void ESPNowEnt::setOutboxMessageHandler()
+void ESPNowEnt::overrideOutboxHandler()
 {
   setOutboxMsgHandler(handleOutboxMsg);
 }

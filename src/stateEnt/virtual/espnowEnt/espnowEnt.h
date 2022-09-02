@@ -49,8 +49,8 @@ protected:
   static bool handleOutboxMsg(JSMessage m);
 
 public:
-  void setInboxMessageHandler();
-  void setOutboxMessageHandler();
+  void overrideInboxHandler();
+  void overrideOutboxHandler();
   bool preStateChange(int s); // From espnowEntMaster
   // From espnowHandler
   static int8_t scanForPeers();

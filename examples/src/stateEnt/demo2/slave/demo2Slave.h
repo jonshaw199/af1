@@ -8,7 +8,7 @@ class Demo2Slave : public ESPNowEnt
 public:
   void setup();
   bool preStateChange(int s);
-  void setInboxMessageHandler();
+  void overrideInboxHandler();
 };
 
 #endif // STATEENT_DEMO2_SLAVE_DEMO1SLAVE_H_

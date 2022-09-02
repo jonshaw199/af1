@@ -7,7 +7,7 @@ class Demo4 : public WSEnt
 {
   void setup();
   bool preStateChange(int s);
-  void setInboxMessageHandler();
+  void overrideInboxHandler();
 };
 
 #endif // STATEENT_DEMO4_DEMO4_H_

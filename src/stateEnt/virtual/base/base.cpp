@@ -95,12 +95,12 @@ bool Base::handleOutboxMsg(JSMessage m)
   return false;
 }
 
-void Base::setInboxMessageHandler()
+void Base::overrideInboxHandler()
 {
   setInboxMsgHandler(handleInboxMsg);
 }
 
-void Base::setOutboxMessageHandler()
+void Base::overrideOutboxHandler()
 {
   setOutboxMsgHandler(handleOutboxMsg);
 }

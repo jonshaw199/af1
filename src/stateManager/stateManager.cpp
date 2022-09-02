@@ -197,8 +197,8 @@ bool StateManager::handleStateChange(int s)
 {
   stateEnt = stateEntMap[s];
   stateEnt->setup();
-  stateEnt->setInboxMessageHandler();
-  stateEnt->setOutboxMessageHandler();
+  stateEnt->overrideInboxHandler();
+  stateEnt->overrideOutboxHandler();
   return true;
 }
 

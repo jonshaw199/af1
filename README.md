@@ -28,7 +28,7 @@ When creating new state entities, setup, loop, and message handling behavior fro
 class Demo : public WSEnt
 {
   void setup(); // override
-  void setInboxMessageHandler(); // override
+  void overrideInboxHandler(); // override
 };
 ```
 
@@ -44,7 +44,7 @@ void Demo::setup()
   JSLED::init();
 }
 
-void Demo::setInboxMessageHandler()
+void Demo::overrideInboxHandler()
 {
   setInboxMsgHandler([](JSMessage m) {
     switch (m.getType())

@@ -59,8 +59,8 @@ public:
   virtual void setup();
   virtual void loop();
   virtual bool preStateChange(int s);
-  virtual void setInboxMessageHandler();
-  virtual void setOutboxMessageHandler();
+  virtual void overrideInboxHandler();
+  virtual void overrideOutboxHandler();
   unsigned long getElapsedMs();
   void resetIntervalEvents();
   // From WifiHandler

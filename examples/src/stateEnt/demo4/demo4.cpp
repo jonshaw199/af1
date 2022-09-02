@@ -18,7 +18,7 @@ bool Demo4::preStateChange(int s)
   return baseResult;
 }
 
-void Demo4::setInboxMessageHandler()
+void Demo4::overrideInboxHandler()
 {
   setInboxMsgHandler([](JSMessage m)
                      {  switch (m.getType())

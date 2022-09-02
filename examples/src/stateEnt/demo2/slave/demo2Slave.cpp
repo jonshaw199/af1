@@ -20,7 +20,7 @@ bool Demo2Slave::preStateChange(int s)
   return baseResult;
 }
 
-void Demo2Slave::setInboxMessageHandler()
+void Demo2Slave::overrideInboxHandler()
 {
   setInboxMsgHandler([](JSMessage m)
                      {  switch (m.getType())
