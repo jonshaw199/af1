@@ -49,7 +49,8 @@ void WSEnt::setup()
   }
   else
   {
-    Serial.println("Handshake failed.");
+    Serial.println("Handshake failed, initiating restart...");
+    StateManager::setRequestedState(STATE_PURG_RESTART);
   }
 }
 
@@ -71,7 +72,8 @@ void WSEnt::loop()
   }
   else
   {
-    Serial.println("Client disconnected.");
+    Serial.println("Client disconnected, initiating restart...");
+    StateManager::setRequestedState(STATE_PURG_RESTART);
   }
 
   // wait to fully let the client disconnect
@@ -87,7 +89,8 @@ void WSEnt::connectToWS()
   }
   else
   {
-    Serial.println("Websocket connection failed.");
+    Serial.println("Websocket connection failed, initiating restart...");
+    StateManager::setRequestedState(STATE_PURG_RESTART);
   }
 }
 
