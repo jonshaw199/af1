@@ -20,7 +20,7 @@ The AF1 core consists of a handful of pre-built "state entities" and one "state 
 
 - `Base`: HTTP client or no connectivity
   - `WSEnt`: Websocket client
-  - `ESPNowEntity`: ESP-Now master/slave
+  - `ESPNowEnt`: ESP-Now master/slave
 
 When creating new state entities, setup, loop, and message handling behavior from the virtual classes can be overridden as necessary. As an example, this `Demo` class extends the framework's `WSEnt` class in order to receive websocket messages from a server for controlling an LED. Note that `setup()` and `overrideInboxHandler()` are inherited from `WSEnt`, but their behavior is overridden here in order to handle some LED-related stuff:
 
