@@ -72,7 +72,6 @@ public:
   static int getPrevState();
   static void setRequestedState(int s);
   static int getRequestedState();
-  static void changeToRequestedState();
   static void handleUserInput(String s);
   static String stateToString(int s);
   static void setBuiltinLED(bool on);

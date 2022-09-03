@@ -130,8 +130,8 @@ void StateManager::loop()
     Serial.println("Handling state change request: " + StateManager::stateToString(requestedState));
     if (stateEnt->preStateChange(requestedState))
     {
-      StateManager::changeToRequestedState();
-      StateManager::handleStateChange(requestedState);
+      // Requested state may have changed between last and next function call
+      StateManager::handleStateChange(StateManager::getRequestedState());
       Serial.println("State change complete");
     }
     else
@@ -169,15 +169,6 @@ int StateManager::getRequestedState()
   return requestedState;
 }
 
-void StateManager::changeToRequestedState()
-{
-  Serial.print("Switching to ");
-  Serial.print(stateNameMap[requestedState]);
-  Serial.println(" state now.");
-  prevState = curState;
-  curState = requestedState;
-}
-
 void StateManager::handleUserInput(String s)
 {
   if (stringHandlerMap.count(s))
@@ -204,6 +195,13 @@ void StateManager::setBuiltinLED(bool on)
 
 bool StateManager::handleStateChange(int s)
 {
+  Serial.print("Switching to ");
+  Serial.print(stateNameMap[s]);
+  Serial.println(" state now.");
+
+  prevState = curState;
+  curState = s;
+
   stateEnt = stateEntMap[s];
   stateEnt->setup();
   stateEnt->overrideInboxHandler();
