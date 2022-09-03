@@ -127,7 +127,7 @@ void StateManager::loop()
   int requestedState = getRequestedState();
   if (curState != requestedState)
   {
-    Serial.println("Requested state change: " + StateManager::stateToString(requestedState));
+    Serial.println("Handling state change request: " + StateManager::stateToString(requestedState));
     if (stateEnt->preStateChange(requestedState))
     {
       StateManager::changeToRequestedState();
