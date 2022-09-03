@@ -201,6 +201,9 @@ void StateManager::setBuiltinLED(bool on)
 
 bool StateManager::handleStateChange(int s)
 {
+  Serial.print("Switching to ");
+  Serial.print(stateNameMap[s]);
+  Serial.println(" state now.");
   stateEnt = stateEntMap[s];
   stateEnt->setup();
   stateEnt->overrideInboxHandler();
