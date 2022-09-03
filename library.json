@@ -30,7 +30,7 @@
 
       "-D DELAY_PREPARE_WIFI=333",
       "-D DELAY_SEND=2",
-      "-D MS_PURG_DEFAULT=333",
+      "-D MS_PURG_DEFAULT=3000",
       "-D MS_MASTER_HANDSHAKE_LOOP=333"
     ]
   }

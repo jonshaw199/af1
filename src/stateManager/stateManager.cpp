@@ -159,6 +159,8 @@ int StateManager::getPrevState()
 
 void StateManager::setRequestedState(int s)
 {
+  Serial.print("Setting requested state: ");
+  Serial.println(stateNameMap[s]);
   requestedState = s;
 }
 
@@ -290,4 +292,9 @@ void StateManager::setStateAfterHandshake(int s)
 int StateManager::getStateAfterHandshake()
 {
   return stateAfterHandshake;
+}
+
+void StateManager::setPurgNext(int p, int n)
+{
+  (static_cast<Purg<Base> *>(stateEntMap[p]))->setNext(n);
 }

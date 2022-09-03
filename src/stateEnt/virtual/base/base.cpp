@@ -57,7 +57,7 @@ bool Base::preStateChange(int s)
 {
   if (s == STATE_NONE)
   {
-    Serial.println("Uh oh, idling...");
+    Serial.println("Base::preStateChange: Uh oh, idling...");
     StateManager::setRequestedState(STATE_IDLE_BASE);
     return false;
   }

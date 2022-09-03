@@ -83,6 +83,7 @@ public:
   static int getInitialState();
   static void setStateAfterHandshake(int s);
   static int getStateAfterHandshake();
+  static void setPurgNext(int p, int n);
 
   static void registerStateEnt(int i, Base *s, String n);
   static void registerStringHandler(String s, string_input_handler h);

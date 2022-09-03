@@ -65,7 +65,7 @@ bool ESPNowEnt::preStateChange(int s)
 #if MASTER
   if (s == STATE_NONE)
   {
-    Serial.println("Uh oh, idling...");
+    Serial.println("ESPNowEnt::preStateChange: uh oh, idling...");
     StateManager::setRequestedState(STATE_IDLE_ESPNOW);
     return false;
   }
@@ -73,6 +73,7 @@ bool ESPNowEnt::preStateChange(int s)
   {
     sendStateChangeMessages(s);
     StateManager::setRequestedState(STATE_PURG_ESPNOW);
+    StateManager::setPurgNext(STATE_PURG_ESPNOW, s);
     return false;
   }
 #endif
