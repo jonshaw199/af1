@@ -20,43 +20,34 @@ Consumers of this framework use and extend "state entities". A state entity defi
 
 When creating new state entities, setup, loop, and message handling behavior from the virtual classes can be overridden as necessary. As an example, this `Demo` class extends the framework's `WSEnt` class in order to process websocket messages from a server related to LED brightness:
 
-**demo.h:**
-
-```
-#include <AF1.h>
-
-class Demo : public WSEnt
-{
-  void setup();
-  void overrideInboxHandler();
-};
-```
-
 **demo.cpp:**
 
 ```
-#include "demo.h"
+#include <AF1.h>
 #include "led/led.h"
 
-void Demo::setup()
+class Demo : public WSEnt
 {
-  WSEnt::setup();
-  JSLED::init();
-}
+public:
+  void setup()
+  {
+    WSEnt::setup();
+    JSLED::init();
+  }
 
-void Demo::overrideInboxHandler()
-{
-  setInboxMsgHandler([](JSMessage m) {
-    switch (m.getType())
-    {
-    case TYPE_RUN_DATA:
-      uint8_t b = m.getJson()["brightness"];
-      JSLED::setBrightness(b);
-      return true;
-    }
-
-    return WSEnt::handleInboxMsg(m);
-  });
+  void overrideInboxHandler()
+  {
+    setInboxMsgHandler([](JSMessage m){
+      switch (m.getType())
+      {
+      case TYPE_RUN_DATA:
+        uint8_t b = m.getJson()["brightness"];
+        JSLED::setBrightness(b);
+        return true;
+      }
+      return WSEnt::handleInboxMsg(m);
+    });
+  }
 }
 ```
 
@@ -65,7 +56,7 @@ void Demo::overrideInboxHandler()
 ```
 #include <Arduino.h>
 #include <AF1.h>
-#include "stateEnt/demo/demo.h"
+#include "demo.cpp"
 
 enum user_defined_states
 {
