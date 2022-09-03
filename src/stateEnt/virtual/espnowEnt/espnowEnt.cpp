@@ -63,7 +63,13 @@ void ESPNowEnt::overrideOutboxHandler()
 bool ESPNowEnt::preStateChange(int s)
 {
 #if MASTER
-  if (s != STATE_PURG_ESPNOW)
+  if (s == STATE_NONE)
+  {
+    Serial.println("Uh oh, idling...");
+    StateManager::setRequestedState(STATE_IDLE_ESPNOW);
+    return false;
+  }
+  else if (s != STATE_PURG_ESPNOW)
   {
     sendStateChangeMessages(s);
     StateManager::setRequestedState(STATE_PURG_ESPNOW);
@@ -74,7 +80,7 @@ bool ESPNowEnt::preStateChange(int s)
 }
 
 /*
-  From ESPNowHandler ?
+  From ESPNowHandler
 */
 
 void ESPNowEnt::onDataSent(const uint8_t *mac_addr, esp_now_send_status_t status)
