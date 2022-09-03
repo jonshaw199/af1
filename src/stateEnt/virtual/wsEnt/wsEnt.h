@@ -28,12 +28,16 @@ class WSEnt : public Base
 {
   void connectToWS();
 
+protected:
+  static bool handleOutboxMsg(JSMessage m);
+
 public:
   static WebSocketClient webSocketClient;
   // Use WiFiClient class to create TCP connections
   static WiFiClient client;
   void setup();
   void loop();
+  void overrideOutboxHandler();
 };
 
 #endif

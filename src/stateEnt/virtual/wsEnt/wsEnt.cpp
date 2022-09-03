@@ -90,3 +90,31 @@ void WSEnt::connectToWS()
     Serial.println("Websocket connection failed.");
   }
 }
+
+void WSEnt::overrideOutboxHandler()
+{
+  setOutboxMsgHandler(handleOutboxMsg);
+}
+
+bool WSEnt::handleOutboxMsg(JSMessage m)
+{
+  // sendMsg(m);
+  if (client)
+  {
+    String s;
+    serializeJson(m.getJson(), s);
+    Serial.print("Sending websocket message: ");
+    Serial.print(s);
+    uint8_t result;
+    webSocketClient.sendData(s, result);
+    Serial.print("Result: ");
+    Serial.println(result);
+    return true;
+  }
+  else
+  {
+    Serial.println("Websocket client not connected; unable to send message");
+  }
+
+  return Base::handleOutboxMsg(m);
+}
