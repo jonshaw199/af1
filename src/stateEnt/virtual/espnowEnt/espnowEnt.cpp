@@ -19,6 +19,7 @@
 
 #include "espnowEnt.h"
 #include "pre.h"
+#include "stateManager/stateManager.h"
 
 // From espnowHandler
 static std::map<int, js_peer_info> peerInfoMap;
@@ -62,26 +63,12 @@ void ESPNowEnt::overrideOutboxHandler()
 bool ESPNowEnt::preStateChange(int s)
 {
 #if MASTER
-  bool baseResult = Base::preStateChange(s);
-  if (baseResult)
+  if (s != STATE_PURG_ESPNOW)
   {
-    int slaveState = s;
-    switch (s)
-    {
-    case STATE_OTA:       // Slaves already notified
-    case STATE_RESTART:   // Slaves already notified
-    case STATE_HANDSHAKE: // Slaves can' be notified
-      return true;
-    case STATE_PURG_OTA:
-      slaveState = STATE_OTA;
-      break;
-    case STATE_PURG_RESTART:
-      slaveState = STATE_RESTART;
-      break;
-    }
-    sendStateChangeMessages(slaveState);
+    sendStateChangeMessages(s);
+    StateManager::setRequestedState(STATE_PURG_ESPNOW);
+    return false;
   }
-  return baseResult;
 #endif
   return true;
 }

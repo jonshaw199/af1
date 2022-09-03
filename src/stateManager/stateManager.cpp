@@ -62,11 +62,7 @@ StateManager::StateManager()
   };
   stringHandlerMap["o"] = []()
   {
-#if MASTER
-    setRequestedState(STATE_PURG_OTA);
-#else
     setRequestedState(STATE_OTA);
-#endif
   };
   stringHandlerMap["h"] = []()
   {
@@ -74,11 +70,7 @@ StateManager::StateManager()
   };
   stringHandlerMap["k"] = []()
   {
-#if MASTER
-    StateManager::setRequestedState(STATE_PURG_RESTART);
-#else
     StateManager::setRequestedState(STATE_RESTART);
-#endif
   };
   stringHandlerMap["i"] = []()
   {

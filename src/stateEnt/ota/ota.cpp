@@ -94,16 +94,11 @@ void OTA::setup()
 void OTA::loop()
 {
   WSEnt::loop();
-
   ArduinoOTA.handle();
 }
 
 bool OTA::preStateChange(int s)
 {
-  bool baseResult = WSEnt::preStateChange(s);
-  if (baseResult)
-  {
-    StateManager::setBuiltinLED(0);
-  }
-  return baseResult;
+  StateManager::setBuiltinLED(0);
+  return true;
 }

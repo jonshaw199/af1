@@ -11,13 +11,9 @@ void Demo2Slave::setup()
 
 bool Demo2Slave::preStateChange(int s)
 {
-  bool baseResult = Base::preStateChange(s);
-  if (baseResult)
-  {
-    Serial.println("Turning off lights on the way out");
-    JSLED::fillColor(CRGB::Black);
-  }
-  return baseResult;
+  Serial.println("Turning off lights on the way out");
+  JSLED::fillColor(CRGB::Black);
+  return true;
 }
 
 void Demo2Slave::overrideInboxHandler()

@@ -9,13 +9,9 @@ void Demo4::setup()
 
 bool Demo4::preStateChange(int s)
 {
-  bool baseResult = WSEnt::preStateChange(s);
-  if (baseResult)
-  {
-    Serial.println("Turning off lights on the way out");
-    JSLED::fillColor(CRGB::Black);
-  }
-  return baseResult;
+  Serial.println("Turning off lights on the way out");
+  JSLED::fillColor(CRGB::Black);
+  return true;
 }
 
 void Demo4::overrideInboxHandler()
