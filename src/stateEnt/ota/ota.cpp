@@ -72,7 +72,7 @@ void OTA::setup()
     Serial.println("Start updating " + type); })
       .onEnd([]()
              { Serial.println("\nEnd"); 
-             StateManager::setRequestedState(STATE_PURG_RESTART); })
+             StateManager::setRequestedState(STATE_RESTART); })
       .onProgress([](unsigned int progress, unsigned int total)
                   { Serial.printf("Progress: %u%%\r", (progress / (total / 100))); })
       .onError([](ota_error_t error)

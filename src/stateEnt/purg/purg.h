@@ -20,20 +20,45 @@
 #ifndef STATEENT_PURG_PURG_H_
 #define STATEENT_PURG_PURG_H_
 
-#include "stateEnt/virtual/espnowEnt/espnowEnt.h"
+#include <Arduino.h>
+#include "stateManager/stateManager.h"
 #include "state/state.h"
 
-class Purg : public ESPNowEnt
+template <class T>
+class Purg : public T
 {
   unsigned long purgMs;
   int next;
 
 public:
-  Purg();
-  Purg(int s);
-  void loop();
-  void setPurgMs(unsigned long purgMs);
-  void setNext(int s);
+  Purg()
+  {
+    purgMs = MS_PURG_DEFAULT;
+    next = STATE_NONE;
+  }
+  Purg(int s)
+  {
+    purgMs = MS_PURG_DEFAULT;
+    next = s;
+  }
+  void loop()
+  {
+    T::loop();
+
+    if (T::getElapsedMs() > purgMs)
+    {
+      Serial.println("Purgatory over");
+      StateManager::setRequestedState(next);
+    }
+  }
+  void setPurgMs(unsigned long ms)
+  {
+    purgMs = ms;
+  }
+  void setNext(int s)
+  {
+    next = s;
+  }
 };
 
 #endif // STATEENT_PURG_PURG_H_

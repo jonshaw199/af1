@@ -26,6 +26,7 @@
 #include "stateEnt/init/init.h"
 #include "stateEnt/purg/purg.h"
 #include "stateEnt/virtual/wsEnt/wsEnt.h"
+#include "stateEnt/virtual/espnowEnt/espnowEnt.h"
 
 int StateManager::curState;
 int StateManager::prevState;
@@ -50,8 +51,8 @@ StateManager::StateManager()
 #endif
   stateEntMap[STATE_RESTART] = new Restart();
   stateEntMap[STATE_IDLE_ESPNOW] = new ESPNowEnt();
-  stateEntMap[STATE_PURG_OTA] = new Purg(STATE_OTA);
-  stateEntMap[STATE_PURG_RESTART] = new Purg(STATE_RESTART);
+  stateEntMap[STATE_PURG_ESPNOW] = new Purg<ESPNowEnt>();
+  stateEntMap[STATE_PURG_WS] = new Purg<WSEnt>();
   stateEntMap[STATE_IDLE_WS] = new WSEnt();
   stateEntMap[STATE_IDLE_BASE] = new Base();
 
@@ -94,14 +95,14 @@ StateManager::StateManager()
 
   stateNameMap[STATE_NONE] = "STATE_NONE";
   stateNameMap[STATE_INIT] = "STATE_INIT";
-  stateNameMap[STATE_PURG_OTA] = "STATE_PURG_OTA";
+  stateNameMap[STATE_PURG_ESPNOW] = "STATE_PURG_ESPNOW";
   stateNameMap[STATE_OTA] = "STATE_OTA";
   stateNameMap[STATE_IDLE_ESPNOW] = "STATE_IDLE_ESPNOW";
-  stateNameMap[STATE_PURG_RESTART] = "STATE_PURG_RESTART";
   stateNameMap[STATE_RESTART] = "STATE_RESTART";
   stateNameMap[STATE_HANDSHAKE] = "STATE_HANDSHAKE";
   stateNameMap[STATE_IDLE_WS] = "STATE_IDLE_WS";
   stateNameMap[STATE_IDLE_BASE] = "STATE_IDLE_BASE";
+  stateNameMap[STATE_PURG_WS] = "STATE_PURG_WS";
 
   initialState = STATE_IDLE_BASE;
   stateAfterHandshake = STATE_IDLE_ESPNOW;
