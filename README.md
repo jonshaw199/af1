@@ -16,9 +16,13 @@
 
 ### Overview
 
-Consumers of this framework use and extend "state entities". A state entity defines the behavior for a particular state, and new state entities can be created by extending the virtual `Base`, `WSEnt`, or `ESPNowEnt` classes (depending on the desired message handling mechanism, if any).
+The AF1 core consists of a handful of pre-built "state entities" and one "state manager". A state entity defines the behavior for a particular state, and new state entities can be created by extending the virtual `Base`, `WSEnt` (websocket client), or `ESPNowEnt` (ESP-Now master/slave) classes, depending on the desired message handling mechanism (if any):
 
-When creating new state entities, setup, loop, and message handling behavior from the virtual classes can be overridden as necessary. As an example, this `Demo` class extends the framework's `WSEnt` class in order to process websocket messages from a server related to LED brightness:
+- `Base`: Just an HTTP client (or no connectivity)
+  - `WSEnt`: Websocket client
+  - `ESPNowEntity`: ESP-Now master/slave
+
+When creating new state entities, setup, loop, and message handling behavior from the virtual classes can be overridden as necessary. As an example, this `Demo` class extends the framework's `WSEnt` class in order to receive websocket messages from a server for controlling an LED. Note that `setup()` and `overrideInboxHandler()` are inherited from `WSEnt`, but their behavior is overridden here in order to handle some LED-related stuff:
 
 **demo.cpp:**
 
