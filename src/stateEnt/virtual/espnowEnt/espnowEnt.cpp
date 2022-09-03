@@ -67,14 +67,12 @@ bool ESPNowEnt::preStateChange(int s)
   {
     Serial.println("ESPNowEnt::preStateChange: uh oh, idling...");
     StateManager::setRequestedState(STATE_IDLE_ESPNOW);
-    return false;
   }
-  else if (s != STATE_PURG_ESPNOW)
+  else if (StateManager::getCurState() != STATE_PURG_ESPNOW)
   {
     sendStateChangeMessages(s);
     StateManager::setRequestedState(STATE_PURG_ESPNOW);
     StateManager::setPurgNext(STATE_PURG_ESPNOW, s);
-    return false;
   }
 #endif
   return true;
@@ -350,7 +348,7 @@ void ESPNowEnt::sendMsg(JSMessage msg)
 
 void ESPNowEnt::sendStateChangeMessages(int s)
 {
-  Serial.println("Sending state change messages");
+  Serial.println("Pushing state change messages to the outbox");
 
   JSMessage msg = JSMessage();
 

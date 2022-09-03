@@ -59,7 +59,6 @@ bool Base::preStateChange(int s)
   {
     Serial.println("Base::preStateChange: Uh oh, idling...");
     StateManager::setRequestedState(STATE_IDLE_BASE);
-    return false;
   }
   return true;
 }
