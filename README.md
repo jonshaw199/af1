@@ -16,9 +16,9 @@
 
 ### Overview
 
-The AF1 core consists of a handful of pre-built "state entities" and one "state manager". A state entity defines the behavior for a particular state, and new state entities can be created by extending the virtual `Base`, `WSEnt` (websocket client), or `ESPNowEnt` (ESP-Now master/slave) classes, depending on the desired message handling mechanism (if any):
+The AF1 core consists of a handful of pre-built "state entities" and one "state manager". A state entity defines the behavior for a particular state, and new state entities can be created by extending the virtual `Base`, `WSEnt`, or `ESPNowEnt` classes, depending on the desired message handling mechanism (if any):
 
-- `Base`: Just an HTTP client (or no connectivity)
+- `Base`: HTTP client or no connectivity
   - `WSEnt`: Websocket client
   - `ESPNowEntity`: ESP-Now master/slave
 
