@@ -143,9 +143,8 @@ void ESPNowEnt::initEspNow()
   }
   else
   {
-    Serial.println("ESP-NOW Init Failed");
-    // delay(3000);
-    // ESP.restart();
+    Serial.println("ESP-NOW Init Failed, switching to fallback state");
+    StateManager::setRequestedState(STATE_ESPNOW_FALLBACK);
   }
 }
 
