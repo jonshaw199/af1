@@ -65,6 +65,7 @@ void WSEnt::loop()
     webSocketClient.getData(data);
     if (data.length() > 0)
     {
+      Serial.print(".");
       DynamicJsonDocument doc(1024);
       deserializeJson(doc, data);
       pushInbox(doc);
