@@ -38,6 +38,7 @@ Base::Base()
 void Base::setup()
 {
   resetIntervalEvents();
+  activateIntervalEvents();
   startMs = millis();
 }
 
@@ -49,7 +50,7 @@ void Base::loop()
   // Interval events
   for (std::map<String, IntervalEvent>::iterator it = intervalEventMap.begin(); it != intervalEventMap.end(); it++)
   {
-    it->second.cbIfTime(getElapsedMs());
+    it->second.cbIfTimeAndActive(getElapsedMs());
   }
 }
 
@@ -61,6 +62,14 @@ bool Base::preStateChange(int s)
     StateManager::setRequestedState(STATE_IDLE_BASE);
   }
   return true;
+}
+
+void Base::onStateChange(int s)
+{
+  Serial.print("Switching to ");
+  Serial.print(StateManager::getStateNameMap().at(s));
+  Serial.println(" state now.");
+  deactivateIntervalEvents();
 }
 
 unsigned long Base::getElapsedMs()
@@ -115,6 +124,22 @@ void Base::resetIntervalEvents()
   for (std::map<String, IntervalEvent>::iterator it = intervalEventMap.begin(); it != intervalEventMap.end(); it++)
   {
     it->second.reset();
+  }
+}
+
+void Base::activateIntervalEvents()
+{
+  for (std::map<String, IntervalEvent>::iterator it = intervalEventMap.begin(); it != intervalEventMap.end(); it++)
+  {
+    it->second.activate();
+  }
+}
+
+void Base::deactivateIntervalEvents()
+{
+  for (std::map<String, IntervalEvent>::iterator it = intervalEventMap.begin(); it != intervalEventMap.end(); it++)
+  {
+    it->second.deactivate();
   }
 }
 

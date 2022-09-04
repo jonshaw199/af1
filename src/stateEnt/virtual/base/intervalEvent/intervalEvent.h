@@ -37,11 +37,18 @@ public:
 
 typedef bool (*interval_event_cb)(IECBArg a);
 
+enum IntervalEventMode
+{
+  IE_MODE_ACTIVE,
+  IE_MODE_INACTIVE
+};
+
 class IntervalEvent
 {
   unsigned long intervalMs;
   interval_event_cb cb;
   int maxCbCnt = MAX_CB_CNT_INF;
+  int mode = IE_MODE_INACTIVE;
 
   int cbCnt = 0;
 
@@ -49,6 +56,7 @@ public:
   IntervalEvent();
   IntervalEvent(unsigned long i, interval_event_cb c);
   IntervalEvent(unsigned long i, interval_event_cb c, int m);
+  IntervalEvent(unsigned long i, interval_event_cb c, int m, int m2);
   unsigned long getIntervalMs();
   int getMaxCbCnt();
   interval_event_cb getCb();
@@ -58,9 +66,13 @@ public:
   unsigned long getLastCbMs();
   unsigned long getNextCbMs();
   bool isTime(unsigned long elapsedMs);
-  bool cbIfTime(unsigned long elapsedMs);
+  bool cbIfTimeAndActive(unsigned long elapsedMs);
+  void setMode(int m);
+  int getMode();
 
   void reset();
+  void activate();
+  void deactivate();
 };
 
 #endif // STATEENT_BASE_INTERVALEVENT_H_

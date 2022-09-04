@@ -83,6 +83,7 @@ public:
   static void setStateAfterHandshake(int s);
   static int getStateAfterHandshake();
   static void setPurgNext(int p, int n);
+  static const std::map<int, String> &getStateNameMap();
 
   static void registerStateEnt(int i, Base *s, String n);
   static void registerStringHandler(String s, string_input_handler h);

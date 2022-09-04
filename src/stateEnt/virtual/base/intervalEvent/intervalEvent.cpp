@@ -56,6 +56,14 @@ IntervalEvent::IntervalEvent(unsigned long i, interval_event_cb c, int m)
   maxCbCnt = m;
 }
 
+IntervalEvent::IntervalEvent(unsigned long i, interval_event_cb c, int m, int m2)
+{
+  intervalMs = i;
+  cb = c;
+  maxCbCnt = m;
+  mode = m2;
+}
+
 unsigned long IntervalEvent::getIntervalMs()
 {
   return intervalMs;
@@ -91,9 +99,9 @@ bool IntervalEvent::isTime(unsigned long elapsedMs)
   return elapsedMs >= getNextCbMs() && (maxCbCnt < 0 || cbCnt < maxCbCnt);
 }
 
-bool IntervalEvent::cbIfTime(unsigned long elapsedMs)
+bool IntervalEvent::cbIfTimeAndActive(unsigned long elapsedMs)
 {
-  if (isTime(elapsedMs) && intervalMs && cb(IECBArg(elapsedMs, cbCnt, maxCbCnt))) // Checking intervalMs here since default constructor doesnt even define cb; might need stub there to be safe
+  if (mode == IE_MODE_ACTIVE && isTime(elapsedMs) && intervalMs && cb(IECBArg(elapsedMs, cbCnt, maxCbCnt))) // Checking intervalMs here since default constructor doesnt even define cb; might need stub there to be safe
   {
     cbCnt = elapsedMs / intervalMs; // Setting cbCnt to expected value rather than just incrementing
     return true;
@@ -101,7 +109,27 @@ bool IntervalEvent::cbIfTime(unsigned long elapsedMs)
   return false;
 }
 
+void IntervalEvent::setMode(int m)
+{
+  mode = m;
+}
+
+int IntervalEvent::getMode()
+{
+  return mode;
+}
+
 void IntervalEvent::reset()
 {
   cbCnt = 0;
+}
+
+void IntervalEvent::activate()
+{
+  mode = IE_MODE_ACTIVE;
+}
+
+void IntervalEvent::deactivate()
+{
+  mode = IE_MODE_INACTIVE;
 }

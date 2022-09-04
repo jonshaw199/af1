@@ -195,10 +195,6 @@ void StateManager::setBuiltinLED(bool on)
 
 bool StateManager::handleStateChange(int s)
 {
-  Serial.print("Switching to ");
-  Serial.print(stateNameMap[s]);
-  Serial.println(" state now.");
-
   prevState = curState;
   curState = s;
 
@@ -206,6 +202,9 @@ bool StateManager::handleStateChange(int s)
   stateEnt->setup();
   stateEnt->overrideInboxHandler();
   stateEnt->overrideOutboxHandler();
+
+  stateEnt->onStateChange(s);
+
   return true;
 }
 
@@ -298,4 +297,9 @@ int StateManager::getStateAfterHandshake()
 void StateManager::setPurgNext(int p, int n)
 {
   (static_cast<Purg<Base> *>(stateEntMap[p]))->setNext(n);
+}
+
+const std::map<int, String> &StateManager::getStateNameMap()
+{
+  return stateNameMap;
 }

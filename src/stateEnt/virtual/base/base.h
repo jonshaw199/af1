@@ -59,10 +59,13 @@ public:
   virtual void setup();
   virtual void loop();
   virtual bool preStateChange(int s);
+  virtual void onStateChange(int s);
   virtual void overrideInboxHandler();
   virtual void overrideOutboxHandler();
   unsigned long getElapsedMs();
   void resetIntervalEvents();
+  void activateIntervalEvents();
+  void deactivateIntervalEvents();
   // From WifiHandler
   static void prepareWifi();
   static void setSTAMode();
