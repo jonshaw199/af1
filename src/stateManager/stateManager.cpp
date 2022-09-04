@@ -130,6 +130,7 @@ void StateManager::loop()
     Serial.println("Handling state change request: " + StateManager::stateToString(requestedState));
     if (stateEnt->validateStateChange(requestedState))
     {
+      stateEnt->preStateChange(StateManager::getRequestedState());
       // Requested state may have changed between last and next function call
       StateManager::handleStateChange(StateManager::getRequestedState());
       Serial.println("State change complete");
@@ -195,8 +196,6 @@ void StateManager::setBuiltinLED(bool on)
 
 bool StateManager::handleStateChange(int s)
 {
-  stateEnt->preStateChange(s);
-
   prevState = curState;
   curState = s;
 
