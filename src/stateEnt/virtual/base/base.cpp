@@ -48,6 +48,13 @@ void Base::loop()
   inbox.handleMessages();
   outbox.handleMessages();
 
+  // Handling user input
+  if (Serial.available() > 0)
+  {
+    String s = Serial.readString();
+    StateManager::handleUserInput(s);
+  }
+
   // Interval events
   for (std::map<String, IntervalEvent>::iterator it = intervalEventMap.begin(); it != intervalEventMap.end(); it++)
   {

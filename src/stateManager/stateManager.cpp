@@ -140,12 +140,6 @@ void StateManager::loop()
       Serial.println("State change rejected by validateStateChange");
     }
   }
-  // Handling user input
-  if (Serial.available() > 0)
-  {
-    String s = Serial.readString();
-    handleUserInput(s);
-  }
 }
 
 int StateManager::getCurState()
