@@ -28,13 +28,17 @@ bool handleHandshakesInternal(IECBArg a)
   return true;
 }
 
+MasterHandshake::MasterHandshake() : ESPNowEnt()
+{
+  intervalEventMap.insert(std::pair<String, IntervalEvent>("MasterHandshake_1", IntervalEvent(MS_MASTER_HANDSHAKE_LOOP, handleHandshakesInternal)));
+}
+
 void MasterHandshake::setup()
 {
   ESPNowEnt::setup();
   prepareWifi();
   setAPMode();
   initEspNow();
-  intervalEventMap.insert(std::pair<String, IntervalEvent>("MasterHandshake_1", IntervalEvent(MS_MASTER_HANDSHAKE_LOOP, handleHandshakesInternal)));
 }
 
 void MasterHandshake::loop()

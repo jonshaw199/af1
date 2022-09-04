@@ -24,6 +24,8 @@
 
 class MasterHandshake : public ESPNowEnt
 {
+public:
+  MasterHandshake();
   void setup();
   void loop();
 };
