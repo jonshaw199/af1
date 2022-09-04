@@ -44,7 +44,7 @@ JSMessage::JSMessage(DynamicJsonDocument d) : json(1024)
 {
   msg = {};
   msg.state = d["state"];
-  msg.senderID = d["senderID"];
+  msg.senderID = JS_ID; // d["senderID"];
   msg.type = d["type"];
   recipients = {};
   sendCnt = 0;
