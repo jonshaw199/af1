@@ -51,7 +51,7 @@ protected:
 public:
   void overrideInboxHandler();
   void overrideOutboxHandler();
-  bool preStateChange(int s); // From espnowEntMaster
+  bool validateStateChange(int s); // From espnowEntMaster
   // From espnowHandler
   static int8_t scanForPeers();
   static void connectToPeers();

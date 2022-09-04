@@ -58,8 +58,8 @@ public:
   Base();
   virtual void setup();
   virtual void loop();
-  virtual bool preStateChange(int s);
-  virtual void onStateChange(int s);
+  virtual bool validateStateChange(int s);
+  virtual void preStateChange(int s);
   virtual void overrideInboxHandler();
   virtual void overrideOutboxHandler();
   unsigned long getElapsedMs();

@@ -123,11 +123,11 @@ bool WSEnt::handleOutboxMsg(JSMessage m)
   return Base::handleOutboxMsg(m);
 }
 
-bool WSEnt::preStateChange(int s)
+bool WSEnt::validateStateChange(int s)
 {
   if (s == STATE_NONE)
   {
-    Serial.println("WSEnt::preStateChange: Uh oh, idling...");
+    Serial.println("WSEnt::validateStateChange: Uh oh, idling...");
     StateManager::setRequestedState(STATE_IDLE_WS);
   }
   return true;

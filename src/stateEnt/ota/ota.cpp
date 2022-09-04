@@ -97,7 +97,7 @@ void OTA::loop()
   ArduinoOTA.handle();
 }
 
-bool OTA::preStateChange(int s)
+bool OTA::validateStateChange(int s)
 {
   StateManager::setBuiltinLED(0);
   return true;

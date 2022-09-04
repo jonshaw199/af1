@@ -122,13 +122,13 @@ void StateManager::loop()
   // Handling this first instead of last; allows us to use init.loop() if we need it before switching to the requested state (or maybe we don't want to request a new state during init at all?)
   stateEnt->loop();
 
-  // Check if state change requested and proceed if stateEnt->preStateChange() says its ok
+  // Check if state change requested and proceed if stateEnt->validateStateChange() says its ok
   int curState = getCurState();
   int requestedState = getRequestedState();
   if (curState != requestedState)
   {
     Serial.println("Handling state change request: " + StateManager::stateToString(requestedState));
-    if (stateEnt->preStateChange(requestedState))
+    if (stateEnt->validateStateChange(requestedState))
     {
       // Requested state may have changed between last and next function call
       StateManager::handleStateChange(StateManager::getRequestedState());
@@ -136,7 +136,7 @@ void StateManager::loop()
     }
     else
     {
-      Serial.println("State change rejected by preStateChange");
+      Serial.println("State change rejected by validateStateChange");
     }
   }
   // Handling user input
@@ -195,6 +195,8 @@ void StateManager::setBuiltinLED(bool on)
 
 bool StateManager::handleStateChange(int s)
 {
+  stateEnt->preStateChange(s);
+
   prevState = curState;
   curState = s;
 
@@ -202,8 +204,6 @@ bool StateManager::handleStateChange(int s)
   stateEnt->setup();
   stateEnt->overrideInboxHandler();
   stateEnt->overrideOutboxHandler();
-
-  stateEnt->onStateChange(s);
 
   return true;
 }

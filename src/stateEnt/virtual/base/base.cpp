@@ -55,17 +55,17 @@ void Base::loop()
   }
 }
 
-bool Base::preStateChange(int s)
+bool Base::validateStateChange(int s)
 {
   if (s == STATE_NONE)
   {
-    Serial.println("Base::preStateChange: Uh oh, idling...");
+    Serial.println("Base::validateStateChange: Uh oh, idling...");
     StateManager::setRequestedState(STATE_IDLE_BASE);
   }
   return true;
 }
 
-void Base::onStateChange(int s)
+void Base::preStateChange(int s)
 {
   Serial.print("Switching to ");
   Serial.print(StateManager::getStateNameMap().at(s));

@@ -27,7 +27,7 @@ class OTA : public WSEnt
 public:
   void setup();
   void loop();
-  bool preStateChange(int s);
+  bool validateStateChange(int s);
 };
 
 #endif // STATEENT_OTA_OTA_H_

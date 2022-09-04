@@ -38,7 +38,7 @@ public:
   void setup();
   void loop();
   void overrideOutboxHandler();
-  bool preStateChange(int s);
+  bool validateStateChange(int s);
 };
 
 #endif

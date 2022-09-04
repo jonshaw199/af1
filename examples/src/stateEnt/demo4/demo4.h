@@ -6,7 +6,7 @@
 class Demo4 : public WSEnt
 {
   void setup();
-  bool preStateChange(int s);
+  bool validateStateChange(int s);
   void overrideInboxHandler();
 };
 

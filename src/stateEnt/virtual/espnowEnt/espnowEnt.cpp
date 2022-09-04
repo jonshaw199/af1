@@ -60,12 +60,12 @@ void ESPNowEnt::overrideOutboxHandler()
   setOutboxMsgHandler(handleOutboxMsg);
 }
 
-bool ESPNowEnt::preStateChange(int s)
+bool ESPNowEnt::validateStateChange(int s)
 {
 #if MASTER
   if (s == STATE_NONE)
   {
-    Serial.println("ESPNowEnt::preStateChange: uh oh, idling...");
+    Serial.println("ESPNowEnt::validateStateChange: uh oh, idling...");
     StateManager::setRequestedState(STATE_IDLE_ESPNOW);
   }
   else if (StateManager::getCurState() != STATE_PURG_ESPNOW)
