@@ -21,7 +21,7 @@
 
 void SlaveHandshake::setup()
 {
-  Base::setup();
+  ESPNowEnt::setup();
   setAPMode();
   broadcastAP();
   initEspNow();

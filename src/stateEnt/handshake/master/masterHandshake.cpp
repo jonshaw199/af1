@@ -30,7 +30,7 @@ bool handleHandshakesInternal(IECBArg a)
 
 void MasterHandshake::setup()
 {
-  Base::setup();
+  ESPNowEnt::setup();
   prepareWifi();
   setAPMode();
   initEspNow();
@@ -39,7 +39,7 @@ void MasterHandshake::setup()
 
 void MasterHandshake::loop()
 {
-  Base::loop();
+  ESPNowEnt::loop();
 
   // Check if handshake has been completed for all slaves
   int numHandshakeComplete = 0;
