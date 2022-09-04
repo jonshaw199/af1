@@ -37,6 +37,7 @@ Base::Base()
 
 void Base::setup()
 {
+  Serial.println("Base::setup()");
   resetIntervalEvents();
   activateIntervalEvents();
   startMs = millis();
@@ -50,7 +51,7 @@ void Base::loop()
   // Interval events
   for (std::map<String, IntervalEvent>::iterator it = intervalEventMap.begin(); it != intervalEventMap.end(); it++)
   {
-    it->second.cbIfTimeAndActive(getElapsedMs());
+    intervalEventMap[it->first].cbIfTimeAndActive(getElapsedMs());
   }
 }
 
@@ -123,7 +124,7 @@ void Base::resetIntervalEvents()
 {
   for (std::map<String, IntervalEvent>::iterator it = intervalEventMap.begin(); it != intervalEventMap.end(); it++)
   {
-    it->second.reset();
+    intervalEventMap[it->first].reset();
   }
 }
 
@@ -131,7 +132,7 @@ void Base::activateIntervalEvents()
 {
   for (std::map<String, IntervalEvent>::iterator it = intervalEventMap.begin(); it != intervalEventMap.end(); it++)
   {
-    it->second.activate();
+    intervalEventMap[it->first].activate();
   }
 }
 
@@ -139,7 +140,7 @@ void Base::deactivateIntervalEvents()
 {
   for (std::map<String, IntervalEvent>::iterator it = intervalEventMap.begin(); it != intervalEventMap.end(); it++)
   {
-    it->second.deactivate();
+    intervalEventMap[it->first].deactivate();
   }
 }
 
