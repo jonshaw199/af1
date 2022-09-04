@@ -93,15 +93,13 @@ void loop()
 ```
 class Demo2 : public Base
 {
-  int intervalMs = 3000;
-
 public:
   Demo2()
   {
-    intervalEvents.push_back(IntervalEvent(intervalMs, [](IECBArg a) {
+    intervalEvents.push_back(IntervalEvent(3000, [](IECBArg a) {
       // Do something here every 3 seconds indefinitely
       return true;
-    } /*, maxCbCnt*/));
+    } /*, maxCbCnt*/)); // Or assign maxCbCnt for one-time or x-time events
   }
 }
 ```
