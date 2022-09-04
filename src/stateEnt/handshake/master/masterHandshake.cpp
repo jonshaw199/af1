@@ -34,7 +34,7 @@ void MasterHandshake::setup()
   prepareWifi();
   setAPMode();
   initEspNow();
-  intervalEvents.push_back(IntervalEvent(MS_MASTER_HANDSHAKE_LOOP, handleHandshakesInternal));
+  intervalEventMap.insert(std::pair<String, IntervalEvent>("MasterHandshake_1", IntervalEvent(MS_MASTER_HANDSHAKE_LOOP, handleHandshakesInternal)));
 }
 
 void MasterHandshake::loop()

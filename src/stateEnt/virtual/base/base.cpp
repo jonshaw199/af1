@@ -47,9 +47,9 @@ void Base::loop()
   outbox.handleMessages();
 
   // Interval events
-  for (std::vector<IntervalEvent>::iterator it = intervalEvents.begin(); it != intervalEvents.end(); it++)
+  for (std::map<String, IntervalEvent>::iterator it = intervalEventMap.begin(); it != intervalEventMap.end(); it++)
   {
-    it->cbIfTime(getElapsedMs());
+    it->second.cbIfTime(getElapsedMs());
   }
 }
 
@@ -112,9 +112,9 @@ void Base::overrideOutboxHandler()
 
 void Base::resetIntervalEvents()
 {
-  for (std::vector<IntervalEvent>::iterator it = intervalEvents.begin(); it != intervalEvents.end(); it++)
+  for (std::map<String, IntervalEvent>::iterator it = intervalEventMap.begin(); it != intervalEventMap.end(); it++)
   {
-    it->reset();
+    it->second.reset();
   }
 }
 

@@ -41,7 +41,7 @@ class Base
 {
 protected:
   unsigned long startMs;
-  std::vector<IntervalEvent> intervalEvents;
+  std::map<String, IntervalEvent> intervalEventMap;
   static bool handleInboxMsg(JSMessage m);
   static bool handleOutboxMsg(JSMessage m);
   // From WifiHandler
