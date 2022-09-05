@@ -37,6 +37,7 @@ public:
   static WiFiClient client;
   void setup();
   void loop();
+  void overrideInboxHandler();
   void overrideOutboxHandler();
   bool validateStateChange(int s);
 };

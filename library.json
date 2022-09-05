@@ -16,25 +16,5 @@
     "ArduinoJson": "https://github.com/bblanchon/ArduinoJson.git"
   },
   "frameworks": "Arduino",
-  "platforms": "*",
-  "build": {
-    "flags": [
-      "-D DEVICE_PREFIX=JS",
-      "-D DEVICE_AP_PASS=1234567890",
-      "-D PRINT_WIFI_SCAN_RESULTS=false",
-
-      "-D ESPNOW_CHANNEL=0",
-      "-D SLAVE_CNT=4",
-      "-D DEFAULT_RETRIES=3",
-      "-D RETRIES_PURG=10",
-
-      "-D DELAY_PREPARE_WIFI=333",
-      "-D DELAY_SEND=2",
-      "-D MS_PURG_DEFAULT=999",
-      "-D MS_MASTER_HANDSHAKE_LOOP=333",
-
-      "-D STATE_WS_FALLBACK=STATE_IDLE_BASE",
-      "-D STATE_ESPNOW_FALLBACK=STATE_IDLE_BASE"
-    ]
-  }
+  "platforms": "espressif32"
 }

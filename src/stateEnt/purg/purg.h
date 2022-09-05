@@ -23,6 +23,7 @@
 #include <Arduino.h>
 #include "stateManager/stateManager.h"
 #include "state/state.h"
+#include "pre.h"
 
 template <class T>
 class Purg : public T

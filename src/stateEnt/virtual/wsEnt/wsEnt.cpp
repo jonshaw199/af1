@@ -95,6 +95,17 @@ void WSEnt::connectToWS()
   }
 }
 
+void WSEnt::overrideInboxHandler()
+{
+  setInboxMsgHandler([](JSMessage m)
+                     {
+    String j;
+    serializeJsonPretty(m.getJson().to<JsonObject>(), j);
+    Serial.print("WSEnt handling msg: ");
+    Serial.println(j);
+    return Base::handleInboxMsg(m); });
+}
+
 void WSEnt::overrideOutboxHandler()
 {
   setOutboxMsgHandler(handleOutboxMsg);

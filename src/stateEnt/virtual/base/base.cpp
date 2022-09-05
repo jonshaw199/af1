@@ -177,10 +177,10 @@ void Base::setAPMode()
 bool Base::broadcastAP()
 {
   Serial.println("Broadcasting soft AP");
-  String Prefix = STRINGIFY(DEVICE_PREFIX);
+  String Prefix = DEVICE_PREFIX;
   String id = String(JS_ID);
   String SSID = Prefix + id;
-  String Password = STRINGIFY(DEVICE_AP_PASS);
+  String Password = DEVICE_AP_PASS;
   return WiFi.softAP(SSID.c_str(), Password.c_str(), ESPNOW_CHANNEL, 0);
 }
 

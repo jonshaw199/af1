@@ -182,9 +182,9 @@ int8_t ESPNowEnt::scanForPeers()
         Serial.println("");
       }
       // Check if the current network is one of our slaves
-      if (SSID.indexOf(STRINGIFY(DEVICE_PREFIX)) == 0) // Technically must start with a prefix
+      if (SSID.indexOf(DEVICE_PREFIX) == 0) // Technically must start with a prefix
       {
-        int deviceID = SSID.substring(String(STRINGIFY(DEVICE_PREFIX)).length()).toInt();
+        int deviceID = SSID.substring(String(DEVICE_PREFIX).length()).toInt();
         // Check the overwrite argument and only overwrite existing entries if true
         if (!peerInfoMap.count(deviceID))
         {
