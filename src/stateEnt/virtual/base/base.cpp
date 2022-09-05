@@ -89,7 +89,7 @@ unsigned long Base::getElapsedMs()
 bool Base::handleInboxMsg(JSMessage m)
 {
   Serial.println("Base handling inbox msg");
-  m.prettyPrint();
+  m.print();
 
   switch (m.getType())
   {
@@ -117,7 +117,7 @@ bool Base::handleInboxMsg(JSMessage m)
 bool Base::handleOutboxMsg(JSMessage m)
 {
   Serial.println("Base handling outbox msg");
-  m.prettyPrint();
+  m.print();
   Serial.println("Outbox message going to the abyss");
   return false;
 }

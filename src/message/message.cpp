@@ -149,10 +149,10 @@ DynamicJsonDocument JSMessage::getJson()
   return json;
 }
 
-void JSMessage::prettyPrint()
+void JSMessage::print()
 {
   String j;
-  serializeJsonPretty(getJson().to<JsonObject>(), j);
+  serializeJsonPretty(json, j);
   Serial.print("Message: ");
   Serial.println(j);
 }

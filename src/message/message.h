@@ -79,7 +79,7 @@ public:
   const uint8_t *getData();
   void setJson(DynamicJsonDocument d);
   DynamicJsonDocument getJson();
-  void prettyPrint();
+  void print();
 };
 
 #endif // MESSAGE_MESSAGE_H_
