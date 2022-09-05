@@ -25,19 +25,29 @@ JSMessage::JSMessage() : json(1024)
   msg.state = STATE_NONE;
   msg.senderID = JS_ID;
   msg.type = TYPE_NONE;
+
   recipients = {};
   sendCnt = 0;
   retries = 0;
   maxRetries = 0;
+
+  json["state"] = msg.state;
+  json["type"] = msg.type;
+  json["senderID"] = msg.senderID;
 }
 
 JSMessage::JSMessage(js_message m) : json(1024)
 {
   msg = m;
+
   recipients = {};
   sendCnt = 0;
   retries = 0;
   maxRetries = 0;
+
+  json["state"] = msg.state;
+  json["type"] = msg.type;
+  json["senderID"] = JS_ID;
 }
 
 JSMessage::JSMessage(DynamicJsonDocument d) : json(1024)
@@ -46,11 +56,14 @@ JSMessage::JSMessage(DynamicJsonDocument d) : json(1024)
   msg.state = d["state"];
   msg.senderID = JS_ID; // d["senderID"];
   msg.type = d["type"];
+
   recipients = {};
   sendCnt = 0;
   retries = 0;
   maxRetries = 0;
+
   json = d;
+  json["senderID"] = msg.senderID;
 }
 
 std::set<int> JSMessage::getRecipients()
@@ -76,6 +89,7 @@ int JSMessage::getSendCnt()
 void JSMessage::setType(int t)
 {
   msg.type = t;
+  json["type"] = t;
 }
 
 int JSMessage::getType()
@@ -86,6 +100,7 @@ int JSMessage::getType()
 void JSMessage::setState(int s)
 {
   msg.state = s;
+  json["state"] = s;
 }
 
 int JSMessage::getState()
@@ -96,6 +111,7 @@ int JSMessage::getState()
 void JSMessage::setSenderID(int id)
 {
   msg.senderID = id;
+  json["senderID"] = id;
 }
 
 int JSMessage::getSenderID()
@@ -131,4 +147,12 @@ void JSMessage::setJson(DynamicJsonDocument d)
 DynamicJsonDocument JSMessage::getJson()
 {
   return json;
+}
+
+void JSMessage::prettyPrint()
+{
+  String j;
+  serializeJsonPretty(getJson().to<JsonObject>(), j);
+  Serial.print("Message: ");
+  Serial.println(j);
 }
