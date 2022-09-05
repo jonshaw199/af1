@@ -109,10 +109,7 @@ bool WSEnt::handleOutboxMsg(JSMessage m)
     serializeJson(m.getJson(), s);
     Serial.print("Sending websocket message: ");
     m.print();
-    uint8_t result;
-    webSocketClient.sendData(s, result);
-    Serial.print("Result: ");
-    Serial.println(result);
+    webSocketClient.sendData(s);
     return true;
   }
   else
