@@ -19,6 +19,10 @@
 
 #define AF1 StateManager
 
+#ifndef JS_ID
+#define JS_ID 0
+#endif
+
 #define DEVICE_PREFIX "JS"
 #define DEVICE_AP_PASS "1234567890"
 #define PRINT_WIFI_SCAN_RESULTS false
