@@ -99,7 +99,7 @@ public:
     intervalEventMap.insert(std::pair<String, IntervalEvent>("Demo2_1", IntervalEvent(3000, [](IECBArg a) {
       // Do something here every 3 seconds indefinitely
       return true;
-    } /*, maxCbCnt */ ))); // Or assign maxCbCnt for one-time or x-time events
+    } /*, maxCbCnt */ ))); // Or assign maxCbCnt for 1-time or x-time events
   }
 }
 ```
