@@ -34,6 +34,7 @@ class Demo : public WSEnt
 {
 public:
   Demo() : WSEnt{"192.168.1.123", "/", 3000} {}
+
   void setup()
   {
     WSEnt::setup();
