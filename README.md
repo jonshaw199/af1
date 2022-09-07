@@ -33,6 +33,7 @@ When creating new state entities, setup, loop, and message handling behavior fro
 class Demo : public WSEnt
 {
 public:
+  Demo() : WSEnt{"192.168.1.123", "/", 3000} {}
   void setup()
   {
     WSEnt::setup();
@@ -74,7 +75,6 @@ void setup()
   Serial.begin(115200);
   AF1::setup(DEVICE_ID); // REQUIRED
   AF1::registerWifiAP("ssid-here", "pass-here");
-  AF1::registerWSServer("192.168.1.123", "/", 3000);
   AF1::registerStateEnt(STATE_DEMO, new Demo(), "STATE_DEMO");
   AF1::registerStringHandler("4", [](){
     AF1::setRequestedState(STATE_DEMO);
