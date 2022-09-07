@@ -39,7 +39,6 @@ std::map<int, Base *> StateManager::stateEntMap;
 std::map<String, string_input_handler> StateManager::stringHandlerMap;
 std::map<int, String> StateManager::stateNameMap;
 std::vector<wifi_ap_info> StateManager::wifiAPs;
-ws_server_info StateManager::wsServerInfo;
 
 StateManager::StateManager()
 {
@@ -253,19 +252,9 @@ void StateManager::registerWifiAP(String s, String p, int a, int b, int c, int d
   wifiAPs.push_back(i);
 }
 
-void StateManager::registerWSServer(String h, String p, int p2)
-{
-  wsServerInfo = {h, p, p2};
-}
-
 const std::vector<wifi_ap_info> StateManager::getWifiAPs()
 {
   return wifiAPs;
-}
-
-const ws_server_info StateManager::getWSServerInfo()
-{
-  return wsServerInfo;
 }
 
 void StateManager::setInitialState(int s)

@@ -24,8 +24,16 @@
 
 #include "stateEnt/virtual/base/base.h"
 
+struct ws_server_info
+{
+  String host;
+  String path;
+  int port;
+};
+
 class WSEnt : public Base
 {
+  ws_server_info serverInfo;
   void connectToWS();
 
 protected:
@@ -35,6 +43,8 @@ public:
   static WebSocketClient webSocketClient;
   // Use WiFiClient class to create TCP connections
   static WiFiClient client;
+  WSEnt();
+  WSEnt(String host, String path, int port);
   void setup();
   void loop();
   void overrideOutboxHandler();

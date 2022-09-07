@@ -40,13 +40,6 @@ struct wifi_ap_info
   int subnetIP[4];
 };
 
-struct ws_server_info
-{
-  String host;
-  String path;
-  int port;
-};
-
 class StateManager
 {
   StateManager();
@@ -63,7 +56,6 @@ protected:
   static std::map<String, string_input_handler> stringHandlerMap;
   static std::map<int, String> stateNameMap;
   static std::vector<wifi_ap_info> wifiAPs;
-  static ws_server_info wsServerInfo;
 
 public:
   static StateManager &getInstance();
@@ -78,7 +70,6 @@ public:
   static void setBuiltinLED(bool on);
   static bool handleStateChange(int s);
   static const std::vector<wifi_ap_info> getWifiAPs();
-  static const ws_server_info getWSServerInfo();
   static void setInitialState(int s);
   static int getInitialState();
   static void setStateAfterHandshake(int s);
@@ -91,7 +82,6 @@ public:
   static void registerStringHandler(String s, string_input_handler h);
   static void registerWifiAP(String s, String p);
   static void registerWifiAP(String s, String p, int a, int b, int c, int d, int ga, int gb, int gc, int gd, int sa, int sb, int sc, int sd);
-  static void registerWSServer(String h, String p, int p2);
 };
 
 #endif // STATEMANAGER_STATEMANAGER_H_

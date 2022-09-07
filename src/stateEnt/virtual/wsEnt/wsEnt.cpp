@@ -27,6 +27,22 @@ WebSocketClient WSEnt::webSocketClient;
 // Use WiFiClient class to create TCP connections
 WiFiClient WSEnt::client;
 
+WSEnt::WSEnt()
+{
+  Base();
+  serverInfo.host = "";
+  serverInfo.path = "";
+  serverInfo.port = -1;
+}
+
+WSEnt::WSEnt(String host, String path, int port)
+{
+  Base();
+  serverInfo.host = host;
+  serverInfo.path = path;
+  serverInfo.port = port;
+}
+
 void WSEnt::setup()
 {
   Base::setup();
@@ -34,12 +50,12 @@ void WSEnt::setup()
   connectToWifi();
   connectToWS();
 
-  int lenH = StateManager::getWSServerInfo().host.length() + 1;
-  int lenP = StateManager::getWSServerInfo().path.length() + 1;
+  int lenH = serverInfo.host.length() + 1;
+  int lenP = serverInfo.path.length() + 1;
   char h[lenH];
   char p[lenP];
-  StateManager::getWSServerInfo().host.toCharArray(h, lenH);
-  StateManager::getWSServerInfo().path.toCharArray(p, lenP);
+  serverInfo.host.toCharArray(h, lenH);
+  serverInfo.path.toCharArray(p, lenP);
   webSocketClient.host = h;
   webSocketClient.path = p;
 
@@ -84,7 +100,7 @@ void WSEnt::loop()
 void WSEnt::connectToWS()
 {
   // Connect to the websocket server
-  if (client.connect(StateManager::getWSServerInfo().host.c_str(), StateManager::getWSServerInfo().port))
+  if (client.connect(serverInfo.host.c_str(), serverInfo.port))
   {
     Serial.println("Websocket connected");
   }
