@@ -28,7 +28,7 @@ void Init::setup()
   Serial.println();
   Serial.println("*********");
   Serial.print("JS ID: ");
-  Serial.println(JS_ID);
+  Serial.println(StateManager::getDeviceID());
 
   // WifiHandler init
   setAPMode();

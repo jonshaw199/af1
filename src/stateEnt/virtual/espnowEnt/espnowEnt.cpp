@@ -352,7 +352,7 @@ void ESPNowEnt::sendStateChangeMessages(int s)
   JSMessage msg = JSMessage();
 
   msg.setType(TYPE_CHANGE_STATE);
-  msg.setSenderID(JS_ID);
+  msg.setSenderID(StateManager::getDeviceID());
   msg.setState(s);
   msg.setMaxRetries(DEFAULT_RETRIES);
 
@@ -367,7 +367,7 @@ void ESPNowEnt::sendHandshakeRequests(std::set<int> ids)
 
   // Set struct
   msg.setType(TYPE_HANDSHAKE_REQUEST);
-  msg.setSenderID(JS_ID);
+  msg.setSenderID(StateManager::getDeviceID());
   msg.setState(STATE_HANDSHAKE);
   msg.setData(getMacAP());
   // Set wrapper
@@ -408,7 +408,7 @@ void ESPNowEnt::sendHandshakeResponses(std::set<int> ids)
 
   // Set struct
   msg.setType(TYPE_HANDSHAKE_RESPONSE);
-  msg.setSenderID(JS_ID);
+  msg.setSenderID(StateManager::getDeviceID());
   msg.setState(STATE_HANDSHAKE);
   // Set wrapper
   msg.setRecipients(ids);

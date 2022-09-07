@@ -62,6 +62,8 @@ public:
 #include <AF1.h>
 #include "demo.cpp"
 
+#define DEVICE_ID 1
+
 enum user_defined_states
 {
   STATE_DEMO
@@ -70,7 +72,7 @@ enum user_defined_states
 void setup()
 {
   Serial.begin(115200);
-  AF1::setup(); // REQUIRED
+  AF1::setup(DEVICE_ID); // REQUIRED
   AF1::registerWifiAP("ssid-here", "pass-here");
   AF1::registerWSServer("192.168.1.123", "/", 3000);
   AF1::registerStateEnt(STATE_DEMO, new Demo(), "STATE_DEMO");

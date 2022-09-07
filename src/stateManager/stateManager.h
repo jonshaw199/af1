@@ -57,6 +57,7 @@ protected:
   static int requestedState;
   static int initialState;
   static int stateAfterHandshake;
+  static int deviceID;
   static Base *stateEnt;
   static std::map<int, Base *> stateEntMap;
   static std::map<String, string_input_handler> stringHandlerMap;
@@ -66,7 +67,7 @@ protected:
 
 public:
   static StateManager &getInstance();
-  static void setup();
+  static void setup(int id);
   static void loop();
   static int getCurState();
   static int getPrevState();
@@ -84,6 +85,7 @@ public:
   static int getStateAfterHandshake();
   static void setPurgNext(int p, int n);
   static const std::map<int, String> &getStateNameMap();
+  static int getDeviceID();
 
   static void registerStateEnt(int i, Base *s, String n);
   static void registerStringHandler(String s, string_input_handler h);

@@ -18,12 +18,13 @@
 */
 
 #include "message.h"
+#include "stateManager/stateManager.h"
 
 JSMessage::JSMessage() : json(1024)
 {
   msg = {};
   msg.state = STATE_NONE;
-  msg.senderID = JS_ID;
+  msg.senderID = StateManager::getDeviceID();
   msg.type = TYPE_NONE;
 
   recipients = {};
@@ -47,14 +48,14 @@ JSMessage::JSMessage(js_message m) : json(1024)
 
   json["state"] = msg.state;
   json["type"] = msg.type;
-  json["senderID"] = JS_ID;
+  json["senderID"] = StateManager::getDeviceID();
 }
 
 JSMessage::JSMessage(DynamicJsonDocument d) : json(1024)
 {
   msg = {};
   msg.state = d["state"];
-  msg.senderID = JS_ID; // d["senderID"];
+  msg.senderID = StateManager::getDeviceID(); // d["senderID"];
   msg.type = d["type"];
 
   recipients = {};

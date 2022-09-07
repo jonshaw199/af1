@@ -33,6 +33,7 @@ int StateManager::prevState;
 int StateManager::requestedState;
 int StateManager::initialState;
 int StateManager::stateAfterHandshake;
+int StateManager::deviceID;
 Base *StateManager::stateEnt;
 std::map<int, Base *> StateManager::stateEntMap;
 std::map<String, string_input_handler> StateManager::stringHandlerMap;
@@ -107,13 +108,13 @@ StateManager &StateManager::getInstance()
   return instance;
 }
 
-void StateManager::setup()
+void StateManager::setup(int id)
 {
   getInstance(); // Ensuring instantiation
+  deviceID = id;
   int s = STATE_INIT;
   curState = s;
   requestedState = s;
-
   handleStateChange(s); // Let Init stateEnt handle everything
 }
 
@@ -295,4 +296,9 @@ void StateManager::setPurgNext(int p, int n)
 const std::map<int, String> &StateManager::getStateNameMap()
 {
   return stateNameMap;
+}
+
+int StateManager::getDeviceID()
+{
+  return deviceID;
 }
