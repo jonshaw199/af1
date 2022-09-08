@@ -154,9 +154,21 @@ int StateManager::getPrevState()
 
 void StateManager::setRequestedState(int s)
 {
-  Serial.print("Setting requested state: ");
-  Serial.println(stateNameMap[s]);
-  requestedState = s;
+  if (stateNameMap.find(s) == stateNameMap.end())
+  {
+    Serial.print("Requested state ");
+    Serial.print(s);
+    Serial.println(" is not recognized, not setting.");
+  }
+  else
+  {
+    Serial.print("Setting requested state: ");
+    Serial.print(stateNameMap[s]);
+    Serial.print(" (");
+    Serial.print(s);
+    Serial.println(")");
+    requestedState = s;
+  }
 }
 
 int StateManager::getRequestedState()
