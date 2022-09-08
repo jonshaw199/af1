@@ -30,7 +30,7 @@ void OTA::setup()
 {
   StateManager::setBuiltinLED(1);
 
-  WSEnt::setup();
+  Base::setup();
 
   // JS - Issues with Heltec Wifi Kit 32; wouldnt connect
   // https://github.com/espressif/arduino-esp32/issues/1212
@@ -93,7 +93,7 @@ void OTA::setup()
 
 void OTA::loop()
 {
-  WSEnt::loop();
+  Base::loop();
   ArduinoOTA.handle();
 }
 

@@ -22,7 +22,7 @@
 
 #include "stateEnt/virtual/wsEnt/wsEnt.h"
 
-class OTA : public WSEnt
+class OTA : public Base
 {
 public:
   void setup();
