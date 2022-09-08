@@ -303,3 +303,13 @@ int StateManager::getDeviceID()
 {
   return deviceID;
 }
+
+void StateManager::setWSServerInfo(WSEnt *e, String host, String path, int port)
+{
+  e->setServerInfo(host, path, port);
+}
+
+void StateManager::setDefaultWSServerInfo(String host, String path, int port)
+{
+  (static_cast<WSEnt *>(stateEntMap[STATE_IDLE_WS]))->setServerInfo(host, path, port);
+}

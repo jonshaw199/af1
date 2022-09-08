@@ -49,6 +49,7 @@ public:
   void loop();
   void overrideOutboxHandler();
   bool validateStateChange(int s);
+  void setServerInfo(String host, String path, int port);
 };
 
 #endif

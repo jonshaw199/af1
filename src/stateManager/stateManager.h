@@ -28,6 +28,7 @@
 #include "state/state.h"
 #include "message/message.h"
 #include "stateEnt/virtual/base/base.h"
+#include "stateEnt/virtual/wsEnt/wsEnt.h"
 
 typedef void (*string_input_handler)();
 
@@ -43,6 +44,7 @@ struct wifi_ap_info
 class StateManager
 {
   StateManager();
+  static void setWSServerInfo(WSEnt *e, String host, String path, int port);
 
 protected:
   static int curState;
@@ -77,6 +79,7 @@ public:
   static void setPurgNext(int p, int n);
   static const std::map<int, String> &getStateNameMap();
   static int getDeviceID();
+  static void setDefaultWSServerInfo(String host, String path, int port);
 
   static void registerStateEnt(int i, Base *s, String n);
   static void registerStringHandler(String s, string_input_handler h);

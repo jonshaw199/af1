@@ -27,20 +27,14 @@ WebSocketClient WSEnt::webSocketClient;
 // Use WiFiClient class to create TCP connections
 WiFiClient WSEnt::client;
 
-WSEnt::WSEnt()
+WSEnt::WSEnt() : Base()
 {
-  Base();
-  serverInfo.host = "";
-  serverInfo.path = "";
-  serverInfo.port = -1;
+  setServerInfo("", "", -1);
 }
 
-WSEnt::WSEnt(String host, String path, int port)
+WSEnt::WSEnt(String host, String path, int port) : Base()
 {
-  Base();
-  serverInfo.host = host;
-  serverInfo.path = path;
-  serverInfo.port = port;
+  setServerInfo(host, path, port);
 }
 
 void WSEnt::setup()
@@ -144,4 +138,11 @@ bool WSEnt::validateStateChange(int s)
     StateManager::setRequestedState(STATE_IDLE_WS);
   }
   return true;
+}
+
+void WSEnt::setServerInfo(String host, String path, int port)
+{
+  serverInfo.host = host;
+  serverInfo.path = path;
+  serverInfo.port = port;
 }
