@@ -24,7 +24,7 @@ void Demo2Master::setup()
 
 void Demo2Master::sendMsg(uint8_t b)
 {
-  JSMessage msg;
+  AF1Msg msg;
   msg.setState(STATE_DEMO1);
   msg.setType(TYPE_RUN_DATA);
   demo2_data d;

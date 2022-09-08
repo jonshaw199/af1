@@ -21,7 +21,7 @@
 
 #include "box/box.h"
 
-bool dummyHandler(JSMessage m)
+bool dummyHandler(AF1Msg m)
 {
   return false;
 }
@@ -36,7 +36,7 @@ void Box::handleMessages()
   m.lock();
   if (!q.empty())
   {
-    JSMessage msg = q.front();
+    AF1Msg msg = q.front();
     q.pop();
     m.unlock();
     msgHandler(msg);

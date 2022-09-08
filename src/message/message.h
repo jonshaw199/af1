@@ -36,7 +36,7 @@ enum MessageType
   TYPE_RC_DATA
 };
 
-typedef struct js_message
+typedef struct af1_msg
 {
   // Calculated
   // int msgID;
@@ -46,13 +46,13 @@ typedef struct js_message
   int state;
   // State dependent and only used for espnow
   uint8_t data[100];
-} js_message;
+} af1_msg;
 
-// This class is a wrapper around the js_message struct that actually gets sent using ESPNOW
+// This class is a wrapper around the af1_msg struct that actually gets sent using ESPNOW
 // ... now also wraps json that gets sent using WS
-class JSMessage
+class AF1Msg
 {
-  js_message msg;
+  af1_msg msg;
   DynamicJsonDocument json;
   std::set<int> recipients;
   int sendCnt;
@@ -60,9 +60,9 @@ class JSMessage
   int maxRetries;
 
 public:
-  JSMessage();
-  JSMessage(js_message m);
-  JSMessage(DynamicJsonDocument d);
+  AF1Msg();
+  AF1Msg(af1_msg m);
+  AF1Msg(DynamicJsonDocument d);
   void setRecipients(std::set<int> r);
   std::set<int> getRecipients();
   int incrementSendCnt();

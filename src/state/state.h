@@ -20,7 +20,7 @@
 #ifndef STATE_STATE_H_
 #define STATE_STATE_H_
 
-enum js_state
+enum af1_state
 {
   STATE_NONE = 100,
   STATE_INIT,

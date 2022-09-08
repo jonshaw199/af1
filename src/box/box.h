@@ -23,9 +23,9 @@
 #include "tsQueue/tsQueue.h"
 #include "message/message.h"
 
-typedef bool (*msg_handler)(JSMessage m);
+typedef bool (*msg_handler)(AF1Msg m);
 
-class Box : public TSQueue<JSMessage>
+class Box : public TSQueue<AF1Msg>
 {
   msg_handler msgHandler;
 

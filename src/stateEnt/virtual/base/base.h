@@ -42,8 +42,8 @@ class Base
 protected:
   unsigned long startMs;
   std::map<String, IntervalEvent> intervalEventMap;
-  static bool handleInboxMsg(JSMessage m);
-  static bool handleOutboxMsg(JSMessage m);
+  static bool handleInboxMsg(AF1Msg m);
+  static bool handleOutboxMsg(AF1Msg m);
   // From WifiHandler
   static uint8_t macAP[6];
   static uint8_t macSTA[6];
@@ -77,14 +77,14 @@ public:
   static uint8_t *getMacAP();
   static void connectToWifi();
   // From MessageHandler
-  static const TSQueue<JSMessage> &getOutbox(); // Read only
-  static const TSQueue<JSMessage> &getInbox();  // Read only
+  static const TSQueue<AF1Msg> &getOutbox(); // Read only
+  static const TSQueue<AF1Msg> &getInbox();  // Read only
   static void handleInboxMessages();
   static void handleOutboxMessages();
   static void setInboxMsgHandler(msg_handler h);
   static void setOutboxMsgHandler(msg_handler h);
-  static void pushOutbox(JSMessage m);
-  static void pushInbox(JSMessage m);
+  static void pushOutbox(AF1Msg m);
+  static void pushInbox(AF1Msg m);
   // New
   static DynamicJsonDocument httpFetch(String url);
   static DynamicJsonDocument httpPost(String url, DynamicJsonDocument body);

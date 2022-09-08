@@ -110,7 +110,7 @@ void WSEnt::overrideOutboxHandler()
   setOutboxMsgHandler(handleOutboxMsg);
 }
 
-bool WSEnt::handleOutboxMsg(JSMessage m)
+bool WSEnt::handleOutboxMsg(AF1Msg m)
 {
   // sendMsg(m);
   if (client)

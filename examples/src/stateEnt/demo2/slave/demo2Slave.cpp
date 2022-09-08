@@ -18,7 +18,7 @@ bool Demo2Slave::validateStateChange(int s)
 
 void Demo2Slave::overrideInboxHandler()
 {
-  setInboxMsgHandler([](JSMessage m)
+  setInboxMsgHandler([](AF1Msg m)
                      {  switch (m.getType())
   {
   case TYPE_RUN_DATA:

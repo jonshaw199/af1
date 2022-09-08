@@ -86,7 +86,7 @@ unsigned long Base::getElapsedMs()
   return nowMs - startMs;
 }
 
-bool Base::handleInboxMsg(JSMessage m)
+bool Base::handleInboxMsg(AF1Msg m)
 {
   Serial.println("Base handling inbox msg");
   m.print();
@@ -114,7 +114,7 @@ bool Base::handleInboxMsg(JSMessage m)
   return false;
 }
 
-bool Base::handleOutboxMsg(JSMessage m)
+bool Base::handleOutboxMsg(AF1Msg m)
 {
   Serial.println("Base handling outbox msg");
   m.print();
@@ -274,12 +274,12 @@ void Base::connectToWifi()
   From MessageHandler
 */
 
-const TSQueue<JSMessage> &Base::getOutbox()
+const TSQueue<AF1Msg> &Base::getOutbox()
 {
   return outbox;
 }
 
-const TSQueue<JSMessage> &Base::getInbox()
+const TSQueue<AF1Msg> &Base::getInbox()
 {
   return inbox;
 }
@@ -294,12 +294,12 @@ void Base::setOutboxMsgHandler(msg_handler h)
   outbox.setMsgHandler(h);
 }
 
-void Base::pushOutbox(JSMessage m)
+void Base::pushOutbox(AF1Msg m)
 {
   outbox.enqueue(m);
 }
 
-void Base::pushInbox(JSMessage m)
+void Base::pushInbox(AF1Msg m)
 {
   inbox.enqueue(m);
 }

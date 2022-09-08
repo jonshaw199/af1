@@ -20,7 +20,7 @@
 #include "message.h"
 #include "stateManager/stateManager.h"
 
-JSMessage::JSMessage() : json(1024)
+AF1Msg::AF1Msg() : json(1024)
 {
   msg = {};
   msg.state = STATE_NONE;
@@ -37,7 +37,7 @@ JSMessage::JSMessage() : json(1024)
   json["senderID"] = msg.senderID;
 }
 
-JSMessage::JSMessage(js_message m) : json(1024)
+AF1Msg::AF1Msg(af1_msg m) : json(1024)
 {
   msg = m;
 
@@ -51,7 +51,7 @@ JSMessage::JSMessage(js_message m) : json(1024)
   json["senderID"] = StateManager::getDeviceID();
 }
 
-JSMessage::JSMessage(DynamicJsonDocument d) : json(1024)
+AF1Msg::AF1Msg(DynamicJsonDocument d) : json(1024)
 {
   msg = {};
   msg.state = d["state"];
@@ -67,90 +67,90 @@ JSMessage::JSMessage(DynamicJsonDocument d) : json(1024)
   json["senderID"] = msg.senderID;
 }
 
-std::set<int> JSMessage::getRecipients()
+std::set<int> AF1Msg::getRecipients()
 {
   return recipients;
 }
 
-void JSMessage::setRecipients(std::set<int> r)
+void AF1Msg::setRecipients(std::set<int> r)
 {
   recipients = r;
 }
 
-int JSMessage::incrementSendCnt()
+int AF1Msg::incrementSendCnt()
 {
   return sendCnt++;
 }
 
-int JSMessage::getSendCnt()
+int AF1Msg::getSendCnt()
 {
   return sendCnt;
 }
 
-void JSMessage::setType(int t)
+void AF1Msg::setType(int t)
 {
   msg.type = t;
   json["type"] = t;
 }
 
-int JSMessage::getType()
+int AF1Msg::getType()
 {
   return msg.type;
 }
 
-void JSMessage::setState(int s)
+void AF1Msg::setState(int s)
 {
   msg.state = s;
   json["state"] = s;
 }
 
-int JSMessage::getState()
+int AF1Msg::getState()
 {
   return msg.state;
 }
 
-void JSMessage::setSenderID(int id)
+void AF1Msg::setSenderID(int id)
 {
   msg.senderID = id;
   json["senderID"] = id;
 }
 
-int JSMessage::getSenderID()
+int AF1Msg::getSenderID()
 {
   return msg.senderID;
 }
 
-void JSMessage::setMaxRetries(int m)
+void AF1Msg::setMaxRetries(int m)
 {
   maxRetries = m;
 }
 
-int JSMessage::getMaxRetries()
+int AF1Msg::getMaxRetries()
 {
   return maxRetries;
 }
 
-void JSMessage::setData(uint8_t *d)
+void AF1Msg::setData(uint8_t *d)
 {
   memcpy(msg.data, d, sizeof(msg.data));
 }
 
-const uint8_t *JSMessage::getData()
+const uint8_t *AF1Msg::getData()
 {
   return msg.data;
 }
 
-void JSMessage::setJson(DynamicJsonDocument d)
+void AF1Msg::setJson(DynamicJsonDocument d)
 {
   json = d;
 }
 
-DynamicJsonDocument JSMessage::getJson()
+DynamicJsonDocument AF1Msg::getJson()
 {
   return json;
 }
 
-void JSMessage::print()
+void AF1Msg::print()
 {
   String j;
   serializeJsonPretty(json, j);

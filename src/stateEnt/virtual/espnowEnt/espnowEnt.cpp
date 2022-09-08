@@ -22,11 +22,11 @@
 #include "stateManager/stateManager.h"
 
 // From espnowHandler
-static std::map<int, js_peer_info> peerInfoMap;
+static std::map<int, af1_peer_info> peerInfoMap;
 static std::map<String, int> macToIDMap;
 // End ?
 
-bool ESPNowEnt::handleInboxMsg(JSMessage m)
+bool ESPNowEnt::handleInboxMsg(AF1Msg m)
 {
   switch (m.getType())
   {
@@ -49,7 +49,7 @@ void ESPNowEnt::overrideInboxHandler()
   setInboxMsgHandler(handleInboxMsg);
 }
 
-bool ESPNowEnt::handleOutboxMsg(JSMessage m)
+bool ESPNowEnt::handleOutboxMsg(AF1Msg m)
 {
   sendMsg(m);
   return true;
@@ -104,7 +104,7 @@ void ESPNowEnt::onDataSent(const uint8_t *mac_addr, esp_now_send_status_t status
     if (peerInfoMap[peerDeviceID].lastMsg.getSendCnt() - 1 < peerInfoMap[peerDeviceID].lastMsg.getMaxRetries())
     {
       Serial.println("Retrying send to device ID " + String(peerDeviceID));
-      JSMessage msg = peerInfoMap[peerDeviceID].lastMsg;
+      AF1Msg msg = peerInfoMap[peerDeviceID].lastMsg;
       msg.incrementSendCnt();
       msg.setRecipients({peerDeviceID}); // Only resending to 1 device!
       pushOutbox(msg);
@@ -126,9 +126,9 @@ void ESPNowEnt::onDataRecv(const uint8_t *mac, const uint8_t *incomingData, int 
   // Serial.print("Last Packet Recv from: ");
   // Serial.println(macStr);
   Serial.print(".");
-  js_message msg;
+  af1_msg msg;
   memcpy(&msg, incomingData, sizeof(msg));
-  JSMessage msgWrapper = msg;
+  AF1Msg msgWrapper = msg;
   pushInbox(msg);
   // inbox.enqueue(msgWrapper);
 }
@@ -213,7 +213,7 @@ int8_t ESPNowEnt::scanForPeers()
             info.ifidx = WIFI_IF_AP;
             peerInfoMap[deviceID].espnowPeerInfo = info;
             peerInfoMap[deviceID].handshakeResponse = false;
-            peerInfoMap[deviceID].lastMsg = JSMessage();
+            peerInfoMap[deviceID].lastMsg = AF1Msg();
             macToIDMap[macToString(info.peer_addr)] = deviceID;
             Serial.println("Saved peer info for device ID " + String(deviceID));
           }
@@ -241,7 +241,7 @@ void ESPNowEnt::connectToPeers()
   // If not, then try to connect
   if (peerInfoMap.size())
   {
-    for (std::map<int, js_peer_info>::iterator it = peerInfoMap.begin(); it != peerInfoMap.end(); it++)
+    for (std::map<int, af1_peer_info>::iterator it = peerInfoMap.begin(); it != peerInfoMap.end(); it++)
     {
       // Check if the peer exists
       if (esp_now_is_peer_exist(it->second.espnowPeerInfo.peer_addr))
@@ -288,7 +288,7 @@ void ESPNowEnt::connectToPeers()
   }
 }
 
-void ESPNowEnt::sendMsg(JSMessage msg)
+void ESPNowEnt::sendMsg(AF1Msg msg)
 {
   // If recipients set is empty then send to all
   std::set<int> recipientIDs = msg.getRecipients().size() ? msg.getRecipients() : getPeerIDs();
@@ -349,7 +349,7 @@ void ESPNowEnt::sendStateChangeMessages(int s)
 {
   Serial.println("Pushing state change messages to the outbox");
 
-  JSMessage msg = JSMessage();
+  AF1Msg msg = AF1Msg();
 
   msg.setType(TYPE_CHANGE_STATE);
   msg.setSenderID(StateManager::getDeviceID());
@@ -363,7 +363,7 @@ void ESPNowEnt::sendHandshakeRequests(std::set<int> ids)
 {
   Serial.println("Sending handshake requests");
 
-  JSMessage msg = JSMessage();
+  AF1Msg msg = AF1Msg();
 
   // Set struct
   msg.setType(TYPE_HANDSHAKE_REQUEST);
@@ -381,7 +381,7 @@ void ESPNowEnt::sendHandshakeRequests(std::set<int> ids)
   }
 }
 
-void ESPNowEnt::receiveHandshakeRequest(JSMessage m)
+void ESPNowEnt::receiveHandshakeRequest(AF1Msg m)
 {
   Serial.println("Receiving handshake request from ID " + String(m.getSenderID()));
   Serial.print("Mac: ");
@@ -395,7 +395,7 @@ void ESPNowEnt::receiveHandshakeRequest(JSMessage m)
   ei.ifidx = WIFI_IF_AP;
   peerInfoMap[m.getSenderID()].espnowPeerInfo = ei;
   peerInfoMap[m.getSenderID()].handshakeResponse = false;
-  peerInfoMap[m.getSenderID()].lastMsg = JSMessage();
+  peerInfoMap[m.getSenderID()].lastMsg = AF1Msg();
 
   connectToPeers();
 }
@@ -404,7 +404,7 @@ void ESPNowEnt::sendHandshakeResponses(std::set<int> ids)
 {
   Serial.println("Sending handshake responses");
 
-  JSMessage msg = JSMessage();
+  AF1Msg msg = AF1Msg();
 
   // Set struct
   msg.setType(TYPE_HANDSHAKE_RESPONSE);
@@ -416,20 +416,20 @@ void ESPNowEnt::sendHandshakeResponses(std::set<int> ids)
   pushOutbox(msg);
 }
 
-void ESPNowEnt::receiveHandshakeResponse(JSMessage m)
+void ESPNowEnt::receiveHandshakeResponse(AF1Msg m)
 {
   Serial.println("Receiving handshake response from ID " + String(m.getSenderID()));
   peerInfoMap[m.getSenderID()].handshakeResponse = true;
 }
 
-const std::map<int, js_peer_info> &ESPNowEnt::getPeerInfoMap()
+const std::map<int, af1_peer_info> &ESPNowEnt::getPeerInfoMap()
 {
   return peerInfoMap;
 }
 
 void ESPNowEnt::sendAllHandshakes()
 {
-  for (std::map<int, js_peer_info>::const_iterator it = peerInfoMap.begin(); it != peerInfoMap.end() && !it->second.handshakeRequest; it++)
+  for (std::map<int, af1_peer_info>::const_iterator it = peerInfoMap.begin(); it != peerInfoMap.end() && !it->second.handshakeRequest; it++)
   {
     sendHandshakeRequests({it->first});
   }
@@ -438,7 +438,7 @@ void ESPNowEnt::sendAllHandshakes()
 std::set<int> ESPNowEnt::getPeerIDs()
 {
   std::set<int> result;
-  for (std::map<int, js_peer_info>::iterator it = peerInfoMap.begin(); it != peerInfoMap.end(); it++)
+  for (std::map<int, af1_peer_info>::iterator it = peerInfoMap.begin(); it != peerInfoMap.end(); it++)
   {
     result.insert(it->first);
   }

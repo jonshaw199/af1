@@ -29,14 +29,14 @@
 #include "stateEnt/virtual/base/base.h"
 #include "message/message.h"
 
-typedef struct js_peer_info
+typedef struct af1_peer_info
 {
   esp_now_peer_info_t espnowPeerInfo;
   bool handshakeRequest;
   bool handshakeResponse;
-  JSMessage lastMsg;
+  AF1Msg lastMsg;
   std::mutex mutex;
-} js_peer_info;
+} af1_peer_info;
 
 class ESPNowEnt : public Base
 {
@@ -45,8 +45,8 @@ class ESPNowEnt : public Base
   static void onDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len);
 
 protected:
-  static bool handleInboxMsg(JSMessage m);
-  static bool handleOutboxMsg(JSMessage m);
+  static bool handleInboxMsg(AF1Msg m);
+  static bool handleOutboxMsg(AF1Msg m);
 
 public:
   void overrideInboxHandler();
@@ -59,13 +59,13 @@ public:
   static bool handleHandshakes();
   static void sendStateChangeMessages(int s);
   static void sendHandshakeRequests(std::set<int> ids);
-  static void receiveHandshakeRequest(JSMessage m);
+  static void receiveHandshakeRequest(AF1Msg m);
   static void sendHandshakeResponses(std::set<int> ids);
-  static void receiveHandshakeResponse(JSMessage m);
-  static const std::map<int, js_peer_info> &getPeerInfoMap(); // Read only
+  static void receiveHandshakeResponse(AF1Msg m);
+  static const std::map<int, af1_peer_info> &getPeerInfoMap(); // Read only
   static void sendAllHandshakes();
   static std::set<int> getPeerIDs();
-  static void sendMsg(JSMessage msg);
+  static void sendMsg(AF1Msg msg);
 };
 
 #endif // STATEENT_VIRTUAL_ESPNOWENT_ESPNOWENT_H_
