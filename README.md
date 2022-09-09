@@ -33,7 +33,8 @@ When creating new state entities, setup, loop, and message handling behavior fro
 class Demo : public WSEnt
 {
 public:
-  Demo() : WSEnt{"192.168.1.123", "/", 3000} {}
+  // This state entity uses a websocket at 192.168.1.123:3000/ws
+  Demo() : WSEnt{"192.168.1.123", "/ws", 3000} {}
 
   void setup()
   {
