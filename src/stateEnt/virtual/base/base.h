@@ -21,14 +21,10 @@
 #define STATEENT_VIRTUAL_BASE_BASE_H_
 
 #include <Arduino.h>
-#include <vector>
 #include <map>
 #include <queue>
-#include <set>
-#include <esp_now.h>
 #include <WiFi.h>
 #include <WiFiMulti.h>
-#include <mutex>
 #include <HTTPClient.h>
 #include <ArduinoJson.h>
 
