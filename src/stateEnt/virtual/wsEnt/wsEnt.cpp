@@ -118,7 +118,7 @@ void WSEnt::handleOutboxMsg(AF1Msg m)
     String s;
     serializeJson(m.getJson(), s);
 #if PRINT_MSG_SEND
-    Serial.print("Sending websocket message");
+    Serial.println("Sending websocket message");
 #endif
     webSocketClient.sendData(s);
   }
