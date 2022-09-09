@@ -107,6 +107,36 @@ public:
 }
 ```
 
+**API Docs To Do**
+
+```
+  void AF1::registerStateEnt(int i, Base *s, String n);
+  void AF1::registerStringHandler(String s, string_input_handler h);
+  void AF1::registerWifiAP(String s, String p);
+  void AF1::registerWifiAP(String s, String p, int a, int b, int c, int d, int ga, int gb, int gc, int gd, int sa, int sb, int sc, int sd);
+
+  StateManager AF1::&getInstance();
+  void AF1::setup(int id);
+  void AF1::loop();
+  int AF1::getCurState();
+  int AF1::getPrevState();
+  void AF1::setRequestedState(int s);
+  int AF1::getRequestedState();
+  void AF1::handleUserInput(String s);
+  String AF1::stateToString(int s);
+  void AF1::setBuiltinLED(bool on);
+  bool AF1::handleStateChange(int s);
+  const std::vector<wifi_ap_info> AF1::getWifiAPs();
+  void AF1::setInitialState(int s);
+  int AF1::getInitialState();
+  void AF1::setStateAfterHandshake(int s);
+  int AF1::getStateAfterHandshake();
+  void AF1::setPurgNext(int p, int n);
+  const std::map<int, String> AF1::&getStateNameMap();
+  int AF1::getDeviceID();
+  void AF1::setDefaultWSServerInfo(String host, String path, int port);
+```
+
 ## To Explore
 
 - Nested state entities
