@@ -33,8 +33,7 @@ When creating new state entities, setup, loop, and message handling behavior fro
 class Demo : public WSEnt
 {
 public:
-  // This state entity uses a websocket at 192.168.1.123:3000/ws
-  Demo() : WSEnt{"192.168.1.123", "/ws", 3000} {}
+  Demo() : WSEnt{"192.168.1.123", "/ws", 3000} {} // This state entity uses a websocket at 192.168.1.123:3000/ws
 
   void setup()
   {
@@ -77,6 +76,7 @@ void setup()
   AF1::setup(DEVICE_ID); // REQUIRED
   AF1::registerWifiAP("ssid-here", "pass-here");
   AF1::registerStateEnt(STATE_DEMO, new Demo(), "STATE_DEMO");
+  // Change to STATE_DEMO when "4" is entered into serial monitor
   AF1::registerStringHandler("4", [](){
     AF1::setRequestedState(STATE_DEMO);
   });
