@@ -19,24 +19,65 @@
 
 #define AF1 StateManager
 
+#ifndef DEVICE_PREFIX
 #define DEVICE_PREFIX "JS"
+#endif
+
+#ifndef DEVICE_AP_PASS
 #define DEVICE_AP_PASS "1234567890"
+#endif
+
+#ifndef PRINT_WIFI_SCAN_RESULTS
 #define PRINT_WIFI_SCAN_RESULTS false
+#endif
+
+#ifndef PRINT_MSG_SEND
 #define PRINT_MSG_SEND false
+#endif
+
+#ifndef PRINT_MSG_RECEIVE
 #define PRINT_MGG_RECEIVE false
+#endif
 
+#ifndef ESPNOW_CHANNEL
 #define ESPNOW_CHANNEL 0
-#define SLAVE_CNT 4
+#endif
+
+#ifndef SLAVE_CNT
+#define SLAVE_CNT 1
+#endif
+
+#ifndef DEFAULT_RETRIES
 #define DEFAULT_RETRIES 3
+#endif
+
+#ifndef RETRIES_PURG
 #define RETRIES_PURG 10
+#endif
 
+#ifndef DELAY_PREPARE_WIFI
 #define DELAY_PREPARE_WIFI 333
-#define DELAY_SEND 2
-#define MS_PURG_DEFAULT 999
-#define MS_MASTER_HANDSHAKE_LOOP 333
+#endif
 
+#ifndef DELAY_SEND
+#define DELAY_SEND 2
+#endif
+
+#ifndef MS_PURG_DEFAULT
+#define MS_PURG_DEFAULT 999
+#endif
+
+#ifndef MS_MASTER_HANDSHAKE_LOOP
+#define MS_MASTER_HANDSHAKE_LOOP 333
+#endif
+
+#ifndef STATE_WS_FALLBACK
 #define STATE_WS_FALLBACK STATE_IDLE_BASE
+#endif
+
+#ifndef STATE_ESPNOW_FALLBACK
 #define STATE_ESPNOW_FALLBACK STATE_IDLE_BASE
+#endif
 
 #define STRINGIFY(s) STRINGIFY1(s)
 #define STRINGIFY1(s) #s
