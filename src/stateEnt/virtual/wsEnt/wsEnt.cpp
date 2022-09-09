@@ -130,8 +130,6 @@ void WSEnt::handleOutboxMsg(AF1Msg m)
     Serial.println("Websocket client not connected; unable to send message");
 #endif
   }
-
-  return Base::handleOutboxMsg(m);
 }
 
 bool WSEnt::validateStateChange(int s)
