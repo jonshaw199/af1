@@ -113,14 +113,12 @@ void WSEnt::overrideOutboxHandler()
 void WSEnt::handleOutboxMsg(AF1Msg m)
 {
   Base::handleOutboxMsg(m);
-  // sendMsg(m);
   if (client)
   {
     String s;
     serializeJson(m.getJson(), s);
 #if PRINT_MSG_SEND
-    Serial.print("Sending websocket message: ");
-    m.print();
+    Serial.print("Sending websocket message");
 #endif
     webSocketClient.sendData(s);
   }
