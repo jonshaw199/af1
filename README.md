@@ -106,3 +106,8 @@ public:
   }
 }
 ```
+
+## To Explore
+
+- Nested state entities
+- Long/infinite loops in stateEnt::loop() (basically hijacking the main loop and preventing requested state changes from being fulfilled the normal way; may be useful for other things)
