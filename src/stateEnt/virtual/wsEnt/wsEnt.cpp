@@ -110,21 +110,25 @@ void WSEnt::overrideOutboxHandler()
   setOutboxMsgHandler(handleOutboxMsg);
 }
 
-bool WSEnt::handleOutboxMsg(AF1Msg m)
+void WSEnt::handleOutboxMsg(AF1Msg m)
 {
+  Base::handleOutboxMsg(m);
   // sendMsg(m);
   if (client)
   {
     String s;
     serializeJson(m.getJson(), s);
+#if PRINT_MSG_SEND
     Serial.print("Sending websocket message: ");
     m.print();
+#endif
     webSocketClient.sendData(s);
-    return true;
   }
   else
   {
+#if PRINT_MSG_SEND
     Serial.println("Websocket client not connected; unable to send message");
+#endif
   }
 
   return Base::handleOutboxMsg(m);

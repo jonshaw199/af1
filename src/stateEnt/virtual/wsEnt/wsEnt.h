@@ -37,7 +37,7 @@ class WSEnt : public Base
   void connectToWS();
 
 protected:
-  static bool handleOutboxMsg(AF1Msg m);
+  static void handleOutboxMsg(AF1Msg m);
 
 public:
   static WebSocketClient webSocketClient;

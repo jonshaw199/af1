@@ -22,6 +22,8 @@
 #define DEVICE_PREFIX "JS"
 #define DEVICE_AP_PASS "1234567890"
 #define PRINT_WIFI_SCAN_RESULTS false
+#define PRINT_MSG_SEND false
+#define PRINT_MGG_RECEIVE false
 
 #define ESPNOW_CHANNEL 0
 #define SLAVE_CNT 4

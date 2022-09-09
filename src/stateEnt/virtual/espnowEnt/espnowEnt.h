@@ -45,8 +45,8 @@ class ESPNowEnt : public Base
   static void onDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len);
 
 protected:
-  static bool handleInboxMsg(AF1Msg m);
-  static bool handleOutboxMsg(AF1Msg m);
+  static void handleInboxMsg(AF1Msg m);
+  static void handleOutboxMsg(AF1Msg m);
 
 public:
   void overrideInboxHandler();

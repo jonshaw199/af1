@@ -26,22 +26,19 @@ static std::map<int, af1_peer_info> peerInfoMap;
 static std::map<String, int> macToIDMap;
 // End ?
 
-bool ESPNowEnt::handleInboxMsg(AF1Msg m)
+void ESPNowEnt::handleInboxMsg(AF1Msg m)
 {
+  Base::handleInboxMsg(m);
   switch (m.getType())
   {
   case TYPE_HANDSHAKE_REQUEST:
     Serial.println("Handshake request message in inbox");
     receiveHandshakeRequest(m);
     sendHandshakeResponses({m.getSenderID()});
-    return true;
   case TYPE_HANDSHAKE_RESPONSE:
     Serial.println("Handshake response message in inbox");
     receiveHandshakeResponse(m);
-    return true;
   }
-
-  return Base::handleInboxMsg(m);
 }
 
 void ESPNowEnt::overrideInboxHandler()
@@ -49,10 +46,10 @@ void ESPNowEnt::overrideInboxHandler()
   setInboxMsgHandler(handleInboxMsg);
 }
 
-bool ESPNowEnt::handleOutboxMsg(AF1Msg m)
+void ESPNowEnt::handleOutboxMsg(AF1Msg m)
 {
+  Base::handleOutboxMsg(m);
   sendMsg(m);
-  return true;
 }
 
 void ESPNowEnt::overrideOutboxHandler()

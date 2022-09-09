@@ -42,8 +42,8 @@ class Base
 protected:
   unsigned long startMs;
   std::map<String, IntervalEvent> intervalEventMap;
-  static bool handleInboxMsg(AF1Msg m);
-  static bool handleOutboxMsg(AF1Msg m);
+  static void handleInboxMsg(AF1Msg m);
+  static void handleOutboxMsg(AF1Msg m);
   // From WifiHandler
   static uint8_t macAP[6];
   static uint8_t macSTA[6];

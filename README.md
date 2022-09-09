@@ -44,14 +44,13 @@ public:
   void overrideInboxHandler()
   {
     setInboxMsgHandler([](AF1Msg m){
+      WSEnt::handleInboxMsg(m);
       switch (m.getType())
       {
       case TYPE_RUN_DATA:
         uint8_t b = m.getJson()["brightness"];
         JSLED::setBrightness(b);
-        return true;
       }
-      return WSEnt::handleInboxMsg(m);
     });
   }
 }

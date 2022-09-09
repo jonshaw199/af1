@@ -21,9 +21,8 @@
 
 #include "box/box.h"
 
-bool dummyHandler(AF1Msg m)
+void dummyHandler(AF1Msg m)
 {
-  return false;
 }
 
 Box::Box()

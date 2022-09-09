@@ -86,17 +86,18 @@ unsigned long Base::getElapsedMs()
   return nowMs - startMs;
 }
 
-bool Base::handleInboxMsg(AF1Msg m)
+void Base::handleInboxMsg(AF1Msg m)
 {
-  Serial.println("Base handling inbox msg");
+  Serial.println("<");
+#if PRINT_MSG_SEND
   m.print();
+#endif
 
   switch (m.getType())
   {
   case TYPE_CHANGE_STATE:
     Serial.println("State change request message in inbox");
     StateManager::setRequestedState(m.getState());
-    return true;
   }
 
 #if IMPLICIT_STATE_CHANGE
@@ -105,21 +106,17 @@ bool Base::handleInboxMsg(AF1Msg m)
   {
     Serial.println("Implicit state change to " + StateManager::stateToString(m.getState()));
     StateManager::setRequestedState(m.getState());
-    return true;
   }
 #endif
 #endif
-
-  Serial.println("Inbox message going to the abyss");
-  return false;
 }
 
-bool Base::handleOutboxMsg(AF1Msg m)
+void Base::handleOutboxMsg(AF1Msg m)
 {
-  Serial.println("Base handling outbox msg");
+  Serial.print(">");
+#if PRINT_MSG_SEND
   m.print();
-  Serial.println("Outbox message going to the abyss");
-  return false;
+#endif
 }
 
 void Base::overrideInboxHandler()

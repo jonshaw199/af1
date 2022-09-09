@@ -23,7 +23,7 @@
 #include "tsQueue/tsQueue.h"
 #include "message/message.h"
 
-typedef bool (*msg_handler)(AF1Msg m);
+typedef void (*msg_handler)(AF1Msg m);
 
 class Box : public TSQueue<AF1Msg>
 {

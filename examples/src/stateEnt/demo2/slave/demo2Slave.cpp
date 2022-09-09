@@ -19,15 +19,14 @@ bool Demo2Slave::validateStateChange(int s)
 void Demo2Slave::overrideInboxHandler()
 {
   setInboxMsgHandler([](AF1Msg m)
-                     {  switch (m.getType())
+                     { 
+  Base::handleInboxMsg(m); 
+  switch (m.getType())
   {
   case TYPE_RUN_DATA:
     demo2_data d;
     memcpy(&d, m.getData(), sizeof(d));
     JSLED::setBrightness(d.brightness);
     JSLED::fillColor(d.color);
-    return true;
-  }
-
-  return Base::handleInboxMsg(m); });
+  } });
 }
