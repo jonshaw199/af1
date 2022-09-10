@@ -52,6 +52,7 @@ void WSEnt::setup()
   serverInfo.path.toCharArray(p, lenP);
   webSocketClient.host = h;
   webSocketClient.path = p;
+  webSocketClient.protocol = "chat";
 
   if (webSocketClient.handshake(client))
   {
