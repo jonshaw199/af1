@@ -88,7 +88,7 @@ unsigned long Base::getElapsedMs()
 
 void Base::handleInboxMsg(AF1Msg m)
 {
-  Serial.println("<");
+  Serial.print("<");
 #if PRINT_MSG_SEND
   m.print();
 #endif
