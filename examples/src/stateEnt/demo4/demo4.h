@@ -3,9 +3,8 @@
 
 #include <AF1.h>
 
-class Demo4 : public WSEnt
+class Demo4 : public Base
 {
-  Demo4();
   void setup();
   void preStateChange(int s);
   void overrideInboxHandler();

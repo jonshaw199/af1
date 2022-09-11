@@ -24,25 +24,25 @@
 
 bool handleHandshakesInternal(IECBArg a)
 {
-  ESPNowEnt::handleHandshakes();
+  Base::handleHandshakes();
   return true;
 }
 
-MasterHandshake::MasterHandshake() : ESPNowEnt()
+MasterHandshake::MasterHandshake() : Base()
 {
   intervalEventMap.insert(std::pair<String, IntervalEvent>("MasterHandshake_1", IntervalEvent(MS_MASTER_HANDSHAKE_LOOP, handleHandshakesInternal)));
 }
 
 void MasterHandshake::setup()
 {
-  ESPNowEnt::setup();
+  Base::setup();
   setAPSTAMode();
   initEspNow();
 }
 
 void MasterHandshake::loop()
 {
-  ESPNowEnt::loop();
+  Base::loop();
 
   // Check if handshake has been completed for all slaves
   int numHandshakeComplete = 0;

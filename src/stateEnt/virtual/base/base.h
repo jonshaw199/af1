@@ -27,14 +27,53 @@
 #include <WiFiMulti.h>
 #include <HTTPClient.h>
 #include <ArduinoJson.h>
+#include <esp_now.h>
+#include <set>
+#include <WebSocketClient.h>
 
 #include "intervalEvent/intervalEvent.h"
 #include "state/state.h"
 #include "message/message.h"
 #include "box/box.h"
 
+typedef void (*string_input_handler)();
+
+struct wifi_ap_info
+{
+  String ssid;
+  String pass;
+  int staticIP[4];
+  int gatewayIP[4];
+  int subnetIP[4];
+};
+
+typedef struct af1_peer_info
+{
+  esp_now_peer_info_t espnowPeerInfo;
+  bool handshakeRequest;
+  bool handshakeResponse;
+  AF1Msg lastMsg;
+  std::mutex mutex;
+} af1_peer_info;
+
+typedef struct ws_client_info
+{
+  String host;
+  String path;
+  int port;
+  String protocol;
+} ws_client_info;
+
 class Base
 {
+  // From ESPNowEnt
+  static void onESPNowDataSent(const uint8_t *mac_addr, esp_now_send_status_t status);
+  static void onESPNowDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len);
+  // From WSEnt
+  ws_client_info wsClientInfo;
+  void connectToWS();
+  void handshakeWS();
+
 protected:
   unsigned long startMs;
   std::map<String, IntervalEvent> intervalEventMap;
@@ -82,6 +121,22 @@ public:
   static void setOutboxMsgHandler(msg_handler h);
   static void pushOutbox(AF1Msg m);
   static void pushInbox(AF1Msg m);
+  // From ESPNowEnt
+  static int8_t scanForPeers();
+  static void connectToPeers();
+  static void initEspNow();
+  static bool handleHandshakes();
+  static void sendStateChangeMessages(int s);
+  static void sendHandshakeRequests(std::set<int> ids);
+  static void receiveHandshakeRequest(AF1Msg m);
+  static void sendHandshakeResponses(std::set<int> ids);
+  static void receiveHandshakeResponse(AF1Msg m);
+  static void sendAllHandshakes();
+  static void sendMsgESPNow(AF1Msg msg);
+  // From WSEnt
+  static WebSocketClient webSocketClient;
+  static WiFiClient client; // Use WiFiClient class to create TCP connections
+  void setWSClientInfo(ws_client_info w);
   // New
   static DynamicJsonDocument httpFetch(String url);
   static DynamicJsonDocument httpPost(String url, DynamicJsonDocument body);

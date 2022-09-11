@@ -20,9 +20,9 @@
 #ifndef STATEENT_HANDSHAKE_MASTER_MASTERHANDSHAKE_H_
 #define STATEENT_HANDSHAKE_MASTER_MASTERHANDSHAKE_H_
 
-#include "stateEnt/virtual/espnowEnt/espnowEnt.h"
+#include "stateEnt/virtual/base/base.h"
 
-class MasterHandshake : public ESPNowEnt
+class MasterHandshake : public Base
 {
 public:
   MasterHandshake();

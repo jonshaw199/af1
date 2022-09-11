@@ -30,32 +30,11 @@
 #include "state/state.h"
 #include "message/message.h"
 #include "stateEnt/virtual/base/base.h"
-#include "stateEnt/virtual/wsEnt/wsEnt.h"
-
-typedef void (*string_input_handler)();
-
-struct wifi_ap_info
-{
-  String ssid;
-  String pass;
-  int staticIP[4];
-  int gatewayIP[4];
-  int subnetIP[4];
-};
-
-typedef struct af1_peer_info
-{
-  esp_now_peer_info_t espnowPeerInfo;
-  bool handshakeRequest;
-  bool handshakeResponse;
-  AF1Msg lastMsg;
-  std::mutex mutex;
-} af1_peer_info;
 
 class StateManager
 {
   StateManager();
-  static void setWSClientInfo(WSEnt *e, String host, String path, int port, String protocol);
+  static void setWSClientInfo(Base *e, ws_client_info w);
 
 protected:
   static int curState;
@@ -89,12 +68,13 @@ public:
   static void setPurgNext(int p, int n);
   static const std::map<int, String> &getStateNameMap();
   static int getDeviceID();
-  static void setDefaultWSClientInfo(String host, String path, int port, String protocol);
+  static void setDefaultWSClientInfo(ws_client_info w);
   static std::map<int, af1_peer_info> &getPeerInfoMap();
   static std::map<String, int> &getMacToIDMap();
   static std::set<int> getPeerIDs();
 
   static void registerStateEnt(int i, Base *s, String n);
+  static void registerStateEnt(int i, Base *s, String n, ws_client_info w);
   static void registerStringHandler(String s, string_input_handler h);
   static void registerWifiAP(String s, String p);
   static void registerWifiAP(String s, String p, int a, int b, int c, int d, int ga, int gb, int gc, int gd, int sa, int sb, int sc, int sd);

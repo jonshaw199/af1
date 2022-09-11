@@ -20,7 +20,7 @@
 #ifndef STATEENT_OTA_OTA_H_
 #define STATEENT_OTA_OTA_H_
 
-#include "stateEnt/virtual/wsEnt/wsEnt.h"
+#include "stateEnt/virtual/base/base.h"
 
 class OTA : public Base
 {

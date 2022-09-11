@@ -16,13 +16,9 @@
 
 ### Overview
 
-The AF1 core consists of a handful of pre-built "state entities" and one "state manager". A state entity defines the behavior for a state, and new state entities can be created by extending the `Base`, `WSEnt`, or `ESPNowEnt` classes, depending on the desired message handling mechanism (if any):
+The AF1 core consists of a handful of pre-built "state entities" and one "state manager". A state entity defines the behavior for a state, and new state entities can be created by extending the `Base` class.
 
-- `Base`: HTTP client or no wifi connectivity
-  - `WSEnt`: Websocket client
-  - `ESPNowEnt`: ESP-Now master/slave
-
-When creating new state entities, setup, loop, and message handling behavior from the virtual classes can be overridden as necessary. As an example, this `Demo` class extends the framework's `WSEnt` class in order to receive websocket messages from a server for controlling an LED. Note that `setup()` and `overrideInboxHandler()` are inherited from `WSEnt`, but their behavior is overridden here in order to handle LED-related tasks:
+When creating new state entities, setup, loop, and message handling behavior from the virtual classes can be overridden as necessary. As an example, this `Demo` class extends the `Base` class in order to receive websocket messages from a server for controlling an LED. Note that `setup()` and `overrideInboxHandler()` are inherited from `Base`, but their behavior is overridden here in order to handle LED-related tasks:
 
 **demo.cpp:**
 
@@ -30,22 +26,19 @@ When creating new state entities, setup, loop, and message handling behavior fro
 #include <AF1.h>
 #include "led/led.h"
 
-class Demo : public WSEnt
+class Demo : public Base
 {
 public:
-  // This state entity uses a websocket at 192.168.1.123:3000/ws
-  Demo() : WSEnt{"192.168.1.123", "/ws", 3000} {}
-
   void setup()
   {
-    WSEnt::setup();
+    Base::setup();
     JSLED::init();
   }
 
   void overrideInboxHandler()
   {
     setInboxMsgHandler([](AF1Msg m){
-      WSEnt::handleInboxMsg(m);
+      Base::handleInboxMsg(m);
       switch (m.getType())
       {
       case TYPE_RUN_DATA:
@@ -76,7 +69,7 @@ void setup()
   Serial.begin(115200);
   AF1::setup(DEVICE_ID); // REQUIRED
   AF1::registerWifiAP("ssid-here", "pass-here");
-  AF1::registerStateEnt(STATE_DEMO, new Demo(), "STATE_DEMO");
+  AF1::registerStateEnt(STATE_DEMO, new Demo(), "STATE_DEMO"); // "192.168.1.123", "/ws", 3000
   AF1::setInitialState(STATE_DEMO);
   // Change to STATE_DEMO when "4" is entered into serial monitor
   AF1::registerStringHandler("4", [](){
@@ -137,7 +130,7 @@ const std::map<int, String> AF1::&getStateNameMap();
 int AF1::getDeviceID();
 void AF1::setDefaultWSClientInfo(String host, String path, int port, String protocol);
 
-// Inherited members from Base, WSEnt, and ESPNowEnt
+// Inherited members from Base
 ```
 
 ## To Do

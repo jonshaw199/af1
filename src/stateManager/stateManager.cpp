@@ -27,8 +27,6 @@
 #include "stateEnt/handshake/slave/slaveHandshake.h"
 #include "stateEnt/init/init.h"
 #include "stateEnt/purg/purg.h"
-#include "stateEnt/virtual/wsEnt/wsEnt.h"
-#include "stateEnt/virtual/espnowEnt/espnowEnt.h"
 
 int StateManager::curState;
 int StateManager::prevState;
@@ -56,10 +54,8 @@ StateManager::StateManager()
   stateEntMap[STATE_HANDSHAKE] = new SlaveHandshake();
 #endif
   stateEntMap[STATE_RESTART] = new Restart();
-  stateEntMap[STATE_IDLE_ESPNOW] = new ESPNowEnt();
-  stateEntMap[STATE_PURG_ESPNOW] = new Purg<ESPNowEnt>();
-  stateEntMap[STATE_PURG_WS] = new Purg<WSEnt>();
-  stateEntMap[STATE_IDLE_WS] = new WSEnt();
+  stateEntMap[STATE_PURG_ESPNOW] = new Purg<Base>();
+  stateEntMap[STATE_PURG_WS] = new Purg<Base>();
   stateEntMap[STATE_IDLE_BASE] = new Base();
 
   stringHandlerMap["s"] = []()
@@ -74,36 +70,26 @@ StateManager::StateManager()
   {
     StateManager::setRequestedState(STATE_HANDSHAKE);
   };
-  stringHandlerMap["k"] = []()
+  stringHandlerMap["r"] = []()
   {
     StateManager::setRequestedState(STATE_RESTART);
   };
   stringHandlerMap["i"] = []()
   {
-    setRequestedState(STATE_IDLE_ESPNOW);
-  };
-  stringHandlerMap["w"] = []()
-  {
-    StateManager::setRequestedState(STATE_IDLE_WS);
-  };
-  stringHandlerMap["b"] = []()
-  {
-    StateManager::setRequestedState(STATE_IDLE_BASE);
+    setRequestedState(STATE_IDLE_BASE);
   };
 
   stateNameMap[STATE_NONE] = "STATE_NONE";
   stateNameMap[STATE_INIT] = "STATE_INIT";
   stateNameMap[STATE_PURG_ESPNOW] = "STATE_PURG_ESPNOW";
   stateNameMap[STATE_OTA] = "STATE_OTA";
-  stateNameMap[STATE_IDLE_ESPNOW] = "STATE_IDLE_ESPNOW";
   stateNameMap[STATE_RESTART] = "STATE_RESTART";
   stateNameMap[STATE_HANDSHAKE] = "STATE_HANDSHAKE";
-  stateNameMap[STATE_IDLE_WS] = "STATE_IDLE_WS";
   stateNameMap[STATE_IDLE_BASE] = "STATE_IDLE_BASE";
   stateNameMap[STATE_PURG_WS] = "STATE_PURG_WS";
 
   initialState = STATE_IDLE_BASE;
-  stateAfterHandshake = STATE_IDLE_ESPNOW;
+  stateAfterHandshake = STATE_IDLE_BASE;
 }
 
 StateManager &StateManager::getInstance()
@@ -218,6 +204,13 @@ void StateManager::registerStateEnt(int i, Base *s, String n)
   stateNameMap[i] = n;
 }
 
+void StateManager::registerStateEnt(int i, Base *s, String n, ws_client_info w)
+{
+  s->setWSClientInfo(w);
+  stateEntMap[i] = s;
+  stateNameMap[i] = n;
+}
+
 void StateManager::registerStringHandler(String s, string_input_handler h)
 {
   stringHandlerMap[s] = h;
@@ -303,14 +296,14 @@ int StateManager::getDeviceID()
   return deviceID;
 }
 
-void StateManager::setWSClientInfo(WSEnt *e, String host, String path, int port, String protocol)
+void StateManager::setWSClientInfo(Base *e, ws_client_info w)
 {
-  e->setWSClientInfo(host, path, port, protocol);
+  e->setWSClientInfo(w);
 }
 
-void StateManager::setDefaultWSClientInfo(String host, String path, int port, String protocol)
+void StateManager::setDefaultWSClientInfo(ws_client_info w)
 {
-  (static_cast<WSEnt *>(stateEntMap[STATE_IDLE_WS]))->setWSClientInfo(host, path, port, protocol);
+  stateEntMap[STATE_IDLE_BASE]->setWSClientInfo(w);
 }
 
 std::set<int> StateManager::getPeerIDs()
