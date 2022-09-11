@@ -135,7 +135,13 @@ void AF1::setPurgNext(int p, int n);
 const std::map<int, String> AF1::&getStateNameMap();
 int AF1::getDeviceID();
 void AF1::setDefaultWSClientInfo(String host, String path, int port, String protocol);
+
+// Inherited members from Base, WSEnt, and ESPNowEnt
 ```
+
+## To Do
+
+- Add state machine support
 
 ## To Explore
 
