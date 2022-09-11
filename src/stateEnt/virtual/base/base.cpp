@@ -117,12 +117,7 @@ void Base::preStateChange(int s)
   }
 
 #if MASTER
-  if (StateManager::getCurState() != STATE_PURG)
-  {
-    sendStateChangeMessages(s);
-    StateManager::setRequestedState(STATE_PURG);
-    StateManager::setPurgNext(STATE_PURG, s);
-  }
+  sendStateChangeMessages(s);
 #endif
 }
 
