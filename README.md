@@ -141,5 +141,6 @@ void AF1::setDefaultWSClientInfo(String host, String path, int port, String prot
 
 ## To Explore
 
+- Mesh network
 - Nested state entities
 - Long/infinite loops in stateEnt::loop() (basically hijacking the main loop and preventing requested state changes from being fulfilled the normal way; may be useful for other things)
