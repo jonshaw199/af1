@@ -36,8 +36,7 @@ MasterHandshake::MasterHandshake() : ESPNowEnt()
 void MasterHandshake::setup()
 {
   ESPNowEnt::setup();
-  prepareWifi();
-  setAPMode();
+  setAPSTAMode();
   initEspNow();
 }
 

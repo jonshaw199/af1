@@ -66,6 +66,7 @@ public:
   static void prepareWifi();
   static void setSTAMode();
   static void setAPMode();
+  static void setAPSTAMode();
   static bool broadcastAP();
   static String macToString(const uint8_t *m);
   static void printMac(const uint8_t *m);

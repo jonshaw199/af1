@@ -176,6 +176,12 @@ void Base::setAPMode()
   WiFi.mode(WIFI_AP);
 }
 
+void Base::setAPSTAMode()
+{
+  Serial.println("Setting wifi mode to APSTA");
+  WiFi.mode(WIFI_MODE_APSTA);
+}
+
 // Setup access point (aka open wifi network); this is used by slaves so master can find them
 bool Base::broadcastAP()
 {
