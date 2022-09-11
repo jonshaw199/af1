@@ -37,6 +37,11 @@ WSEnt::WSEnt(String host, String path, int port) : Base()
   setWSClientInfo(host, path, port, "");
 }
 
+WSEnt::WSEnt(String host, String path, int port, String protocol) : Base()
+{
+  setWSClientInfo(host, path, port, protocol);
+}
+
 void WSEnt::setup()
 {
   Base::setup();

@@ -47,6 +47,7 @@ public:
   static WiFiClient client;
   WSEnt();
   WSEnt(String host, String path, int port);
+  WSEnt(String host, String path, int port, String protocol);
   void setup();
   void loop();
   void overrideOutboxHandler();
