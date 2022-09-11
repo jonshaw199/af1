@@ -66,10 +66,9 @@ typedef struct ws_client_info
 
 class Base
 {
-  // From ESPNowEnt
   static void onESPNowDataSent(const uint8_t *mac_addr, esp_now_send_status_t status);
   static void onESPNowDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len);
-  // From WSEnt
+
   ws_client_info wsClientInfo;
   void connectToWS();
   void handshakeWS();
@@ -79,29 +78,31 @@ protected:
   std::map<String, IntervalEvent> intervalEventMap;
   static void handleInboxMsg(AF1Msg m);
   static void handleOutboxMsg(AF1Msg m);
-  // From WifiHandler
+
   static uint8_t macAP[6];
   static uint8_t macSTA[6];
-  // From MessageHandler
+
   static Box inbox;
   static Box outbox;
-  // New
+
   static HTTPClient httpClient;
   static WiFiMulti wifiMulti;
 
 public:
   Base();
+  // Virtual
   virtual void setup();
   virtual void loop();
   virtual bool validateStateChange(int s);
   virtual void preStateChange(int s);
   virtual void overrideInboxHandler();
   virtual void overrideOutboxHandler();
+  // Interval Events
   unsigned long getElapsedMs();
   void resetIntervalEvents();
   void activateIntervalEvents();
   void deactivateIntervalEvents();
-  // From WifiHandler
+  // Wifi
   static void prepareWifi();
   static void setSTAMode();
   static void setAPMode();
@@ -112,16 +113,16 @@ public:
   static uint8_t *getMacSTA();
   static uint8_t *getMacAP();
   static void connectToWifi();
-  // From MessageHandler
-  static const TSQueue<AF1Msg> &getOutbox(); // Read only
-  static const TSQueue<AF1Msg> &getInbox();  // Read only
+  // Inbox/Outbox
+  static const TSQueue<AF1Msg> &getOutbox();
+  static const TSQueue<AF1Msg> &getInbox();
   static void handleInboxMessages();
   static void handleOutboxMessages();
   static void setInboxMsgHandler(msg_handler h);
   static void setOutboxMsgHandler(msg_handler h);
   static void pushOutbox(AF1Msg m);
   static void pushInbox(AF1Msg m);
-  // From ESPNowEnt
+  // ESP-Now
   static int8_t scanForPeers();
   static void connectToPeers();
   static void initEspNow();
@@ -133,13 +134,14 @@ public:
   static void receiveHandshakeResponse(AF1Msg m);
   static void sendAllHandshakes();
   static void sendMsgESPNow(AF1Msg msg);
-  // From WSEnt
+  // Websocket
   static WebSocketClient webSocketClient;
   static WiFiClient client; // Use WiFiClient class to create TCP connections
   void setWSClientInfo(ws_client_info w);
-  // New
+  // HTTP
   static DynamicJsonDocument httpFetch(String url);
   static DynamicJsonDocument httpPost(String url, DynamicJsonDocument body);
+  // Other
   static void setBuiltinLED(bool on);
 };
 
