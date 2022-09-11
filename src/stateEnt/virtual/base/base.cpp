@@ -237,6 +237,11 @@ void Base::connectToWifi()
 
   std::vector<wifi_ap_info> v = StateManager::getWifiAPs();
 
+  if (!v.size())
+  {
+    return;
+  }
+
   if (v.size() && v[0].staticIP[0] >= 0)
   {
     // Set your Static IP address
