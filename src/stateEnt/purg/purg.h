@@ -37,11 +37,13 @@ public:
     purgMs = MS_PURG_DEFAULT;
     next = STATE_IDLE_BASE;
   }
+
   Purg(int s)
   {
     purgMs = MS_PURG_DEFAULT;
     next = s;
   }
+
   void loop()
   {
     T::loop();
@@ -52,14 +54,17 @@ public:
       StateManager::setRequestedState(next);
     }
   }
+
   void setPurgMs(unsigned long ms)
   {
     purgMs = ms;
   }
+
   void setNext(int s)
   {
     next = s;
   }
+  
   String getName()
   {
     return "STATE_PURG_" + String(next);
