@@ -224,6 +224,8 @@ uint8_t *Base::getMacAP()
 
 void Base::connectToWifi()
 {
+  Serial.println("Connecting to wifi");
+
   if (WiFi.status() == WL_CONNECTED)
   {
     Serial.println("Already connected to wifi");
