@@ -112,7 +112,10 @@ void WSEnt::handshakeWS()
   wsClientInfo.protocol.toCharArray(pr, lenPr);
   webSocketClient.host = h;
   webSocketClient.path = p;
-  webSocketClient.protocol = pr;
+  if (wsClientInfo.protocol.length())
+  {
+    webSocketClient.protocol = pr;
+  }
 
   if (webSocketClient.handshake(client))
   {
