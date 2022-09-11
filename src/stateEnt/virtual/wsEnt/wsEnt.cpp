@@ -29,12 +29,12 @@ WiFiClient WSEnt::client;
 
 WSEnt::WSEnt() : Base()
 {
-  setWSClientInfo("", "", -1);
+  setWSClientInfo("", "", -1, "");
 }
 
 WSEnt::WSEnt(String host, String path, int port) : Base()
 {
-  setWSClientInfo(host, path, port);
+  setWSClientInfo(host, path, port, "");
 }
 
 void WSEnt::setup()
@@ -46,13 +46,16 @@ void WSEnt::setup()
 
   int lenH = wsClientInfo.host.length() + 1;
   int lenP = wsClientInfo.path.length() + 1;
+  int lenPr = wsClientInfo.protocol.length() + 1;
   char h[lenH];
   char p[lenP];
+  char pr[lenPr];
   wsClientInfo.host.toCharArray(h, lenH);
   wsClientInfo.path.toCharArray(p, lenP);
+  wsClientInfo.protocol.toCharArray(pr, lenPr);
   webSocketClient.host = h;
   webSocketClient.path = p;
-  // webSocketClient.protocol = "chat";
+  webSocketClient.protocol = pr;
 
   if (webSocketClient.handshake(client))
   {
@@ -141,9 +144,10 @@ bool WSEnt::validateStateChange(int s)
   return true;
 }
 
-void WSEnt::setWSClientInfo(String host, String path, int port)
+void WSEnt::setWSClientInfo(String host, String path, int port, String protocol)
 {
   wsClientInfo.host = host;
   wsClientInfo.path = path;
   wsClientInfo.port = port;
+  wsClientInfo.protocol = protocol;
 }

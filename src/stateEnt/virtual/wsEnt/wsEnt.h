@@ -50,7 +50,7 @@ public:
   void loop();
   void overrideOutboxHandler();
   bool validateStateChange(int s);
-  void setWSClientInfo(String host, String path, int port);
+  void setWSClientInfo(String host, String path, int port, String protocol);
 };
 
 #endif
