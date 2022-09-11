@@ -100,11 +100,6 @@ void Base::loop()
 
 bool Base::validateStateChange(int s)
 {
-  if (s == STATE_NONE)
-  {
-    Serial.println("Base::validateStateChange: Uh oh, idling...");
-    StateManager::setRequestedState(STATE_IDLE_BASE);
-  }
   return true;
 }
 
@@ -114,21 +109,21 @@ void Base::preStateChange(int s)
   Serial.print(StateManager::getStateNameMap().at(s));
   Serial.println(" state now.");
   deactivateIntervalEvents();
-  /*
-  #if MASTER
-    if (s == STATE_NONE)
-    {
-      Serial.println("ESPNowEnt::validateStateChange: uh oh, idling...");
-      StateManager::setRequestedState(STATE_IDLE_ESPNOW);
-    }
-    else if (StateManager::getCurState() != STATE_PURG_ESPNOW)
-    {
-      sendStateChangeMessages(s);
-      StateManager::setRequestedState(STATE_PURG_ESPNOW);
-      StateManager::setPurgNext(STATE_PURG_ESPNOW, s);
-    }
-  #endif
-  */
+
+  if (s == STATE_NONE)
+  {
+    Serial.println("Uh oh, idling...");
+    StateManager::setRequestedState(STATE_IDLE_BASE);
+  }
+
+#if MASTER
+  if (StateManager::getCurState() != STATE_PURG)
+  {
+    sendStateChangeMessages(s);
+    StateManager::setRequestedState(STATE_PURG);
+    StateManager::setPurgNext(STATE_PURG, s);
+  }
+#endif
 }
 
 unsigned long Base::getElapsedMs()

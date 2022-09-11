@@ -54,8 +54,7 @@ StateManager::StateManager()
   stateEntMap[STATE_HANDSHAKE] = new SlaveHandshake();
 #endif
   stateEntMap[STATE_RESTART] = new Restart();
-  stateEntMap[STATE_PURG_ESPNOW] = new Purg<Base>();
-  stateEntMap[STATE_PURG_WS] = new Purg<Base>();
+  stateEntMap[STATE_PURG] = new Purg<Base>();
   stateEntMap[STATE_IDLE_BASE] = new Base();
 
   stringHandlerMap["s"] = []()
@@ -81,12 +80,11 @@ StateManager::StateManager()
 
   stateNameMap[STATE_NONE] = "STATE_NONE";
   stateNameMap[STATE_INIT] = "STATE_INIT";
-  stateNameMap[STATE_PURG_ESPNOW] = "STATE_PURG_ESPNOW";
+  stateNameMap[STATE_PURG] = "STATE_PURG";
   stateNameMap[STATE_OTA] = "STATE_OTA";
   stateNameMap[STATE_RESTART] = "STATE_RESTART";
   stateNameMap[STATE_HANDSHAKE] = "STATE_HANDSHAKE";
   stateNameMap[STATE_IDLE_BASE] = "STATE_IDLE_BASE";
-  stateNameMap[STATE_PURG_WS] = "STATE_PURG_WS";
 
   initialState = STATE_IDLE_BASE;
   stateAfterHandshake = STATE_IDLE_BASE;
