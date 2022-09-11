@@ -61,7 +61,7 @@ typedef struct ws_client_info
   String host;
   String path;
   int port;
-  String protocol = "";
+  String protocol;
 } ws_client_info;
 
 class Base
