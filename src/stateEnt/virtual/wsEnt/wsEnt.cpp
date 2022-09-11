@@ -46,7 +46,6 @@ void WSEnt::setup()
 {
   Base::setup();
 
-  connectToWifi();
   if (client)
   {
     Serial.println("Already connected to websocket");
