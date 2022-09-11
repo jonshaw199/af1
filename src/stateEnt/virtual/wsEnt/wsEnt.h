@@ -24,16 +24,17 @@
 
 #include "stateEnt/virtual/base/base.h"
 
-struct ws_server_info
+struct ws_client_info
 {
   String host;
   String path;
+  String protocol;
   int port;
 };
 
 class WSEnt : public Base
 {
-  ws_server_info serverInfo;
+  ws_client_info wsClientInfo;
   void connectToWS();
 
 protected:
@@ -49,7 +50,7 @@ public:
   void loop();
   void overrideOutboxHandler();
   bool validateStateChange(int s);
-  void setServerInfo(String host, String path, int port);
+  void setWSClientInfo(String host, String path, int port);
 };
 
 #endif

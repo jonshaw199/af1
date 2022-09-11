@@ -29,12 +29,12 @@ WiFiClient WSEnt::client;
 
 WSEnt::WSEnt() : Base()
 {
-  setServerInfo("", "", -1);
+  setWSClientInfo("", "", -1);
 }
 
 WSEnt::WSEnt(String host, String path, int port) : Base()
 {
-  setServerInfo(host, path, port);
+  setWSClientInfo(host, path, port);
 }
 
 void WSEnt::setup()
@@ -44,15 +44,15 @@ void WSEnt::setup()
   connectToWifi();
   connectToWS();
 
-  int lenH = serverInfo.host.length() + 1;
-  int lenP = serverInfo.path.length() + 1;
+  int lenH = wsClientInfo.host.length() + 1;
+  int lenP = wsClientInfo.path.length() + 1;
   char h[lenH];
   char p[lenP];
-  serverInfo.host.toCharArray(h, lenH);
-  serverInfo.path.toCharArray(p, lenP);
+  wsClientInfo.host.toCharArray(h, lenH);
+  wsClientInfo.path.toCharArray(p, lenP);
   webSocketClient.host = h;
   webSocketClient.path = p;
-  webSocketClient.protocol = "chat";
+  // webSocketClient.protocol = "chat";
 
   if (webSocketClient.handshake(client))
   {
@@ -95,7 +95,7 @@ void WSEnt::loop()
 void WSEnt::connectToWS()
 {
   // Connect to the websocket server
-  if (client.connect(serverInfo.host.c_str(), serverInfo.port))
+  if (client.connect(wsClientInfo.host.c_str(), wsClientInfo.port))
   {
     Serial.println("Websocket connected");
   }
@@ -141,9 +141,9 @@ bool WSEnt::validateStateChange(int s)
   return true;
 }
 
-void WSEnt::setServerInfo(String host, String path, int port)
+void WSEnt::setWSClientInfo(String host, String path, int port)
 {
-  serverInfo.host = host;
-  serverInfo.path = path;
-  serverInfo.port = port;
+  wsClientInfo.host = host;
+  wsClientInfo.path = path;
+  wsClientInfo.port = port;
 }
