@@ -45,16 +45,16 @@ static std::map<String, int> macToIDMap;
 
 StateManager::StateManager()
 {
-  stateEntMap[STATE_INIT] = new Init("STATE_INIT");
-  stateEntMap[STATE_OTA] = new OTA("STATE_OTA");
+  stateEntMap[STATE_INIT] = new Init();
+  stateEntMap[STATE_OTA] = new OTA();
 #if MASTER
-  stateEntMap[STATE_HANDSHAKE] = new MasterHandshake("STATE_HANDSHAKE");
+  stateEntMap[STATE_HANDSHAKE] = new MasterHandshake();
 #else
-  stateEntMap[STATE_HANDSHAKE] = new SlaveHandshake("STATE_HANDSHAKE");
+  stateEntMap[STATE_HANDSHAKE] = new SlaveHandshake();
 #endif
-  stateEntMap[STATE_RESTART] = new Restart("STATE_RESTART");
-  stateEntMap[STATE_PURG] = new Purg<Base>("STATE_PURG");
-  stateEntMap[STATE_IDLE_BASE] = new Base("STATE_IDLE_BASE");
+  stateEntMap[STATE_RESTART] = new Restart();
+  stateEntMap[STATE_PURG] = new Purg<Base>();
+  stateEntMap[STATE_IDLE_BASE] = new Base();
 
   stringHandlerMap["s"] = []()
   {
@@ -144,7 +144,7 @@ void StateManager::setRequestedState(int s)
   else
   {
     Serial.print("Setting requested state: ");
-    Serial.print(stateEntMap[s]->);
+    Serial.print(stateEntMap[s]->getName());
     Serial.print(" (");
     Serial.print(s);
     Serial.println(")");

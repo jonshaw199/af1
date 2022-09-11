@@ -27,6 +27,7 @@ class Init : public Base
 public:
   void setup();
   void loop();
+  String getName();
 };
 
 #endif // STATEENT_INIT_INIT_H

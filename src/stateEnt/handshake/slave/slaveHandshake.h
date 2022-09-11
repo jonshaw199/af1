@@ -26,6 +26,7 @@ class SlaveHandshake : public Base
 {
 public:
   void setup();
+  String getName();
 };
 
 #endif // STATEENT_HANDSHAKE_SLAVE_SLAVEHANDSHAKE_H_

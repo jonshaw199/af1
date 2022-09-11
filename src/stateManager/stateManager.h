@@ -71,8 +71,7 @@ public:
   static std::map<String, int> &getMacToIDMap();
   static std::set<int> getPeerIDs();
 
-  static void registerStateEnt(int i, Base *s, String n);
-  static void registerStateEnt(int i, Base *s, String n, ws_client_info w);
+  static void registerStateEnt(int i, Base *s);
   static void registerStringHandler(String s, string_input_handler h);
   static void registerWifiAP(String s, String p);
   static void registerWifiAP(String s, String p, int a, int b, int c, int d, int ga, int gb, int gc, int gd, int sa, int sb, int sc, int sd);

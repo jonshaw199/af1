@@ -54,3 +54,7 @@ void Init::loop()
 {
   StateManager::setRequestedState(StateManager::getInitialState());
 }
+
+String getName() {
+  return "STATE_INIT";
+}

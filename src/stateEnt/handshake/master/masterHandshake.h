@@ -28,6 +28,7 @@ public:
   MasterHandshake();
   void setup();
   void loop();
+  String getName();
 };
 
 #endif // STATEENT_HANDSHAKE_MASTER_MASTERHANDSHAKE_H_

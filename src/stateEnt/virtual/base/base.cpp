@@ -35,14 +35,12 @@ WebSocketClient Base::webSocketClient;
 // Use WiFiClient class to create TCP connections
 WiFiClient Base::client;
 
-Base::Base(String n)
+Base::Base()
 {
-  name = n;
 }
 
-Base::Base(String n, ws_client_info w)
+Base::Base(ws_client_info w)
 {
-  Base(n);
   setWSClientInfo(w);
 }
 
@@ -116,12 +114,6 @@ void Base::preStateChange(int s)
   Serial.print(StateManager::getStateEntMap().at(s)->getName());
   Serial.println(" state now.");
   deactivateIntervalEvents();
-
-  if (s == StateManager::get)
-  {
-    Serial.println("Uh oh, idling...");
-    StateManager::setRequestedState(STATE_IDLE_BASE);
-  }
 
 #if MASTER
   sendStateChangeMessages(s);
@@ -205,6 +197,11 @@ void Base::overrideInboxHandler()
 void Base::overrideOutboxHandler()
 {
   setOutboxMsgHandler(handleOutboxMsg);
+}
+
+String Base::getName()
+{
+  return "(unknown state)";
 }
 
 void Base::resetIntervalEvents()
@@ -872,9 +869,4 @@ void Base::setWSClientInfo(ws_client_info w)
   wsClientInfo.path = w.path;
   wsClientInfo.port = w.port;
   wsClientInfo.protocol = w.protocol;
-}
-
-String Base::getName()
-{
-  return name;
 }

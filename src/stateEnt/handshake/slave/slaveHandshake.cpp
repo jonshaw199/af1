@@ -26,3 +26,8 @@ void SlaveHandshake::setup()
   broadcastAP();
   initEspNow();
 }
+
+String SlaveHandshake::getName()
+{
+  return "STATE_HANDSHAKE_SLAVE";
+}

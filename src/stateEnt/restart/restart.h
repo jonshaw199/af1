@@ -26,6 +26,7 @@ class Restart : public Base
 {
 public:
   void loop();
+  String getName();
 };
 
 #endif // STATEENT_RESTART_RESTART_H

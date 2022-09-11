@@ -61,13 +61,11 @@ typedef struct ws_client_info
   String host;
   String path;
   int port;
-  String protocol;
+  String protocol = "";
 } ws_client_info;
 
 class Base
 {
-  String name;
-
   static void onESPNowDataSent(const uint8_t *mac_addr, esp_now_send_status_t status);
   static void onESPNowDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len);
 
@@ -91,8 +89,8 @@ protected:
   static WiFiMulti wifiMulti;
 
 public:
-  Base(String n);
-  Base(String n, ws_client_info w);
+  Base();
+  Base(ws_client_info w);
   // Virtual
   virtual void setup();
   virtual void loop();
@@ -100,6 +98,7 @@ public:
   virtual void preStateChange(int s);
   virtual void overrideInboxHandler();
   virtual void overrideOutboxHandler();
+  virtual String getName();
   // Interval Events
   unsigned long getElapsedMs();
   void resetIntervalEvents();
@@ -146,7 +145,6 @@ public:
   static DynamicJsonDocument httpPost(String url, DynamicJsonDocument body);
   // Other
   static void setBuiltinLED(bool on);
-  String getName();
 };
 
 #endif // STATEENT_VIRTUAL_BASE_BASE_H_

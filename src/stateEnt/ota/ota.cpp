@@ -101,3 +101,7 @@ void OTA::preStateChange(int s)
 {
   setBuiltinLED(0);
 }
+
+String OTA::getName() {
+  return "STATE_OTA";
+}

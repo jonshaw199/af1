@@ -60,6 +60,10 @@ public:
   {
     next = s;
   }
+  String getName()
+  {
+    return "STATE_PURG_" + String(next);
+  }
 };
 
 #endif // STATEENT_PURG_PURG_H_

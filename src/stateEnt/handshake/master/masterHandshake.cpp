@@ -28,7 +28,7 @@ bool handleHandshakesInternal(IECBArg a)
   return true;
 }
 
-MasterHandshake::MasterHandshake() : Base()
+MasterHandshake::MasterHandshake() : Base{}
 {
   intervalEventMap.insert(std::pair<String, IntervalEvent>("MasterHandshake_1", IntervalEvent(MS_MASTER_HANDSHAKE_LOOP, handleHandshakesInternal)));
 }
@@ -57,4 +57,9 @@ void MasterHandshake::loop()
   {
     StateManager::setRequestedState(StateManager::getStateAfterHandshake());
   }
+}
+
+String MasterHandshake::getName()
+{
+  return "STATE_HANDSHAKE_MASTER";
 }

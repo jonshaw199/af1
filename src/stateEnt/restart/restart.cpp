@@ -26,3 +26,8 @@ void Restart::loop()
   delay(1000);
   ESP.restart();
 }
+
+String Restart::getName()
+{
+  return "STATE_RESTART";
+}
