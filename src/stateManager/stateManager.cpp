@@ -304,12 +304,12 @@ int StateManager::getDeviceID()
   return deviceID;
 }
 
-void StateManager::setWSServerInfo(WSEnt *e, String host, String path, int port)
+void StateManager::setWSClientInfo(WSEnt *e, String host, String path, int port, String protocol)
 {
-  e->setServerInfo(host, path, port);
+  e->setWSClientInfo(host, path, port, protocol);
 }
 
-void StateManager::setDefaultWSServerInfo(String host, String path, int port)
+void StateManager::setDefaultWSClientInfo(String host, String path, int port, String protocol)
 {
-  (static_cast<WSEnt *>(stateEntMap[STATE_IDLE_WS]))->setServerInfo(host, path, port);
+  (static_cast<WSEnt *>(stateEntMap[STATE_IDLE_WS]))->setWSClientInfo(host, path, port, protocol);
 }
