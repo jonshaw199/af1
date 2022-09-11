@@ -22,8 +22,7 @@
 
 enum af1_state
 {
-  STATE_NONE = 100,
-  STATE_INIT,
+  STATE_INIT = 100,
   STATE_PURG,
   STATE_OTA,
   STATE_RESTART,

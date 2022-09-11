@@ -128,7 +128,7 @@ int AF1::getInitialState();
 void AF1::setStateAfterHandshake(int s);
 int AF1::getStateAfterHandshake();
 void AF1::setPurgNext(int p, int n);
-const std::map<int, String> AF1::&getStateNameMap();
+const std::map<int, Base *> AF1::&getStateEntMap();
 int AF1::getDeviceID();
 void AF1::setDefaultWSClientInfo(String host, String path, int port, String protocol);
 

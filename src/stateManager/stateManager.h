@@ -34,7 +34,6 @@
 class StateManager
 {
   StateManager();
-  static void setWSClientInfo(Base *e, ws_client_info w);
 
 protected:
   static int curState;
@@ -46,7 +45,6 @@ protected:
   static Base *stateEnt;
   static std::map<int, Base *> stateEntMap;
   static std::map<String, string_input_handler> stringHandlerMap;
-  static std::map<int, String> stateNameMap;
   static std::vector<wifi_ap_info> wifiAPs;
 
 public:
@@ -66,7 +64,7 @@ public:
   static void setStateAfterHandshake(int s);
   static int getStateAfterHandshake();
   static void setPurgNext(int p, int n);
-  static const std::map<int, String> &getStateNameMap();
+  static const std::map<int, Base *> &getStateEntMap();
   static int getDeviceID();
   static void setDefaultWSClientInfo(ws_client_info w);
   static std::map<int, af1_peer_info> &getPeerInfoMap();

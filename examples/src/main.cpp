@@ -17,11 +17,11 @@ void setup()
   AF1::setup(JS_ID);
   AF1::registerWifiAP("js-guest", "B1g5lams!");
 #if MASTER
-  AF1::registerStateEnt(STATE_DEMO2, new Demo2Master(), "STATE_DEMO2");
+  AF1::registerStateEnt(STATE_DEMO2, new Demo2Master("STATE_DEMO2"));
 #else
-  AF1::registerStateEnt(STATE_DEMO2, new Demo2Slave(), "STATE_DEMO2");
+  AF1::registerStateEnt(STATE_DEMO2, new Demo2Slave("STATE_DEMO2"));
 #endif
-  AF1::registerStateEnt(STATE_DEMO4, new Demo4(), "STATE_DEMO4", {"192.168.1.65", "/ws", 3000, ""});
+  AF1::registerStateEnt(STATE_DEMO4, new Demo4("STATE_DEMO4", {"192.168.1.65", "/ws", 3000, ""}));
   AF1::registerStringHandler("2", []()
                              { AF1::setRequestedState(STATE_DEMO2); });
   AF1::registerStringHandler("4", []()

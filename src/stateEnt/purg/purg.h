@@ -35,7 +35,7 @@ public:
   Purg()
   {
     purgMs = MS_PURG_DEFAULT;
-    next = STATE_NONE;
+    next = STATE_IDLE_BASE;
   }
   Purg(int s)
   {

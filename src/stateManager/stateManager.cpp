@@ -37,7 +37,6 @@ int StateManager::deviceID;
 Base *StateManager::stateEnt;
 std::map<int, Base *> StateManager::stateEntMap;
 std::map<String, string_input_handler> StateManager::stringHandlerMap;
-std::map<int, String> StateManager::stateNameMap;
 std::vector<wifi_ap_info> StateManager::wifiAPs;
 
 // From espnowHandler
@@ -46,16 +45,16 @@ static std::map<String, int> macToIDMap;
 
 StateManager::StateManager()
 {
-  stateEntMap[STATE_INIT] = new Init();
-  stateEntMap[STATE_OTA] = new OTA();
+  stateEntMap[STATE_INIT] = new Init("STATE_INIT");
+  stateEntMap[STATE_OTA] = new OTA("STATE_OTA");
 #if MASTER
-  stateEntMap[STATE_HANDSHAKE] = new MasterHandshake();
+  stateEntMap[STATE_HANDSHAKE] = new MasterHandshake("STATE_HANDSHAKE");
 #else
-  stateEntMap[STATE_HANDSHAKE] = new SlaveHandshake();
+  stateEntMap[STATE_HANDSHAKE] = new SlaveHandshake("STATE_HANDSHAKE");
 #endif
-  stateEntMap[STATE_RESTART] = new Restart();
-  stateEntMap[STATE_PURG] = new Purg<Base>();
-  stateEntMap[STATE_IDLE_BASE] = new Base();
+  stateEntMap[STATE_RESTART] = new Restart("STATE_RESTART");
+  stateEntMap[STATE_PURG] = new Purg<Base>("STATE_PURG");
+  stateEntMap[STATE_IDLE_BASE] = new Base("STATE_IDLE_BASE");
 
   stringHandlerMap["s"] = []()
   {
@@ -77,14 +76,6 @@ StateManager::StateManager()
   {
     setRequestedState(STATE_IDLE_BASE);
   };
-
-  stateNameMap[STATE_NONE] = "STATE_NONE";
-  stateNameMap[STATE_INIT] = "STATE_INIT";
-  stateNameMap[STATE_PURG] = "STATE_PURG";
-  stateNameMap[STATE_OTA] = "STATE_OTA";
-  stateNameMap[STATE_RESTART] = "STATE_RESTART";
-  stateNameMap[STATE_HANDSHAKE] = "STATE_HANDSHAKE";
-  stateNameMap[STATE_IDLE_BASE] = "STATE_IDLE_BASE";
 
   initialState = STATE_IDLE_BASE;
   stateAfterHandshake = STATE_IDLE_BASE;
@@ -144,7 +135,7 @@ int StateManager::getPrevState()
 
 void StateManager::setRequestedState(int s)
 {
-  if (stateNameMap.find(s) == stateNameMap.end())
+  if (stateEntMap.find(s) == stateEntMap.end())
   {
     Serial.print("Requested state ");
     Serial.print(s);
@@ -153,7 +144,7 @@ void StateManager::setRequestedState(int s)
   else
   {
     Serial.print("Setting requested state: ");
-    Serial.print(stateNameMap[s]);
+    Serial.print(stateEntMap[s]->);
     Serial.print(" (");
     Serial.print(s);
     Serial.println(")");
@@ -180,7 +171,11 @@ void StateManager::handleUserInput(String s)
 
 String StateManager::stateToString(int s)
 {
-  return stateNameMap[s];
+  if (stateEntMap.count(s))
+  {
+    return stateEntMap[s]->getName();
+  }
+  return "Unknown state";
 }
 
 bool StateManager::handleStateChange(int s)
@@ -196,17 +191,9 @@ bool StateManager::handleStateChange(int s)
   return true;
 }
 
-void StateManager::registerStateEnt(int i, Base *s, String n)
+void StateManager::registerStateEnt(int i, Base *s)
 {
   stateEntMap[i] = s;
-  stateNameMap[i] = n;
-}
-
-void StateManager::registerStateEnt(int i, Base *s, String n, ws_client_info w)
-{
-  s->setWSClientInfo(w);
-  stateEntMap[i] = s;
-  stateNameMap[i] = n;
 }
 
 void StateManager::registerStringHandler(String s, string_input_handler h)
@@ -284,19 +271,9 @@ void StateManager::setPurgNext(int p, int n)
   (static_cast<Purg<Base> *>(stateEntMap[p]))->setNext(n);
 }
 
-const std::map<int, String> &StateManager::getStateNameMap()
-{
-  return stateNameMap;
-}
-
 int StateManager::getDeviceID()
 {
   return deviceID;
-}
-
-void StateManager::setWSClientInfo(Base *e, ws_client_info w)
-{
-  e->setWSClientInfo(w);
 }
 
 void StateManager::setDefaultWSClientInfo(ws_client_info w)
@@ -322,4 +299,9 @@ std::map<int, af1_peer_info> &StateManager::getPeerInfoMap()
 std::map<String, int> &StateManager::getMacToIDMap()
 {
   return macToIDMap;
+}
+
+const std::map<int, Base *> &StateManager::getStateEntMap()
+{
+  return stateEntMap;
 }

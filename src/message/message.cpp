@@ -23,7 +23,7 @@
 AF1Msg::AF1Msg() : json(1024)
 {
   msg = {};
-  msg.state = STATE_NONE;
+  msg.state = STATE_IDLE_BASE;
   msg.senderID = StateManager::getDeviceID();
   msg.type = TYPE_NONE;
 
