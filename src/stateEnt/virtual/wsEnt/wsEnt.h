@@ -36,6 +36,7 @@ class WSEnt : public Base
 {
   ws_client_info wsClientInfo;
   void connectToWS();
+  void handshakeWS();
 
 protected:
   static void handleOutboxMsg(AF1Msg m);

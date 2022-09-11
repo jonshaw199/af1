@@ -42,29 +42,14 @@ void WSEnt::setup()
   Base::setup();
 
   connectToWifi();
-  connectToWS();
-
-  int lenH = wsClientInfo.host.length() + 1;
-  int lenP = wsClientInfo.path.length() + 1;
-  int lenPr = wsClientInfo.protocol.length() + 1;
-  char h[lenH];
-  char p[lenP];
-  char pr[lenPr];
-  wsClientInfo.host.toCharArray(h, lenH);
-  wsClientInfo.path.toCharArray(p, lenP);
-  wsClientInfo.protocol.toCharArray(pr, lenPr);
-  webSocketClient.host = h;
-  webSocketClient.path = p;
-  webSocketClient.protocol = pr;
-
-  if (webSocketClient.handshake(client))
+  if (client)
   {
-    Serial.println("Handshake successful");
+    Serial.println("Already connected to websocket");
   }
   else
   {
-    Serial.println("Handshake failed, switching to fallback state");
-    StateManager::setRequestedState(STATE_WS_FALLBACK);
+    connectToWS();
+    handshakeWS();
   }
 }
 
@@ -105,6 +90,32 @@ void WSEnt::connectToWS()
   else
   {
     Serial.println("Websocket connection failed, switching to fallback state");
+    StateManager::setRequestedState(STATE_WS_FALLBACK);
+  }
+}
+
+void WSEnt::handshakeWS()
+{
+  int lenH = wsClientInfo.host.length() + 1;
+  int lenP = wsClientInfo.path.length() + 1;
+  int lenPr = wsClientInfo.protocol.length() + 1;
+  char h[lenH];
+  char p[lenP];
+  char pr[lenPr];
+  wsClientInfo.host.toCharArray(h, lenH);
+  wsClientInfo.path.toCharArray(p, lenP);
+  wsClientInfo.protocol.toCharArray(pr, lenPr);
+  webSocketClient.host = h;
+  webSocketClient.path = p;
+  webSocketClient.protocol = pr;
+
+  if (webSocketClient.handshake(client))
+  {
+    Serial.println("Handshake successful");
+  }
+  else
+  {
+    Serial.println("Handshake failed, switching to fallback state");
     StateManager::setRequestedState(STATE_WS_FALLBACK);
   }
 }
