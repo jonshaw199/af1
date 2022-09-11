@@ -24,6 +24,8 @@
 #include <map>
 #include <vector>
 #include <Arduino.h>
+#include <esp_now.h>
+#include <mutex>
 
 #include "state/state.h"
 #include "message/message.h"
@@ -40,6 +42,15 @@ struct wifi_ap_info
   int gatewayIP[4];
   int subnetIP[4];
 };
+
+typedef struct af1_peer_info
+{
+  esp_now_peer_info_t espnowPeerInfo;
+  bool handshakeRequest;
+  bool handshakeResponse;
+  AF1Msg lastMsg;
+  std::mutex mutex;
+} af1_peer_info;
 
 class StateManager
 {
@@ -69,7 +80,6 @@ public:
   static int getRequestedState();
   static void handleUserInput(String s);
   static String stateToString(int s);
-  static void setBuiltinLED(bool on);
   static bool handleStateChange(int s);
   static const std::vector<wifi_ap_info> getWifiAPs();
   static void setInitialState(int s);
@@ -80,6 +90,9 @@ public:
   static const std::map<int, String> &getStateNameMap();
   static int getDeviceID();
   static void setDefaultWSClientInfo(String host, String path, int port, String protocol);
+  static std::map<int, af1_peer_info> &getPeerInfoMap();
+  static std::map<String, int> &getMacToIDMap();
+  static std::set<int> getPeerIDs();
 
   static void registerStateEnt(int i, Base *s, String n);
   static void registerStringHandler(String s, string_input_handler h);

@@ -28,7 +28,7 @@
 
 void OTA::setup()
 {
-  StateManager::setBuiltinLED(1);
+  setBuiltinLED(1);
 
   Base::setup();
 
@@ -97,8 +97,7 @@ void OTA::loop()
   ArduinoOTA.handle();
 }
 
-bool OTA::validateStateChange(int s)
+void OTA::preStateChange(int s)
 {
-  StateManager::setBuiltinLED(0);
-  return true;
+  setBuiltinLED(0);
 }

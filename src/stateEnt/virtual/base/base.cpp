@@ -317,6 +317,7 @@ void Base::pushInbox(AF1Msg m)
 DynamicJsonDocument Base::httpFetch(String url)
 {
   DynamicJsonDocument result(1024);
+  connectToWifi();
   if ((WiFi.status() == WL_CONNECTED))
   {
     httpClient.begin(url);
@@ -342,6 +343,7 @@ DynamicJsonDocument Base::httpFetch(String url)
 DynamicJsonDocument Base::httpPost(String url, DynamicJsonDocument body)
 {
   DynamicJsonDocument result(1024);
+  connectToWifi();
   if ((WiFi.status() == WL_CONNECTED))
   {
     httpClient.begin(url);
@@ -368,4 +370,11 @@ DynamicJsonDocument Base::httpPost(String url, DynamicJsonDocument body)
     httpClient.end();
   }
   return result;
+}
+
+void Base::setBuiltinLED(bool on)
+{
+#ifdef LED_BUILTIN
+  digitalWrite(LED_BUILTIN, on);
+#endif
 }

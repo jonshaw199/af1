@@ -27,7 +27,7 @@ class OTA : public Base
 public:
   void setup();
   void loop();
-  bool validateStateChange(int s);
+  void preStateChange(int s);
 };
 
 #endif // STATEENT_OTA_OTA_H_

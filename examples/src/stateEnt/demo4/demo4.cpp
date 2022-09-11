@@ -9,7 +9,7 @@ void Demo4::setup()
   JSLED::init();
 }
 
-bool Demo4::validateStateChange(int s)
+void Demo4::preStateChange(int s)
 {
   Serial.println("Turning off lights on the way out");
   JSLED::fillColor(CRGB::Black);

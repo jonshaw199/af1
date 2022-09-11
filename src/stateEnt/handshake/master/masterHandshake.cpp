@@ -47,7 +47,7 @@ void MasterHandshake::loop()
 
   // Check if handshake has been completed for all slaves
   int numHandshakeComplete = 0;
-  for (std::map<int, af1_peer_info>::const_iterator it = getPeerInfoMap().begin(); it != getPeerInfoMap().end(); it++)
+  for (std::map<int, af1_peer_info>::const_iterator it = StateManager::getPeerInfoMap().begin(); it != StateManager::getPeerInfoMap().end(); it++)
   {
     if (it->second.handshakeResponse)
     {

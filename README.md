@@ -126,7 +126,6 @@ void AF1::setRequestedState(int s);
 int AF1::getRequestedState();
 void AF1::handleUserInput(String s);
 String AF1::stateToString(int s);
-void AF1::setBuiltinLED(bool on);
 bool AF1::handleStateChange(int s);
 const std::vector<wifi_ap_info> AF1::getWifiAPs();
 void AF1::setInitialState(int s);

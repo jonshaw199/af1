@@ -17,6 +17,8 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#include <set>
+
 #include "stateManager.h"
 #include "stateEnt/ota/ota.h"
 #include "stateEnt/virtual/base/base.h"
@@ -39,6 +41,10 @@ std::map<int, Base *> StateManager::stateEntMap;
 std::map<String, string_input_handler> StateManager::stringHandlerMap;
 std::map<int, String> StateManager::stateNameMap;
 std::vector<wifi_ap_info> StateManager::wifiAPs;
+
+// From espnowHandler
+static std::map<int, af1_peer_info> peerInfoMap;
+static std::map<String, int> macToIDMap;
 
 StateManager::StateManager()
 {
@@ -193,13 +199,6 @@ String StateManager::stateToString(int s)
   return stateNameMap[s];
 }
 
-void StateManager::setBuiltinLED(bool on)
-{
-#ifdef LED_BUILTIN
-  digitalWrite(LED_BUILTIN, on);
-#endif
-}
-
 bool StateManager::handleStateChange(int s)
 {
   prevState = curState;
@@ -312,4 +311,24 @@ void StateManager::setWSClientInfo(WSEnt *e, String host, String path, int port,
 void StateManager::setDefaultWSClientInfo(String host, String path, int port, String protocol)
 {
   (static_cast<WSEnt *>(stateEntMap[STATE_IDLE_WS]))->setWSClientInfo(host, path, port, protocol);
+}
+
+std::set<int> StateManager::getPeerIDs()
+{
+  std::set<int> result;
+  for (std::map<int, af1_peer_info>::iterator it = peerInfoMap.begin(); it != peerInfoMap.end(); it++)
+  {
+    result.insert(it->first);
+  }
+  return result;
+}
+
+std::map<int, af1_peer_info> &StateManager::getPeerInfoMap()
+{
+  return peerInfoMap;
+}
+
+std::map<String, int> &StateManager::getMacToIDMap()
+{
+  return macToIDMap;
 }

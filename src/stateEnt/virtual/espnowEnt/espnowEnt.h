@@ -23,20 +23,11 @@
 #include <Arduino.h>
 #include <esp_now.h>
 #include <map>
-#include <mutex>
 #include <set>
 
 #include "stateEnt/virtual/base/base.h"
 #include "message/message.h"
-
-typedef struct af1_peer_info
-{
-  esp_now_peer_info_t espnowPeerInfo;
-  bool handshakeRequest;
-  bool handshakeResponse;
-  AF1Msg lastMsg;
-  std::mutex mutex;
-} af1_peer_info;
+#include "stateManager/stateManager.h"
 
 class ESPNowEnt : public Base
 {
@@ -62,9 +53,7 @@ public:
   static void receiveHandshakeRequest(AF1Msg m);
   static void sendHandshakeResponses(std::set<int> ids);
   static void receiveHandshakeResponse(AF1Msg m);
-  static const std::map<int, af1_peer_info> &getPeerInfoMap(); // Read only
   static void sendAllHandshakes();
-  static std::set<int> getPeerIDs();
   static void sendMsg(AF1Msg msg);
 };
 

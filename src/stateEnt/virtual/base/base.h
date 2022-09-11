@@ -84,6 +84,7 @@ public:
   // New
   static DynamicJsonDocument httpFetch(String url);
   static DynamicJsonDocument httpPost(String url, DynamicJsonDocument body);
+  static void setBuiltinLED(bool on);
 };
 
 #endif // STATEENT_VIRTUAL_BASE_BASE_H_

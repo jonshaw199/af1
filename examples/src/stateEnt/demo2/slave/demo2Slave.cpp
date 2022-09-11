@@ -9,11 +9,10 @@ void Demo2Slave::setup()
   JSLED::init();
 }
 
-bool Demo2Slave::validateStateChange(int s)
+void Demo2Slave::preStateChange(int s)
 {
   Serial.println("Turning off lights on the way out");
   JSLED::fillColor(CRGB::Black);
-  return true;
 }
 
 void Demo2Slave::overrideInboxHandler()
