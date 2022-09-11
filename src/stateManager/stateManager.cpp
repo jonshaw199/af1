@@ -115,6 +115,7 @@ void StateManager::setup(int id)
   curState = s;
   requestedState = s;
   handleStateChange(s); // Let Init stateEnt handle everything
+  Serial.println("Setup complete");
 }
 
 void StateManager::loop()
