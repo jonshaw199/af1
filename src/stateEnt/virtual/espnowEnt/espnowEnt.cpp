@@ -89,18 +89,24 @@ void ESPNowEnt::onDataSent(const uint8_t *mac_addr, esp_now_send_status_t status
   // Serial.print("Last Packet Send Status: ");
   if (status == ESP_NOW_SEND_SUCCESS)
   {
-    // Serial.println("Delivery Success");
+#if PRINT_MSG_SEND
+    Serial.println("Delivery Success");
+#endif
   }
   else
   {
     // Serial.println("Delivery Fail");
     int peerDeviceID = macToIDMap[macToString(mac_addr)];
+#if PRINT_MSG_SEND
     Serial.println("Delivery failed to peer ID " + String(peerDeviceID));
+#endif
     peerInfoMap[peerDeviceID].mutex.lock();
     // Check if there are more retries remaining and retry if so
     if (peerInfoMap[peerDeviceID].lastMsg.getSendCnt() - 1 < peerInfoMap[peerDeviceID].lastMsg.getMaxRetries())
     {
+#if PRINT_MSG_SEND
       Serial.println("Retrying send to device ID " + String(peerDeviceID));
+#endif
       AF1Msg msg = peerInfoMap[peerDeviceID].lastMsg;
       msg.incrementSendCnt();
       msg.setRecipients({peerDeviceID}); // Only resending to 1 device!
@@ -109,7 +115,9 @@ void ESPNowEnt::onDataSent(const uint8_t *mac_addr, esp_now_send_status_t status
     }
     else
     {
+#if PRINT_MSG_SEND
       Serial.println("Max retries reached; not sending");
+#endif
     }
     peerInfoMap[peerDeviceID].mutex.unlock();
   }
@@ -117,12 +125,14 @@ void ESPNowEnt::onDataSent(const uint8_t *mac_addr, esp_now_send_status_t status
 
 void ESPNowEnt::onDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len)
 {
+  Serial.print(".");
+#if PRINT_MSG_RECV
   char macStr[18];
   snprintf(macStr, sizeof(macStr), "%02x:%02x:%02x:%02x:%02x:%02x",
            mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
-  // Serial.print("Last Packet Recv from: ");
-  // Serial.println(macStr);
-  Serial.print(".");
+  Serial.print("Last Packet Recv from: ");
+  Serial.println(macStr);
+#endif
   af1_msg msg;
   memcpy(&msg, incomingData, sizeof(msg));
   AF1Msg msgWrapper = msg;
