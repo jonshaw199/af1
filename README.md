@@ -18,7 +18,7 @@
 
 The AF1 core consists of a handful of pre-built "state entities" and one "state manager". A state entity defines the behavior for a state, and new state entities can be created by extending the `Base` class.
 
-When creating new state entities, setup, loop, and message handling behavior from the virtual classes can be overridden as necessary. As an example, this `Demo` class extends the `Base` class in order to receive websocket messages from a server for controlling an LED. Note that `setup()` and `overrideInboxHandler()` are inherited from `Base`, but their behavior is overridden here in order to handle LED-related tasks:
+When creating new state entities, setup, loop, and message handling behavior from `Base` can be overridden as necessary. For example, this `Demo` class overrides `setup()` and `overrideInboxHandler()` in order to handle LED-related tasks:
 
 **demo.cpp:**
 
@@ -69,7 +69,9 @@ void setup()
   Serial.begin(115200);
   AF1::setup(DEVICE_ID); // REQUIRED
   AF1::registerWifiAP("ssid-here", "pass-here");
-  AF1::registerStateEnt(STATE_DEMO, new Demo(), "STATE_DEMO"); // "192.168.1.123", "/ws", 3000
+  Demo *d = new Demo();
+  d->setWSClientInfo({"192.168.1.65", "/rc/demo5/ws", 3000, ""});
+  AF1::registerStateEnt(STATE_DEMO, d, "STATE_DEMO");
   AF1::setInitialState(STATE_DEMO);
   // Change to STATE_DEMO when "4" is entered into serial monitor
   AF1::registerStringHandler("4", [](){
