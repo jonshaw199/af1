@@ -169,3 +169,36 @@ void AF1Msg::print()
   Serial.print("Message: ");
   Serial.println(j);
 }
+
+af1_msg AF1Msg::getInnerMsg()
+{
+  return msg;
+}
+
+void AF1Msg::deserializeInnerMsgESPNow()
+{
+  if (StateManager::getStateEntMap().count(msg.state))
+  {
+    StateManager::getStateEntMap().at(msg.state)->deserializeESPNow(*this);
+  }
+  else
+  {
+#if PRINT_MSG_RECEIVE
+    Serial.println("AF1Msg::deserializeInnerMsg(): state doesnt exist");
+#endif
+  }
+}
+
+void AF1Msg::serializeInnerMsgESPNow()
+{
+  if (StateManager::getStateEntMap().count(msg.state))
+  {
+    StateManager::getStateEntMap().at(msg.state)->serializeESPNow(*this);
+  }
+  else
+  {
+#if PRINT_MSG_SEND
+    Serial.println("AF1Msg::serializeInnerMsg(): state doesnt exist");
+#endif
+  }
+}

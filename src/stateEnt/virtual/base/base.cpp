@@ -129,6 +129,9 @@ unsigned long Base::getElapsedMs()
 void Base::handleInboxMsg(AF1Msg m)
 {
   Serial.print("<");
+
+  m.deserializeInnerMsgESPNow();
+
 #if PRINT_MSG_SEND
   m.print();
 #endif
@@ -164,15 +167,20 @@ void Base::handleInboxMsg(AF1Msg m)
 void Base::handleOutboxMsg(AF1Msg m)
 {
   Serial.print(">");
+
+  // Prepare msg for send (pre-serialize aka serializeInner)
+  m.serializeInnerMsgESPNow();
+
 #if PRINT_MSG_SEND
   m.print();
 #endif
 
   // ESPNow
   sendMsgESPNow(m);
-
   // Websocket
   sendMsgWS(m);
+  // sendHTTP?
+  // sendBluetooth?
 }
 
 void Base::overrideInboxHandler()
@@ -675,7 +683,7 @@ void Base::sendMsgESPNow(AF1Msg msg)
     // Update last msg sent for this peer (now doing this even if sending fails)
     StateManager::getPeerInfoMap()[*it].lastMsg = msg;
     // Serial.println("Sending message to device ID " + String(*it) + " (MAC address " + macToString(peerInfoMap[*it].espnowPeerInfo.peer_addr) + ")");
-    esp_err_t result = esp_now_send(StateManager::getPeerInfoMap()[*it].espnowPeerInfo.peer_addr, (uint8_t *)&msg, sizeof(msg));
+    esp_err_t result = esp_now_send(StateManager::getPeerInfoMap()[*it].espnowPeerInfo.peer_addr, (uint8_t *)&msg.getInnerMsg(), sizeof(msg.getInnerMsg()));
     // Serial.print("Send Status: ");
     if (result != ESP_OK)
     {
@@ -720,6 +728,16 @@ void Base::sendMsgESPNow(AF1Msg msg)
     StateManager::getPeerInfoMap()[*it].mutex.unlock();
     delay(DELAY_SEND);
   }
+}
+
+AF1Msg Base::serializeESPNow(AF1Msg m)
+{
+  return m;
+}
+
+AF1Msg Base::deserializeESPNow(AF1Msg m)
+{
+  return m;
 }
 
 void Base::sendStateChangeMessages(int s)

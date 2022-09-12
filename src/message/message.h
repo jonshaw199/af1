@@ -87,8 +87,14 @@ public:
   int getMaxRetries();
   void setData(uint8_t *d);
   const uint8_t *getData();
+
   void setJson(DynamicJsonDocument d);
   DynamicJsonDocument getJson();
+
+  af1_msg getInnerMsg();
+  void deserializeInnerMsgESPNow();
+  void serializeInnerMsgESPNow();
+
   void print();
 };
 

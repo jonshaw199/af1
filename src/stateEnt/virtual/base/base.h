@@ -99,6 +99,8 @@ public:
   virtual void overrideInboxHandler();
   virtual void overrideOutboxHandler();
   virtual String getName();
+  virtual AF1Msg serializeESPNow(AF1Msg m);
+  virtual AF1Msg deserializeESPNow(AF1Msg m);
   // Interval Events
   unsigned long getElapsedMs();
   void resetIntervalEvents();
