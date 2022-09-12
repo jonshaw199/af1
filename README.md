@@ -71,8 +71,7 @@ void setup()
   AF1::registerWifiAP("ssid-here", "pass-here");
   Demo *d = new Demo();
   d->setWSClientInfo({"192.168.1.65", "/rc/demo5/ws", 3000, ""});
-  AF1::registerStateEnt(STATE_DEMO, d, "STATE_DEMO");
-  AF1::setInitialState(STATE_DEMO);
+  AF1::registerStateEnt(STATE_DEMO, d);
   // Change to STATE_DEMO when "4" is entered into serial monitor
   AF1::registerStringHandler("4", [](){
     AF1::setRequestedState(STATE_DEMO);
