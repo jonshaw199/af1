@@ -79,5 +79,9 @@
 #define STATE_ESPNOW_FALLBACK STATE_IDLE_BASE
 #endif
 
+#ifndef MODE_INITIAL
+#define MODE_INITIAL MODE_BASIC
+#endif
+
 #define STRINGIFY(s) STRINGIFY1(s)
 #define STRINGIFY1(s) #s

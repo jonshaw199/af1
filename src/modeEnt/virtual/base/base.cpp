@@ -17,23 +17,32 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef STATE_STATE_H_
-#define STATE_STATE_H_
+#include "base.h"
 
-enum af1_state
+ModeBase::ModeBase()
 {
-  STATE_INIT = 100,
-  STATE_PURG,
-  STATE_OTA,
-  STATE_RESTART,
-  STATE_HANDSHAKE,
-  STATE_IDLE_BASE,
-};
+}
 
-enum af1_mode
+bool ModeBase::setup()
 {
-  MODE_BASIC,
-  MODE_MESH
-};
+  return true;
+}
 
-#endif // STATE_STATE_H
+bool ModeBase::loop()
+{
+  return true;
+}
+
+bool ModeBase::validateModeChange(int m)
+{
+  return true;
+}
+
+void ModeBase::preModeChange(int m)
+{
+}
+
+String ModeBase::getName()
+{
+  return "(unknown mode)";
+}

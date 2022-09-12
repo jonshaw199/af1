@@ -17,23 +17,9 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef STATE_STATE_H_
-#define STATE_STATE_H_
+#include "mesh.h"
 
-enum af1_state
+String Mesh::getName()
 {
-  STATE_INIT = 100,
-  STATE_PURG,
-  STATE_OTA,
-  STATE_RESTART,
-  STATE_HANDSHAKE,
-  STATE_IDLE_BASE,
-};
-
-enum af1_mode
-{
-  MODE_BASIC,
-  MODE_MESH
-};
-
-#endif // STATE_STATE_H
+  return "MODE_MESH";
+}

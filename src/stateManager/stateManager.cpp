@@ -20,8 +20,9 @@
 #include <set>
 
 #include "stateManager.h"
+#include "modeEnt/basic/basic.h"
+#include "modeEnt/mesh/mesh.h"
 #include "stateEnt/ota/ota.h"
-#include "stateEnt/virtual/base/base.h"
 #include "stateEnt/restart/restart.h"
 #include "stateEnt/handshake/master/masterHandshake.h"
 #include "stateEnt/handshake/slave/slaveHandshake.h"
@@ -36,6 +37,14 @@ int StateManager::stateAfterHandshake;
 int StateManager::deviceID;
 Base *StateManager::stateEnt;
 std::map<int, Base *> StateManager::stateEntMap;
+
+int StateManager::curMode;
+int StateManager::prevMode;
+int StateManager::requestedMode;
+int StateManager::initialMode;
+ModeBase *StateManager::modeEnt;
+std::map<int, ModeBase *> StateManager::modeEntMap;
+
 std::map<String, string_input_handler> StateManager::stringHandlerMap;
 std::vector<wifi_ap_info> StateManager::wifiAPs;
 
@@ -45,6 +54,11 @@ static std::map<String, int> macToIDMap;
 
 StateManager::StateManager()
 {
+  modeEntMap[MODE_BASIC] = new Basic();
+  modeEntMap[MODE_MESH] = new Mesh();
+
+  initialMode = MODE_INITIAL;
+
   stateEntMap[STATE_INIT] = new Init();
   stateEntMap[STATE_OTA] = new OTA();
 #if MASTER
@@ -92,33 +106,62 @@ void StateManager::setup(int id)
 {
   getInstance(); // Ensuring instantiation
   deviceID = id;
-  int s = STATE_INIT;
-  curState = s;
-  requestedState = s;
-  handleStateChange(s); // Let Init stateEnt handle everything
+
+  int m = initialMode;
+  curMode = m;
+  requestedMode = m;
+  if (handleModeChange(m))
+  {
+    int s = STATE_INIT;
+    curState = s;
+    requestedState = s;
+    handleStateChange(s); // Let Init stateEnt handle everything
+  }
 }
 
 void StateManager::loop()
 {
-  // Handling this first instead of last; allows us to use init.loop() if we need it before switching to the requested state (or maybe we don't want to request a new state during init at all?)
-  stateEnt->loop();
-
-  // Check if state change requested and proceed if stateEnt->validateStateChange() says its ok
-  int curState = getCurState();
-  int requestedState = getRequestedState();
-  if (curState != requestedState)
+  // Check if mode change requested and proceed if modeEnt->validateStateChange() says its ok
+  int curMode = getCurMode();
+  int requestedMode = getRequestedMode();
+  if (curMode != requestedMode)
   {
-    Serial.println("Handling state change request: " + StateManager::stateToString(requestedState));
-    if (stateEnt->validateStateChange(requestedState))
+    Serial.println("Handling mode change request: " + StateManager::modeToString(requestedMode));
+    if (modeEnt->validateModeChange(requestedMode))
     {
-      stateEnt->preStateChange(StateManager::getRequestedState());
-      // Requested state may have changed between last and next function call
-      StateManager::handleStateChange(StateManager::getRequestedState());
-      Serial.println("State change complete");
+      modeEnt->preModeChange(StateManager::getRequestedMode());
+      // Requested mode may have changed between last and next function call
+      StateManager::handleModeChange(StateManager::getRequestedMode());
+      Serial.println("Mode change complete");
     }
     else
     {
-      Serial.println("State change rejected by validateStateChange");
+      Serial.println("Mode change rejected by validateStateChange");
+    }
+  }
+
+  if (modeEnt->loop())
+  {
+    // Handling this first instead of last; allows us to use init.loop() if we need it before switching to the requested state (or maybe we don't want to request a new state during init at all?)
+    stateEnt->loop();
+
+    // Check if state change requested and proceed if stateEnt->validateStateChange() says its ok
+    int curState = getCurState();
+    int requestedState = getRequestedState();
+    if (curState != requestedState)
+    {
+      Serial.println("Handling state change request: " + StateManager::stateToString(requestedState));
+      if (stateEnt->validateStateChange(requestedState))
+      {
+        stateEnt->preStateChange(StateManager::getRequestedState());
+        // Requested state may have changed between last and next function call
+        StateManager::handleStateChange(StateManager::getRequestedState());
+        Serial.println("State change complete");
+      }
+      else
+      {
+        Serial.println("State change rejected by validateStateChange");
+      }
     }
   }
 }
@@ -180,15 +223,22 @@ String StateManager::stateToString(int s)
 
 bool StateManager::handleStateChange(int s)
 {
-  prevState = curState;
-  curState = s;
+  if (stateEntMap.count(s))
+  {
+    prevState = curState;
+    curState = s;
 
-  stateEnt = stateEntMap[s];
-  stateEnt->setup();
-  stateEnt->overrideInboxHandler();
-  stateEnt->overrideOutboxHandler();
+    stateEnt = stateEntMap[s];
+    stateEnt->setup();
+    stateEnt->overrideInboxHandler();
+    stateEnt->overrideOutboxHandler();
 
-  return true;
+    return true;
+  }
+  else
+  {
+    return false;
+  }
 }
 
 void StateManager::registerStateEnt(int i, Base *s)
@@ -304,4 +354,58 @@ std::map<String, int> &StateManager::getMacToIDMap()
 const std::map<int, Base *> &StateManager::getStateEntMap()
 {
   return stateEntMap;
+}
+
+int StateManager::getCurMode()
+{
+  return curMode;
+}
+
+int StateManager::getPrevMode()
+{
+  return prevMode;
+}
+
+void StateManager::setRequestedMode(int m)
+{
+  requestedMode = m;
+}
+
+int StateManager::getRequestedMode()
+{
+  return requestedMode;
+}
+
+void StateManager::setInitialMode(int m)
+{
+  initialMode = m;
+}
+
+int StateManager::getInitialMode()
+{
+  return initialMode;
+}
+
+bool StateManager::handleModeChange(int m)
+{
+  if (modeEntMap.count(m))
+  {
+    prevMode = curMode;
+    curMode = m;
+    modeEnt = modeEntMap[m];
+    return modeEnt->setup();
+  }
+  else
+  {
+    return false;
+  }
+}
+
+String StateManager::modeToString(int s)
+{
+  if (modeEntMap.count(s))
+  {
+    return modeEntMap[s]->getName();
+  }
+  return "Unknown state";
 }

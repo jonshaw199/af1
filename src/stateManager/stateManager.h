@@ -30,20 +30,30 @@
 #include "state/state.h"
 #include "message/message.h"
 #include "stateEnt/virtual/base/base.h"
+#include "modeEnt/virtual/base/base.h"
 
 class StateManager
 {
   StateManager();
 
 protected:
+  static int deviceID;
+
   static int curState;
   static int prevState;
   static int requestedState;
   static int initialState;
   static int stateAfterHandshake;
-  static int deviceID;
   static Base *stateEnt;
   static std::map<int, Base *> stateEntMap;
+
+  static int curMode;
+  static int prevMode;
+  static int requestedMode;
+  static int initialMode;
+  static ModeBase *modeEnt;
+  static std::map<int, ModeBase *> modeEntMap;
+
   static std::map<String, string_input_handler> stringHandlerMap;
   static std::vector<wifi_ap_info> wifiAPs;
 
@@ -55,6 +65,14 @@ public:
   static int getPrevState();
   static void setRequestedState(int s);
   static int getRequestedState();
+  static int getCurMode();
+  static int getPrevMode();
+  static void setRequestedMode(int m);
+  static int getRequestedMode();
+  static void setInitialMode(int m);
+  static int getInitialMode();
+  static bool handleModeChange(int m);
+  static String modeToString(int s);
   static void handleUserInput(String s);
   static String stateToString(int s);
   static bool handleStateChange(int s);

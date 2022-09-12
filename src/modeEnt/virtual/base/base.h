@@ -17,23 +17,24 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef STATE_STATE_H_
-#define STATE_STATE_H_
+#ifndef MODEENT_VIRTUAL_BASE_BASE_H_
+#define MODEENT_VIRTUAL_BASE_BASE_H_
 
-enum af1_state
+#include <Arduino.h>
+
+#include "state/state.h"
+
+class ModeBase
 {
-  STATE_INIT = 100,
-  STATE_PURG,
-  STATE_OTA,
-  STATE_RESTART,
-  STATE_HANDSHAKE,
-  STATE_IDLE_BASE,
+
+public:
+  ModeBase();
+  // Virtual
+  virtual bool setup();
+  virtual bool loop();
+  virtual bool validateModeChange(int s);
+  virtual void preModeChange(int s);
+  virtual String getName();
 };
 
-enum af1_mode
-{
-  MODE_BASIC,
-  MODE_MESH
-};
-
-#endif // STATE_STATE_H
+#endif // MODEENT_VIRTUAL_BASE_BASE_H_
