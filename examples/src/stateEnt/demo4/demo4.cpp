@@ -9,6 +9,7 @@ void Demo4::setup()
 
 void Demo4::preStateChange(int s)
 {
+  Base::preStateChange(s);
   Serial.println("Turning off lights on the way out");
   JSLED::fillColor(CRGB::Black);
 }

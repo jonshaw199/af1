@@ -1,9 +1,9 @@
-#ifndef STATEENT_DEMO2_MASTER_DEMO2MASTER_H_
-#define STATEENT_DEMO2_MASTER_DEMO2MASTER_H_
+#ifndef STATEENT_DEMO6_MASTER_DEMO6MASTER_H_
+#define STATEENT_DEMO6_MASTER_DEMO6MASTER_H_
 
 #include <AF1.h>
 
-class Demo2Master : public Base
+class Demo6Master : public Base
 {
   static void sendMsg(uint8_t b);
   static const float coefs[];
@@ -12,8 +12,8 @@ class Demo2Master : public Base
   static const uint8_t maxBrightness;
 
 public:
-  Demo2Master();
+  Demo6Master();
   void setup();
 };
 
-#endif // STATEENT_DEMO2_MASTER_DEMO2MASTER_H_
+#endif // STATEENT_DEMO6_MASTER_DEMO6MASTER_H_
