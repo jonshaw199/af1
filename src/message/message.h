@@ -89,7 +89,7 @@ public:
   const uint8_t *getData();
 
   void setJson(DynamicJsonDocument d);
-  DynamicJsonDocument getJson();
+  DynamicJsonDocument &getJson();
 
   af1_msg getInnerMsg();
   void deserializeInnerMsgESPNow();

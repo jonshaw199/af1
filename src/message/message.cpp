@@ -36,6 +36,7 @@ AF1Msg::AF1Msg() : json(1024)
   json["state"] = msg.state;
   json["type"] = msg.type;
   json["senderID"] = msg.senderID;
+  json["transportType"] = msg.transportType;
 }
 
 AF1Msg::AF1Msg(af1_msg m) : json(1024)
@@ -50,6 +51,7 @@ AF1Msg::AF1Msg(af1_msg m) : json(1024)
   json["state"] = msg.state;
   json["type"] = msg.type;
   json["senderID"] = msg.senderID;
+  json["transportType"] = msg.transportType;
 }
 
 AF1Msg::AF1Msg(DynamicJsonDocument d) : json(1024)
@@ -157,7 +159,7 @@ void AF1Msg::setJson(DynamicJsonDocument d)
   json = d;
 }
 
-DynamicJsonDocument AF1Msg::getJson()
+DynamicJsonDocument &AF1Msg::getJson()
 {
   return json;
 }

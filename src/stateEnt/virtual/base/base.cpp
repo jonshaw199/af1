@@ -740,20 +740,18 @@ void Base::sendMsgESPNow(AF1Msg msg)
   }
 }
 
-AF1Msg Base::serializeESPNow(AF1Msg m)
+void Base::serializeESPNow(AF1Msg &m)
 {
 #if PRINT_MSG_SEND
   Serial.println("Base::serializeESPNow()");
 #endif
-  return m;
 }
 
-AF1Msg Base::deserializeESPNow(AF1Msg m)
+void Base::deserializeESPNow(AF1Msg &m)
 {
 #if PRINT_MSG_RECEIVE
   Serial.println("Base::deserializeESPNow()");
 #endif
-  return m;
 }
 
 void Base::sendStateChangeMessages(int s)
