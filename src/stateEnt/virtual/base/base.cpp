@@ -168,7 +168,7 @@ void Base::handleOutboxMsg(AF1Msg m)
 {
   Serial.print(">");
 
-  // Prepare msg for send (pre-serialize aka serializeInner)
+  // Prepare msg for send
   m.serializeInnerMsgESPNow();
 
 #if PRINT_MSG_SEND
@@ -675,15 +675,25 @@ void Base::connectToPeers()
 void Base::sendMsgESPNow(AF1Msg msg)
 {
   msg.setTransportType(TRANSPORT_ESPNOW);
+
   // If recipients set is empty then send to all
   std::set<int> recipientIDs = msg.getRecipients().size() ? msg.getRecipients() : StateManager::getPeerIDs();
+
+  if (!recipientIDs.size())
+  {
+#if PRINT_MSG_SEND
+    Serial.println("No ESPNow peers; unable to send message");
+#endif
+  }
+
   for (std::set<int>::iterator it = recipientIDs.begin(); it != recipientIDs.end(); it++)
   {
     StateManager::getPeerInfoMap()[*it].mutex.lock();
     // Update last msg sent for this peer (now doing this even if sending fails)
     StateManager::getPeerInfoMap()[*it].lastMsg = msg;
     // Serial.println("Sending message to device ID " + String(*it) + " (MAC address " + macToString(peerInfoMap[*it].espnowPeerInfo.peer_addr) + ")");
-    esp_err_t result = esp_now_send(StateManager::getPeerInfoMap()[*it].espnowPeerInfo.peer_addr, (uint8_t *)&msg.getInnerMsg(), sizeof(msg.getInnerMsg()));
+    af1_msg m = msg.getInnerMsg();
+    esp_err_t result = esp_now_send(StateManager::getPeerInfoMap()[*it].espnowPeerInfo.peer_addr, (uint8_t *)&m, sizeof(m));
     // Serial.print("Send Status: ");
     if (result != ESP_OK)
     {
@@ -732,11 +742,17 @@ void Base::sendMsgESPNow(AF1Msg msg)
 
 AF1Msg Base::serializeESPNow(AF1Msg m)
 {
+#if PRINT_MSG_SEND
+  Serial.println("Base::serializeESPNow()");
+#endif
   return m;
 }
 
 AF1Msg Base::deserializeESPNow(AF1Msg m)
 {
+#if PRINT_MSG_RECEIVE
+  Serial.println("Base::deserializeESPNow()");
+#endif
   return m;
 }
 
