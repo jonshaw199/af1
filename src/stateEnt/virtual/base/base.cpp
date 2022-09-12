@@ -172,21 +172,7 @@ void Base::handleOutboxMsg(AF1Msg m)
   sendMsgESPNow(m);
 
   // Websocket
-  if (client)
-  {
-    String s;
-    serializeJson(m.getJson(), s);
-#if PRINT_MSG_SEND
-    Serial.println("Sending websocket message");
-#endif
-    webSocketClient.sendData(s);
-  }
-  else
-  {
-#if PRINT_MSG_SEND
-    Serial.println("Websocket client not connected; unable to send message");
-#endif
-  }
+  sendMsgWS(m);
 }
 
 void Base::overrideInboxHandler()
@@ -680,6 +666,7 @@ void Base::connectToPeers()
 
 void Base::sendMsgESPNow(AF1Msg msg)
 {
+  msg.setTransportType(TRANSPORT_ESPNOW);
   // If recipients set is empty then send to all
   std::set<int> recipientIDs = msg.getRecipients().size() ? msg.getRecipients() : StateManager::getPeerIDs();
   for (std::set<int>::iterator it = recipientIDs.begin(); it != recipientIDs.end(); it++)
@@ -869,4 +856,24 @@ void Base::setWSClientInfo(ws_client_info w)
   wsClientInfo.path = w.path;
   wsClientInfo.port = w.port;
   wsClientInfo.protocol = w.protocol;
+}
+
+void Base::sendMsgWS(AF1Msg m)
+{
+  m.setTransportType(TRANSPORT_WEBSOCKET);
+  if (client)
+  {
+    String s;
+    serializeJson(m.getJson(), s);
+#if PRINT_MSG_SEND
+    Serial.println("Sending websocket message");
+#endif
+    webSocketClient.sendData(s);
+  }
+  else
+  {
+#if PRINT_MSG_SEND
+    Serial.println("Websocket client not connected; unable to send message");
+#endif
+  }
 }

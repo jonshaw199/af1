@@ -36,6 +36,13 @@ enum MessageType
   TYPE_RC_DATA
 };
 
+enum TransportType
+{
+  TRANSPORT_ESPNOW,
+  TRANSPORT_WEBSOCKET,
+  TRANSPORT_NONE
+};
+
 typedef struct af1_msg
 {
   // Calculated
@@ -44,6 +51,7 @@ typedef struct af1_msg
   int type;
   int senderID;
   int state;
+  int transportType;
   // State dependent and only used for espnow
   uint8_t data[100];
 } af1_msg;
@@ -73,6 +81,8 @@ public:
   int getState();
   void setSenderID(int id);
   int getSenderID();
+  int getTransportType();
+  void setTransportType(int t);
   void setMaxRetries(int m);
   int getMaxRetries();
   void setData(uint8_t *d);

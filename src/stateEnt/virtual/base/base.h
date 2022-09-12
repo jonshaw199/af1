@@ -140,6 +140,7 @@ public:
   static WebSocketClient webSocketClient;
   static WiFiClient client; // Use WiFiClient class to create TCP connections
   void setWSClientInfo(ws_client_info w);
+  static void sendMsgWS(AF1Msg msg);
   // HTTP
   static DynamicJsonDocument httpFetch(String url);
   static DynamicJsonDocument httpPost(String url, DynamicJsonDocument body);
