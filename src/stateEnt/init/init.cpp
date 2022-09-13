@@ -25,8 +25,6 @@
 
 void Init::setup()
 {
-  initEspNow();
-
   Serial.println();
   Serial.println("*********");
   Serial.print("JS ID: ");
@@ -45,6 +43,9 @@ void Init::setup()
   Serial.println();
 
   Base::setup();
+
+  initEspNow();
+
 #ifdef LED_BUILTIN
   pinMode(LED_BUILTIN, OUTPUT);
 #endif
