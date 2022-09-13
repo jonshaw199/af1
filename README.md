@@ -4,13 +4,13 @@
 
 ### Features
 
-- :trident: [State Management](#overview)
 - :electric_plug: [Websocket Client](#overview)
-- :handshake: ESP-Now P2P Communication
+- :handshake: ESP-Now P2P
+- :trident: [State Management](#overview)
 - :stopwatch: [Event Scheduling](#event-scheduling)
 - :radio: Over-The-Air (OTA) firmware updates
 - :keyboard: [Serial Input Handling](#overview)
-- :shipit: Mesh Mode :soon:
+- :shipit: Mesh :soon:
 
 ### Overview
 
@@ -48,7 +48,6 @@ public:
 ...
 ```
 
-## To Explore
+## Examples
 
-- Nested state entities
-- Long/infinite loops in stateEnt::loop() (basically hijacking the main loop and preventing requested state changes from being fulfilled the normal way; may be useful for other things)
+Until the dust settles, examples can be found in other repos such as [AF1 Light Show](https://github.com/jonshaw199/af1-light-show).
