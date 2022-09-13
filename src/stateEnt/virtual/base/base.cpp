@@ -761,7 +761,7 @@ void Base::sendHandshakeRequests(std::set<int> ids)
   // Set struct
   msg.setType(TYPE_HANDSHAKE_REQUEST);
   msg.setSenderID(StateManager::getDeviceID());
-  msg.setState(STATE_HANDSHAKE);
+  msg.setState(StateManager::getCurState()); // msg.setState(STATE_HANDSHAKE);
   msg.setData(getMacAP());
   // Set wrapper
   msg.setRecipients(ids);
@@ -802,7 +802,7 @@ void Base::sendHandshakeResponses(std::set<int> ids)
   // Set struct
   msg.setType(TYPE_HANDSHAKE_RESPONSE);
   msg.setSenderID(StateManager::getDeviceID());
-  msg.setState(STATE_HANDSHAKE);
+  msg.setState(StateManager::getCurState()); // msg.setState(STATE_HANDSHAKE);
   // Set wrapper
   msg.setRecipients(ids);
 
