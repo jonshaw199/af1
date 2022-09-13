@@ -1,7 +1,7 @@
 {
   "name": "AF1",
   "version": "1.0.45",
-  "description": "Arduino/ESP32 Framework ✔ Mesh Mode ✔ AP/STA Mode ✔ Websocket Client ✔ ESP-Now P2P ✔ State Management ✔ Event Scheduling ✔ Over-The-Air Firmware Updates ✔ Serial Input Handling",
+  "description": "Arduino/ESP32 Framework ✔ Websocket Client ✔ ESP-Now P2P ✔ State Management ✔ Event Scheduling ✔ Over-The-Air Firmware Updates ✔ Serial Input Handling",
   "keywords": "arduino, esp32, iot, espnow, websocket, client, server, ota, state, management, event, scheduling, over-the-air, firmware, updates, serial, input, lightweight, extendable, performant, framework, mesh, network, mesh network, mode, mesh mode",
   "authors": [
     {
