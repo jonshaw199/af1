@@ -41,7 +41,6 @@ public:
   void overrideInboxHandler();
   void serializeESPNow(AF1Msg &m);
   void deserializeESPNow(AF1Msg &m);
-  String getName();
 };
 
 Demo1::Demo1()
@@ -52,7 +51,6 @@ Demo1::Demo1()
   AF1Msg msg;
   msg.setState(STATE_DEMO1);
   msg.setType(TYPE_RUN_DATA);
-  msg.setMaxRetries(MS_DEMO1_LOOP >= 1000 ? 3 : 0);
   msg.getJson()["r"] = rand() % 250;
   msg.getJson()["g"] = rand() % 250;
   msg.getJson()["b"] = rand() % 250;
@@ -66,7 +64,6 @@ void Demo1::setup()
 {
   Base::setup();
   JSLED::init();
-  JSLED::setBrightness(10);
 }
 
 void Demo1::preStateChange(int s)
@@ -87,11 +84,6 @@ void Demo1::overrideInboxHandler()
       JSLED::fillColor(c);
       break;
     } });
-}
-
-String Demo1::getName()
-{
-  return "STATE_DEMO1";
 }
 
 void Demo1::serializeESPNow(AF1Msg &m)
