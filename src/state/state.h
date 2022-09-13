@@ -32,7 +32,6 @@ enum af1_state
 enum af1_mode
 {
   MODE_BASIC,
-  MODE_MESH
 };
 
 #endif // STATE_STATE_H

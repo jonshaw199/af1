@@ -21,7 +21,6 @@
 
 #include "stateManager.h"
 #include "modeEnt/basic/basic.h"
-#include "modeEnt/mesh/mesh.h"
 #include "stateEnt/ota/ota.h"
 #include "stateEnt/restart/restart.h"
 #include "stateEnt/init/init.h"
@@ -52,7 +51,6 @@ static std::map<String, int> macToIDMap;
 StateManager::StateManager()
 {
   modeEntMap[MODE_BASIC] = new Basic();
-  modeEntMap[MODE_MESH] = new Mesh();
 
   initialMode = MODE_INITIAL;
 
