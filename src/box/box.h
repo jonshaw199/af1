@@ -25,13 +25,15 @@
 
 typedef void (*msg_handler)(AF1Msg m);
 
+typedef void (*msg_modifier)(AF1Msg &m);
+
 class Box : public TSQueue<AF1Msg>
 {
   msg_handler msgHandler;
 
 public:
   Box();
-  void handleMessages();
+  void handleMessages(msg_modifier m);
   void setMsgHandler(msg_handler h);
 };
 

@@ -25,12 +25,16 @@ void dummyHandler(AF1Msg m)
 {
 }
 
+void dummyModifier(AF1Msg &m)
+{
+}
+
 Box::Box()
 {
   msgHandler = dummyHandler;
 }
 
-void Box::handleMessages()
+void Box::handleMessages(msg_modifier mod = dummyModifier)
 {
   m.lock();
   if (!q.empty())
@@ -38,6 +42,7 @@ void Box::handleMessages()
     AF1Msg msg = q.front();
     q.pop();
     m.unlock();
+    mod(msg);
     msgHandler(msg);
     handleMessages();
   }

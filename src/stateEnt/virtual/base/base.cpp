@@ -68,8 +68,10 @@ void Base::setup()
 
 void Base::loop()
 {
-  inbox.handleMessages();
-  outbox.handleMessages();
+  inbox.handleMessages([](AF1Msg &m)
+                       { m.deserializeInnerMsgESPNow(); });
+  outbox.handleMessages([](AF1Msg &m)
+                        { m.serializeInnerMsgESPNow(); });
 
   // Handling user input
   if (Serial.available() > 0)
