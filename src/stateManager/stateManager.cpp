@@ -24,8 +24,7 @@
 #include "modeEnt/mesh/mesh.h"
 #include "stateEnt/ota/ota.h"
 #include "stateEnt/restart/restart.h"
-#include "stateEnt/handshake/master/masterHandshake.h"
-#include "stateEnt/handshake/slave/slaveHandshake.h"
+#include "stateEnt/handshake/handshake.h"
 #include "stateEnt/init/init.h"
 #include "stateEnt/purg/purg.h"
 
@@ -61,11 +60,7 @@ StateManager::StateManager()
 
   stateEntMap[STATE_INIT] = new Init();
   stateEntMap[STATE_OTA] = new OTA();
-#if MASTER
-  stateEntMap[STATE_HANDSHAKE] = new MasterHandshake();
-#else
-  stateEntMap[STATE_HANDSHAKE] = new SlaveHandshake();
-#endif
+  stateEntMap[STATE_HANDSHAKE] = new Handshake();
   stateEntMap[STATE_RESTART] = new Restart();
   stateEntMap[STATE_PURG] = new Purg<Base>();
   stateEntMap[STATE_IDLE_BASE] = new Base();

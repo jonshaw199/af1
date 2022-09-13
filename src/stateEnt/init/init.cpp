@@ -25,17 +25,18 @@
 
 void Init::setup()
 {
+  initEspNow();
+
   Serial.println();
   Serial.println("*********");
   Serial.print("JS ID: ");
   Serial.println(StateManager::getDeviceID());
 
   // WifiHandler init
-  setAPMode();
+  WiFi.mode(WIFI_MODE_APSTA);
   WiFi.softAPmacAddress(macAP);
   Serial.print("MAC AP: ");
   printMac(macAP);
-  setSTAMode();
   WiFi.macAddress(macSTA);
   Serial.print("MAC STA: ");
   printMac(macSTA);
@@ -55,6 +56,7 @@ void Init::loop()
   StateManager::setRequestedState(StateManager::getInitialState());
 }
 
-String Init::getName() {
+String Init::getName()
+{
   return "STATE_INIT";
 }

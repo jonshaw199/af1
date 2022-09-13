@@ -37,6 +37,10 @@ WiFiClient Base::client;
 
 Base::Base()
 {
+  intervalEventMap.insert(std::pair<String, IntervalEvent>("Base_1", IntervalEvent(MS_HANDSHAKE_LOOP, [](IECBArg a)
+                                                                                   {
+    handleHandshakes();
+    return true; })));
 }
 
 Base::Base(ws_client_info w)
@@ -228,31 +232,7 @@ void Base::deactivateIntervalEvents()
   From WifiHandler
 */
 
-void Base::prepareWifi()
-{
-  WiFi.disconnect(true);
-  // delay(DELAY_PREPARE_WIFI);
-}
-
-void Base::setSTAMode()
-{
-  Serial.println("Setting wifi mode to STA");
-  WiFi.mode(WIFI_STA);
-}
-
-void Base::setAPMode()
-{
-  Serial.println("Setting wifi mode to AP");
-  WiFi.mode(WIFI_AP);
-}
-
-void Base::setAPSTAMode()
-{
-  Serial.println("Setting wifi mode to APSTA");
-  WiFi.mode(WIFI_MODE_APSTA);
-}
-
-// Setup access point (aka open wifi network); this is used by slaves so master can find them
+// Setup access point (aka open wifi network); this is used by scanForESPNowPeers() (or whatever its called)
 bool Base::broadcastAP()
 {
   Serial.println("Broadcasting soft AP");
@@ -623,8 +603,7 @@ int8_t Base::scanForPeers()
 
 void Base::connectToPeers()
 {
-  // Check if each slave is already connected to master
-  // If not, then try to connect
+  // Try to connect if not connected already
   if (StateManager::getPeerInfoMap().size())
   {
     for (std::map<int, af1_peer_info>::iterator it = StateManager::getPeerInfoMap().begin(); it != StateManager::getPeerInfoMap().end(); it++)

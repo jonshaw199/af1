@@ -17,17 +17,17 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "slaveHandshake.h"
+#ifndef STATEENT_HANDSHAKE_HANDSHAKE_H_
+#define STATEENT_HANDSHAKE_HANDSHAKE_H_
 
-void SlaveHandshake::setup()
-{
-  Base::setup();
-  setAPSTAMode();
-  broadcastAP();
-  initEspNow();
-}
+#include "stateEnt/virtual/base/base.h"
 
-String SlaveHandshake::getName()
+class Handshake : public Base
 {
-  return "STATE_HANDSHAKE_SLAVE";
-}
+public:
+  Handshake();
+  void setup();
+  String getName();
+};
+
+#endif // STATEENT_HANDSHAKE_HANDSHAKE_H_

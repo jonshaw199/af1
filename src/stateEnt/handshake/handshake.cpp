@@ -17,18 +17,30 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef STATEENT_HANDSHAKE_MASTER_MASTERHANDSHAKE_H_
-#define STATEENT_HANDSHAKE_MASTER_MASTERHANDSHAKE_H_
+#include "handshake.h"
+#include "stateManager/stateManager.h"
+#include "stateEnt/virtual/base/intervalEvent/intervalEvent.h"
+#include "pre.h"
 
-#include "stateEnt/virtual/base/base.h"
-
-class MasterHandshake : public Base
+bool handleHandshakesInternal(IECBArg a)
 {
-public:
-  MasterHandshake();
-  void setup();
-  void loop();
-  String getName();
-};
+  Base::handleHandshakes();
+  return true;
+}
 
-#endif // STATEENT_HANDSHAKE_MASTER_MASTERHANDSHAKE_H_
+Handshake::Handshake()
+{
+  // intervalEventMap.insert(std::pair<String, IntervalEvent>("Handshake_1", IntervalEvent(MS_HANDSHAKE_LOOP, handleHandshakesInternal)));
+}
+
+void Handshake::setup()
+{
+  Base::setup();
+  // initEspNow();
+  broadcastAP();
+}
+
+String Handshake::getName()
+{
+  return "STATE_HANDSHAKE";
+}
