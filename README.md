@@ -4,17 +4,13 @@
 
 ### Features
 
-- :shipit: Mesh Mode :soon:
-
 - :trident: [State Management](#overview)
 - :electric_plug: [Websocket Client](#overview)
 - :handshake: ESP-Now P2P Communication
 - :stopwatch: [Event Scheduling](#event-scheduling)
 - :radio: Over-The-Air (OTA) firmware updates
 - :keyboard: [Serial Input Handling](#overview)
-- :leaves: Lightweight
-- :heavy_plus_sign: Extendable
-- :racing_car: Performant
+- :shipit: Mesh Mode :soon:
 
 ### Overview
 
