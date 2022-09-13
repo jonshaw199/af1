@@ -68,7 +68,7 @@
 #endif
 
 #ifndef MS_HANDSHAKE_LOOP
-#define MS_HANDSHAKE_LOOP 5000
+#define MS_HANDSHAKE_LOOP 30000
 #endif
 
 #ifndef STATE_WS_FALLBACK
