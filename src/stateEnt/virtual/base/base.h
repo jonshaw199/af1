@@ -101,6 +101,7 @@ public:
   virtual String getName();
   virtual void serializeESPNow(AF1Msg &m);
   virtual void deserializeESPNow(AF1Msg &m);
+  virtual bool scanForESPNowPeers();
   // Interval Events
   unsigned long getElapsedMs();
   void resetIntervalEvents();

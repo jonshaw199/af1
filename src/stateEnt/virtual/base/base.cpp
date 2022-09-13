@@ -39,7 +39,11 @@ Base::Base()
 {
   intervalEventMap.insert(std::pair<String, IntervalEvent>("Base_1", IntervalEvent(MS_HANDSHAKE_LOOP, [](IECBArg a)
                                                                                    {
-    handleHandshakes();
+    if (StateManager::getStateEntMap().at(StateManager::getCurState())->scanForESPNowPeers()) {
+      handleHandshakes();
+    } else {
+      Serial.println("ESPNow peer scan denied in current state");
+    }
     return true; })));
 }
 
@@ -736,6 +740,11 @@ void Base::deserializeESPNow(AF1Msg &m)
 #if PRINT_MSG_RECEIVE
   Serial.println("Base::deserializeESPNow()");
 #endif
+}
+
+bool Base::scanForESPNowPeers()
+{
+  return true;
 }
 
 void Base::sendStateChangeMessages(int s)
