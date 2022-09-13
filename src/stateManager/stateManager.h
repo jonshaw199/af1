@@ -43,7 +43,6 @@ protected:
   static int prevState;
   static int requestedState;
   static int initialState;
-  static int stateAfterHandshake;
   static Base *stateEnt;
   static std::map<int, Base *> stateEntMap;
 
@@ -79,8 +78,6 @@ public:
   static const std::vector<wifi_ap_info> getWifiAPs();
   static void setInitialState(int s);
   static int getInitialState();
-  static void setStateAfterHandshake(int s);
-  static int getStateAfterHandshake();
   static void setPurgNext(int p, int n);
   static const std::map<int, Base *> &getStateEntMap();
   static int getDeviceID();

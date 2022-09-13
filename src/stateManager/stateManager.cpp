@@ -24,7 +24,6 @@
 #include "modeEnt/mesh/mesh.h"
 #include "stateEnt/ota/ota.h"
 #include "stateEnt/restart/restart.h"
-#include "stateEnt/handshake/handshake.h"
 #include "stateEnt/init/init.h"
 #include "stateEnt/purg/purg.h"
 
@@ -32,7 +31,6 @@ int StateManager::curState;
 int StateManager::prevState;
 int StateManager::requestedState;
 int StateManager::initialState;
-int StateManager::stateAfterHandshake;
 int StateManager::deviceID;
 Base *StateManager::stateEnt;
 std::map<int, Base *> StateManager::stateEntMap;
@@ -60,7 +58,6 @@ StateManager::StateManager()
 
   stateEntMap[STATE_INIT] = new Init();
   stateEntMap[STATE_OTA] = new OTA();
-  stateEntMap[STATE_HANDSHAKE] = new Handshake();
   stateEntMap[STATE_RESTART] = new Restart();
   stateEntMap[STATE_PURG] = new Purg<Base>();
   stateEntMap[STATE_IDLE_BASE] = new Base();
@@ -73,10 +70,6 @@ StateManager::StateManager()
   {
     setRequestedState(STATE_OTA);
   };
-  stringHandlerMap["h"] = []()
-  {
-    StateManager::setRequestedState(STATE_HANDSHAKE);
-  };
   stringHandlerMap["r"] = []()
   {
     StateManager::setRequestedState(STATE_RESTART);
@@ -87,7 +80,6 @@ StateManager::StateManager()
   };
 
   initialState = STATE_IDLE_BASE;
-  stateAfterHandshake = STATE_IDLE_BASE;
 }
 
 StateManager &StateManager::getInstance()
@@ -299,16 +291,6 @@ void StateManager::setInitialState(int s)
 int StateManager::getInitialState()
 {
   return initialState;
-}
-
-void StateManager::setStateAfterHandshake(int s)
-{
-  stateAfterHandshake = s;
-}
-
-int StateManager::getStateAfterHandshake()
-{
-  return stateAfterHandshake;
 }
 
 void StateManager::setPurgNext(int p, int n)

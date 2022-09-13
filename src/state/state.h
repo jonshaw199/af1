@@ -26,7 +26,6 @@ enum af1_state
   STATE_PURG,
   STATE_OTA,
   STATE_RESTART,
-  STATE_HANDSHAKE,
   STATE_IDLE_BASE,
 };
 

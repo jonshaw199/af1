@@ -233,6 +233,9 @@ void Base::deactivateIntervalEvents()
 */
 
 // Setup access point (aka open wifi network); this is used by scanForESPNowPeers() (or whatever its called)
+/*
+  Unused now? How?
+*/
 bool Base::broadcastAP()
 {
   Serial.println("Broadcasting soft AP");
