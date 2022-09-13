@@ -99,9 +99,11 @@ void OTA::loop()
 
 void OTA::preStateChange(int s)
 {
+  Base::preStateChange(s);
   setBuiltinLED(0);
 }
 
-String OTA::getName() {
+String OTA::getName()
+{
   return "STATE_OTA";
 }
