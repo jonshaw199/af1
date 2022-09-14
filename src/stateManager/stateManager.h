@@ -57,6 +57,7 @@ protected:
   static std::vector<wifi_ap_info> wifiAPs;
 
   static ws_client_info curWSClientInfo;
+  static ws_client_info defaultWSClientInfo;
 
 public:
   static StateManager &getInstance();
