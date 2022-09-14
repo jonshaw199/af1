@@ -74,6 +74,8 @@ class Base
   static void onESPNowDataSent(const uint8_t *mac_addr, esp_now_send_status_t status);
   static void onESPNowDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len);
 
+  ws_client_info wsClientInfo;
+
 protected:
   unsigned long startMs;
   std::map<String, IntervalEvent> intervalEventMap;
@@ -88,8 +90,6 @@ protected:
 
   static HTTPClient httpClient;
   static WiFiMulti wifiMulti;
-
-  static ws_client_info wsClientInfo;
 
 public:
   Base();
@@ -110,6 +110,10 @@ public:
   void resetIntervalEvents();
   void activateIntervalEvents();
   void deactivateIntervalEvents();
+
+  void setWSClientInfo(ws_client_info w);
+  ws_client_info getWSClientInfo();
+
   // Wifi
   static bool broadcastAP();
   static String macToString(const uint8_t *m);
@@ -141,8 +145,6 @@ public:
   // Websocket
   static WebSocketClient webSocketClient;
   static WiFiClient client; // Use WiFiClient class to create TCP connections
-  static void setWSClientInfo(ws_client_info w);
-  static ws_client_info getWSClientInfo();
   static void sendMsgWS(AF1Msg msg);
   static void connectToWS();
   // HTTP

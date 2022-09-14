@@ -35,8 +35,6 @@ WebSocketClient Base::webSocketClient;
 // Use WiFiClient class to create TCP connections
 WiFiClient Base::client;
 
-ws_client_info Base::wsClientInfo;
-
 Base::Base()
 {
   setWSClientInfo(StateManager::getDefaultWSClientInfo());
@@ -861,17 +859,18 @@ void Base::sendMsgWS(AF1Msg m)
 
 void Base::connectToWS()
 {
+  ws_client_info i = StateManager::getStateEntMap().at(StateManager::getCurState())->wsClientInfo;
   // Only attempting to connect to websocket if wifi is connected first
   if (WiFi.status() == WL_CONNECTED)
   {
-    if (client && wsClientInfo == StateManager::getCurWSClientInfo())
+    if (client && i == StateManager::getCurWSClientInfo())
     {
       Serial.println("Already connected to websocket");
     }
     else
     {
       // Connect to the websocket server
-      if (client.connect(wsClientInfo.host.c_str(), wsClientInfo.port))
+      if (client.connect(i.host.c_str(), i.port))
       {
         Serial.println("Connected to websocket server");
       }
@@ -880,18 +879,18 @@ void Base::connectToWS()
         Serial.println("Connection to websocket server failed");
       }
 
-      int lenH = wsClientInfo.host.length() + 1;
-      int lenP = wsClientInfo.path.length() + 1;
-      int lenPr = wsClientInfo.protocol.length() + 1;
+      int lenH = i.host.length() + 1;
+      int lenP = i.path.length() + 1;
+      int lenPr = i.protocol.length() + 1;
       char h[lenH];
       char p[lenP];
       char pr[lenPr];
-      wsClientInfo.host.toCharArray(h, lenH);
-      wsClientInfo.path.toCharArray(p, lenP);
-      wsClientInfo.protocol.toCharArray(pr, lenPr);
+      i.host.toCharArray(h, lenH);
+      i.path.toCharArray(p, lenP);
+      i.protocol.toCharArray(pr, lenPr);
       webSocketClient.host = h;
       webSocketClient.path = p;
-      if (wsClientInfo.protocol.length())
+      if (i.protocol.length())
       {
         webSocketClient.protocol = pr;
       }
@@ -899,7 +898,7 @@ void Base::connectToWS()
       if (webSocketClient.handshake(client))
       {
         Serial.println("Handshake successful");
-        StateManager::setCurWSClientInfo(wsClientInfo);
+        StateManager::setCurWSClientInfo(i);
       }
       else
       {

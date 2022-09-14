@@ -45,6 +45,7 @@ std::map<String, string_input_handler> StateManager::stringHandlerMap;
 std::vector<wifi_ap_info> StateManager::wifiAPs;
 
 ws_client_info StateManager::curWSClientInfo;
+ws_client_info StateManager::defaultWSClientInfo;
 
 // From espnowHandler
 static std::map<int, af1_peer_info> peerInfoMap;
@@ -80,6 +81,8 @@ StateManager::StateManager()
   };
 
   initialState = STATE_IDLE_BASE;
+  defaultWSClientInfo = {"", "", 0, ""};
+  curWSClientInfo = defaultWSClientInfo;
 }
 
 StateManager &StateManager::getInstance()
@@ -305,12 +308,12 @@ int StateManager::getDeviceID()
 
 void StateManager::setDefaultWSClientInfo(ws_client_info w)
 {
-  stateEntMap[STATE_IDLE_BASE]->setWSClientInfo(w);
+  defaultWSClientInfo = w;
 }
 
 ws_client_info StateManager::getDefaultWSClientInfo()
 {
-  return stateEntMap[STATE_IDLE_BASE]->getWSClientInfo();
+  return defaultWSClientInfo;
 }
 
 std::set<int> StateManager::getPeerIDs()
