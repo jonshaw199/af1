@@ -57,11 +57,6 @@ void Base::setup()
   connectToWS();
 }
 
-int Base::getID()
-{
-  return id;
-}
-
 void Base::loop()
 {
   inbox.handleMessages([](AF1Msg &m)
