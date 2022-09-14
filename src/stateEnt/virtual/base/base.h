@@ -63,6 +63,10 @@ public:
   String path;
   int port;
   String protocol;
+  String toString()
+  {
+    return "ws_client_info: host=" + host + ";path=" + path + ";port=" + String(port) + ";protocol" + protocol;
+  }
   bool operator==(const ws_client_info &other)
   {
     return host == other.host && path == other.path && port == other.port;
@@ -71,6 +75,8 @@ public:
 
 class Base
 {
+  int id;
+
   static void onESPNowDataSent(const uint8_t *mac_addr, esp_now_send_status_t status);
   static void onESPNowDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len);
 
@@ -93,7 +99,7 @@ protected:
 
 public:
   Base();
-  Base(ws_client_info w);
+  Base(int s);
   // Virtual
   virtual void setup();
   virtual void loop();
@@ -113,6 +119,8 @@ public:
 
   void setWSClientInfo(ws_client_info w);
   ws_client_info getWSClientInfo();
+
+  int getID();
 
   // Wifi
   static bool broadcastAP();

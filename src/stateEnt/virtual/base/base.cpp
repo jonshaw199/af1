@@ -35,10 +35,8 @@ WebSocketClient Base::webSocketClient;
 // Use WiFiClient class to create TCP connections
 WiFiClient Base::client;
 
-Base::Base()
+Base::Base() : id{0}
 {
-  setWSClientInfo(StateManager::getDefaultWSClientInfo());
-
   intervalEventMap.insert(std::pair<String, IntervalEvent>("Base_1", IntervalEvent(MS_HANDSHAKE_LOOP, [](IECBArg a)
                                                                                    {
     if (StateManager::getStateEntMap().at(StateManager::getCurState())->scanForESPNowPeers()) {
@@ -49,10 +47,7 @@ Base::Base()
     return true; })));
 }
 
-Base::Base(ws_client_info w)
-{
-  setWSClientInfo(w);
-}
+Base::Base(int s) : id{s} {}
 
 void Base::setup()
 {
@@ -62,6 +57,11 @@ void Base::setup()
   startMs = millis();
   connectToWifi();
   connectToWS();
+}
+
+int Base::getID()
+{
+  return id;
 }
 
 void Base::loop()
@@ -826,6 +826,8 @@ void Base::sendAllHandshakes()
 
 void Base::setWSClientInfo(ws_client_info w)
 {
+  Serial.print("Setting websocket client info: ");
+  Serial.println(w.toString());
   wsClientInfo.host = w.host;
   wsClientInfo.path = w.path;
   wsClientInfo.port = w.port;
@@ -859,10 +861,18 @@ void Base::sendMsgWS(AF1Msg m)
 
 void Base::connectToWS()
 {
-  ws_client_info i = StateManager::getStateEntMap().at(StateManager::getCurState())->wsClientInfo;
   // Only attempting to connect to websocket if wifi is connected first
   if (WiFi.status() == WL_CONNECTED)
   {
+    ws_client_info i = StateManager::getStateEntMap().at(StateManager::getCurState())->wsClientInfo;
+    if (!i.host.length() && StateManager::getDefaultWSClientInfo().host.length())
+    {
+      i = StateManager::getDefaultWSClientInfo();
+    }
+
+    Serial.print("connectToWS: checking WS connection: ");
+    Serial.println(i.toString());
+
     if (client && i == StateManager::getCurWSClientInfo())
     {
       Serial.println("Already connected to websocket");
