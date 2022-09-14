@@ -35,8 +35,12 @@ WebSocketClient Base::webSocketClient;
 // Use WiFiClient class to create TCP connections
 WiFiClient Base::client;
 
+ws_client_info Base::wsClientInfo;
+
 Base::Base()
 {
+  setWSClientInfo(StateManager::getDefaultWSClientInfo());
+
   intervalEventMap.insert(std::pair<String, IntervalEvent>("Base_1", IntervalEvent(MS_HANDSHAKE_LOOP, [](IECBArg a)
                                                                                    {
     if (StateManager::getStateEntMap().at(StateManager::getCurState())->scanForESPNowPeers()) {
@@ -59,19 +63,7 @@ void Base::setup()
   activateIntervalEvents();
   startMs = millis();
   connectToWifi();
-  // Only attempting to connect to websocket if wifi is connected first
-  if (WiFi.status() == WL_CONNECTED)
-  {
-    if (client)
-    {
-      Serial.println("Already connected to websocket");
-    }
-    else
-    {
-      connectToWS();
-      handshakeWS();
-    }
-  }
+  connectToWS();
 }
 
 void Base::loop()
@@ -834,53 +826,17 @@ void Base::sendAllHandshakes()
 
 // From WSEnt
 
-void Base::connectToWS()
-{
-  // Connect to the websocket server
-  if (client.connect(wsClientInfo.host.c_str(), wsClientInfo.port))
-  {
-    Serial.println("Websocket connected");
-  }
-  else
-  {
-    Serial.println("Websocket connection failed");
-  }
-}
-
-void Base::handshakeWS()
-{
-  int lenH = wsClientInfo.host.length() + 1;
-  int lenP = wsClientInfo.path.length() + 1;
-  int lenPr = wsClientInfo.protocol.length() + 1;
-  char h[lenH];
-  char p[lenP];
-  char pr[lenPr];
-  wsClientInfo.host.toCharArray(h, lenH);
-  wsClientInfo.path.toCharArray(p, lenP);
-  wsClientInfo.protocol.toCharArray(pr, lenPr);
-  webSocketClient.host = h;
-  webSocketClient.path = p;
-  if (wsClientInfo.protocol.length())
-  {
-    webSocketClient.protocol = pr;
-  }
-
-  if (webSocketClient.handshake(client))
-  {
-    Serial.println("Handshake successful");
-  }
-  else
-  {
-    Serial.println("Handshake failed");
-  }
-}
-
 void Base::setWSClientInfo(ws_client_info w)
 {
   wsClientInfo.host = w.host;
   wsClientInfo.path = w.path;
   wsClientInfo.port = w.port;
   wsClientInfo.protocol = w.protocol;
+}
+
+ws_client_info Base::getWSClientInfo()
+{
+  return wsClientInfo;
 }
 
 void Base::sendMsgWS(AF1Msg m)
@@ -900,5 +856,55 @@ void Base::sendMsgWS(AF1Msg m)
 #if PRINT_MSG_SEND
     Serial.println("Websocket client not connected; unable to send message");
 #endif
+  }
+}
+
+void Base::connectToWS()
+{
+  // Only attempting to connect to websocket if wifi is connected first
+  if (WiFi.status() == WL_CONNECTED)
+  {
+    if (client && wsClientInfo == StateManager::getCurWSClientInfo())
+    {
+      Serial.println("Already connected to websocket");
+    }
+    else
+    {
+      // Connect to the websocket server
+      if (client.connect(wsClientInfo.host.c_str(), wsClientInfo.port))
+      {
+        Serial.println("Connected to websocket server");
+      }
+      else
+      {
+        Serial.println("Connection to websocket server failed");
+      }
+
+      int lenH = wsClientInfo.host.length() + 1;
+      int lenP = wsClientInfo.path.length() + 1;
+      int lenPr = wsClientInfo.protocol.length() + 1;
+      char h[lenH];
+      char p[lenP];
+      char pr[lenPr];
+      wsClientInfo.host.toCharArray(h, lenH);
+      wsClientInfo.path.toCharArray(p, lenP);
+      wsClientInfo.protocol.toCharArray(pr, lenPr);
+      webSocketClient.host = h;
+      webSocketClient.path = p;
+      if (wsClientInfo.protocol.length())
+      {
+        webSocketClient.protocol = pr;
+      }
+
+      if (webSocketClient.handshake(client))
+      {
+        Serial.println("Handshake successful");
+        StateManager::setCurWSClientInfo(wsClientInfo);
+      }
+      else
+      {
+        Serial.println("Handshake failed");
+      }
+    }
   }
 }

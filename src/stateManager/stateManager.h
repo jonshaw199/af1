@@ -56,6 +56,8 @@ protected:
   static std::map<String, string_input_handler> stringHandlerMap;
   static std::vector<wifi_ap_info> wifiAPs;
 
+  static ws_client_info curWSClientInfo;
+
 public:
   static StateManager &getInstance();
   static void setup(int id);
@@ -82,9 +84,12 @@ public:
   static const std::map<int, Base *> &getStateEntMap();
   static int getDeviceID();
   static void setDefaultWSClientInfo(ws_client_info w);
+  static ws_client_info getDefaultWSClientInfo();
   static std::map<int, af1_peer_info> &getPeerInfoMap();
   static std::map<String, int> &getMacToIDMap();
   static std::set<int> getPeerIDs();
+  static void setCurWSClientInfo(ws_client_info i);
+  static ws_client_info getCurWSClientInfo();
 
   static void registerStateEnt(int i, Base *s);
   static void registerStringHandler(String s, string_input_handler h);

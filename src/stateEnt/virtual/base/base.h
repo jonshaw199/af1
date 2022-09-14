@@ -56,22 +56,23 @@ typedef struct af1_peer_info
   std::mutex mutex;
 } af1_peer_info;
 
-typedef struct ws_client_info
+class ws_client_info
 {
+public:
   String host;
   String path;
   int port;
   String protocol;
-} ws_client_info;
+  bool operator==(const ws_client_info &other)
+  {
+    return host == other.host && path == other.path && port == other.port;
+  }
+};
 
 class Base
 {
   static void onESPNowDataSent(const uint8_t *mac_addr, esp_now_send_status_t status);
   static void onESPNowDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len);
-
-  ws_client_info wsClientInfo;
-  void connectToWS();
-  void handshakeWS();
 
 protected:
   unsigned long startMs;
@@ -87,6 +88,8 @@ protected:
 
   static HTTPClient httpClient;
   static WiFiMulti wifiMulti;
+
+  static ws_client_info wsClientInfo;
 
 public:
   Base();
@@ -138,8 +141,10 @@ public:
   // Websocket
   static WebSocketClient webSocketClient;
   static WiFiClient client; // Use WiFiClient class to create TCP connections
-  void setWSClientInfo(ws_client_info w);
+  static void setWSClientInfo(ws_client_info w);
+  static ws_client_info getWSClientInfo();
   static void sendMsgWS(AF1Msg msg);
+  static void connectToWS();
   // HTTP
   static DynamicJsonDocument httpFetch(String url);
   static DynamicJsonDocument httpPost(String url, DynamicJsonDocument body);

@@ -44,6 +44,8 @@ std::map<int, ModeBase *> StateManager::modeEntMap;
 std::map<String, string_input_handler> StateManager::stringHandlerMap;
 std::vector<wifi_ap_info> StateManager::wifiAPs;
 
+ws_client_info StateManager::curWSClientInfo;
+
 // From espnowHandler
 static std::map<int, af1_peer_info> peerInfoMap;
 static std::map<String, int> macToIDMap;
@@ -306,6 +308,11 @@ void StateManager::setDefaultWSClientInfo(ws_client_info w)
   stateEntMap[STATE_IDLE_BASE]->setWSClientInfo(w);
 }
 
+ws_client_info StateManager::getDefaultWSClientInfo()
+{
+  return stateEntMap[STATE_IDLE_BASE]->getWSClientInfo();
+}
+
 std::set<int> StateManager::getPeerIDs()
 {
   std::set<int> result;
@@ -383,4 +390,14 @@ String StateManager::modeToString(int s)
     return modeEntMap[s]->getName();
   }
   return "Unknown state";
+}
+
+void StateManager::setCurWSClientInfo(ws_client_info i)
+{
+  curWSClientInfo = i;
+}
+
+ws_client_info StateManager::getCurWSClientInfo()
+{
+  return curWSClientInfo;
 }
