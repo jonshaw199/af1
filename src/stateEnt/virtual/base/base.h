@@ -75,8 +75,6 @@ public:
 
 class Base
 {
-  int id;
-
   static void onESPNowDataSent(const uint8_t *mac_addr, esp_now_send_status_t status);
   static void onESPNowDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len);
 
@@ -99,7 +97,6 @@ protected:
 
 public:
   Base();
-  Base(int s);
   // Virtual
   virtual void setup();
   virtual void loop();
@@ -119,8 +116,6 @@ public:
 
   void setWSClientInfo(ws_client_info w);
   ws_client_info getWSClientInfo();
-
-  int getID();
 
   // Wifi
   static bool broadcastAP();

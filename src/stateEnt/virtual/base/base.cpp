@@ -35,7 +35,7 @@ WebSocketClient Base::webSocketClient;
 // Use WiFiClient class to create TCP connections
 WiFiClient Base::client;
 
-Base::Base() : id{0}
+Base::Base()
 {
   intervalEventMap.insert(std::pair<String, IntervalEvent>("Base_1", IntervalEvent(MS_HANDSHAKE_LOOP, [](IECBArg a)
                                                                                    {
@@ -46,8 +46,6 @@ Base::Base() : id{0}
     }
     return true; })));
 }
-
-Base::Base(int s) : id{s} {}
 
 void Base::setup()
 {
