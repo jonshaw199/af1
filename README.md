@@ -5,7 +5,9 @@
 ### Features
 
 - :electric_plug: [Websocket Client](#overview)
+- :globe_with_meridians: HTTP Client
 - :handshake: ESP-Now P2P
+- :arrows_counterclockwise: AP/STA Mode (Use websocket, HTTP, and ESP-Now concurrently)
 - :trident: [State Management](#overview)
 - :stopwatch: [Event Scheduling](#event-scheduling)
 - :radio: Over-The-Air (OTA) firmware updates
@@ -20,6 +22,8 @@ When creating new state entities, setup, loop, serialization/deserialization, an
 ```
 ...
 ```
+
+Until the dust settles, examples can be found in other repos such as [AF1 Light Show](https://github.com/jonshaw199/af1-light-show/blob/main/src/main.cpp).
 
 ## API Docs
 
@@ -44,7 +48,3 @@ public:
 ```
 ...
 ```
-
-## Examples
-
-Until the dust settles, examples can be found in other repos such as [AF1 Light Show](https://github.com/jonshaw199/af1-light-show).
