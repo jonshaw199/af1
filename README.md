@@ -25,6 +25,8 @@ This is the most trivial example:
 #include <Arduino.h>
 #include <AF1.h>
 
+#define DEVICE_ID 1
+
 enum af1_state_extended
 {
   STATE_SANDBOX1
@@ -54,14 +56,14 @@ public:
 
 void setup()
 {
-  AF1::setup(JS_ID);
+  AF1::setup(DEVICE_ID); // Required
   AF1::registerWifiAP("js-guest", "B1g5lams!lol");
   AF1::registerStateEnt(STATE_SANDBOX1, new Sandbox1());
 }
 
 void loop()
 {
-  AF1::loop();
+  AF1::loop(); // Required
 }
 ```
 
