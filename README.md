@@ -33,7 +33,6 @@ enum af1_state_extended
 class Sandbox1 : public Base
 {
 public:
-
   /*
     virtual void setup();
     virtual void loop();
