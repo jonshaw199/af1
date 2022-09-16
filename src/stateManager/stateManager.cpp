@@ -51,6 +51,9 @@ ws_client_info StateManager::defaultWSClientInfo;
 static std::map<int, af1_peer_info> peerInfoMap;
 static std::map<String, int> macToIDMap;
 
+WiFiUDP StateManager::ntpUDP;
+NTPClient StateManager::timeClient(ntpUDP);
+
 StateManager::StateManager()
 {
   modeEntMap[MODE_BASIC] = new Basic();

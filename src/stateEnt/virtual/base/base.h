@@ -32,6 +32,7 @@
 #include <WebSocketClient.h>
 
 #include "intervalEvent/intervalEvent.h"
+#include "timeEvent/timeEvent.h"
 #include "state/state.h"
 #include "message/message.h"
 #include "box/box.h"
@@ -83,6 +84,7 @@ class Base
 protected:
   unsigned long startMs;
   std::map<String, IntervalEvent> intervalEventMap;
+  std::map<String, TimeEvent> timeEventMap;
   static void handleInboxMsg(AF1Msg m);
   static void handleOutboxMsg(AF1Msg m);
 
@@ -113,6 +115,9 @@ public:
   void resetIntervalEvents();
   void activateIntervalEvents();
   void deactivateIntervalEvents();
+  void resetTimeEvents();
+  void activateTimeEvents();
+  void deactivateTimeEvents();
 
   void setWSClientInfo(ws_client_info w);
   ws_client_info getWSClientInfo();

@@ -55,10 +55,14 @@ void Base::setup()
   startMs = millis();
   connectToWifi();
   connectToWS();
+  resetTimeEvents();
+  activateTimeEvents();
 }
 
 void Base::loop()
 {
+  StateManager::timeClient.update();
+
   inbox.handleMessages([](AF1Msg &m)
                        { m.deserializeInnerMsgESPNow(); });
   outbox.handleMessages([](AF1Msg &m)
@@ -69,6 +73,15 @@ void Base::loop()
   {
     String s = Serial.readString();
     StateManager::handleUserInput(s);
+  }
+
+  // Time Events
+  if (StateManager::timeClient.isTimeSet())
+  {
+    for (std::map<String, TimeEvent>::iterator it = timeEventMap.begin(); it != timeEventMap.end(); it++)
+    {
+      timeEventMap[it->first].cbIfTimeAndActive(StateManager::timeClient.getEpochTime() * 1000);
+    }
   }
 
   // Interval events
@@ -107,6 +120,7 @@ void Base::preStateChange(int s)
   Serial.print(StateManager::getStateEntMap().at(s)->getName());
   Serial.println(" state now.");
   deactivateIntervalEvents();
+  deactivateTimeEvents();
 
 #if MASTER
   sendStateChangeMessages(s);
@@ -215,6 +229,30 @@ void Base::deactivateIntervalEvents()
   }
 }
 
+void Base::resetTimeEvents()
+{
+  for (std::map<String, TimeEvent>::iterator it = timeEventMap.begin(); it != timeEventMap.end(); it++)
+  {
+    timeEventMap[it->first].reset();
+  }
+}
+
+void Base::activateTimeEvents()
+{
+  for (std::map<String, TimeEvent>::iterator it = timeEventMap.begin(); it != timeEventMap.end(); it++)
+  {
+    timeEventMap[it->first].activate();
+  }
+}
+
+void Base::deactivateTimeEvents()
+{
+  for (std::map<String, TimeEvent>::iterator it = timeEventMap.begin(); it != timeEventMap.end(); it++)
+  {
+    timeEventMap[it->first].deactivate();
+  }
+}
+
 /*
   From WifiHandler
 */
@@ -319,6 +357,8 @@ void Base::connectToWifi()
     Serial.println("Wifi connection successful");
     Serial.print("Local IP: ");
     Serial.println(WiFi.localIP());
+    Serial.println("initializing timeClient");
+    StateManager::timeClient.begin();
   }
 }
 

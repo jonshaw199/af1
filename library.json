@@ -13,7 +13,8 @@
   "license": "LGPL-3.0",
   "dependencies": {
     "esp32-websocket": "https://github.com/jonshaw199/esp32-websocket.git",
-    "ArduinoJson": "https://github.com/bblanchon/ArduinoJson.git"
+    "ArduinoJson": "https://github.com/bblanchon/ArduinoJson.git",
+    "NTPClient": "https://github.com/arduino-libraries/NTPClient.git"
   },
   "frameworks": "Arduino",
   "platforms": "espressif32"

@@ -26,6 +26,8 @@
 #include <Arduino.h>
 #include <esp_now.h>
 #include <mutex>
+#include <NTPClient.h>
+#include <WiFiUdp.h>
 
 #include "state/state.h"
 #include "message/message.h"
@@ -91,6 +93,8 @@ public:
   static std::set<int> getPeerIDs();
   static void setCurWSClientInfo(ws_client_info i);
   static ws_client_info getCurWSClientInfo();
+  static WiFiUDP ntpUDP;
+  static NTPClient timeClient;
 
   static void registerStateEnt(int i, Base *s);
   static void registerStringHandler(String s, string_input_handler h);
