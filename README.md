@@ -56,6 +56,7 @@ public:
 
 void setup()
 {
+  Serial.begin(115200);
   AF1::setup(DEVICE_ID); // Required
 
   /*
