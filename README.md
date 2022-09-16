@@ -57,7 +57,14 @@ public:
 void setup()
 {
   AF1::setup(DEVICE_ID); // Required
-  AF1::registerWifiAP("ssid", "pass");
+
+  /*
+    static void registerStateEnt(int i, Base *s);
+    static void registerStringHandler(String s, string_input_handler h);
+    static void registerWifiAP(String s, String p);
+    static void registerWifiAP(String s, String p, int a, int b, int c, int d, int ga, int gb, int gc, int gd, int sa, int sb, int sc, int sd);
+  */
+
   AF1::registerStateEnt(STATE_SANDBOX1, new Sandbox1());
 }
 
