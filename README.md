@@ -57,7 +57,7 @@ public:
 void setup()
 {
   AF1::setup(DEVICE_ID); // Required
-  AF1::registerWifiAP("js-guest", "B1g5lams!lol");
+  AF1::registerWifiAP("ssid", "pass");
   AF1::registerStateEnt(STATE_SANDBOX1, new Sandbox1());
 }
 
