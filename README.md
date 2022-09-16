@@ -19,11 +19,54 @@ The AF1 core consists of a handful of pre-built "state entities" and one "state 
 
 When creating new state entities, setup, loop, serialization/deserialization, and other behavior from `Base` can be overridden as necessary.
 
+This is the most trivial example:
+
 ```
-...
+#include <Arduino.h>
+#include <AF1.h>
+
+enum af1_state_extended
+{
+  STATE_SANDBOX1
+};
+
+class Sandbox1 : public Base
+{
+public:
+
+  /*
+    virtual void setup();
+    virtual void loop();
+    virtual bool validateStateChange(int s);
+    virtual void preStateChange(int s);
+    virtual void overrideInboxHandler();
+    virtual void overrideOutboxHandler();
+    virtual void serializeESPNow(AF1Msg &m);
+    virtual void deserializeESPNow(AF1Msg &m);
+    virtual bool scanForESPNowPeers();
+    virtual String getName();
+  */
+
+  String getName()
+  {
+    return "SANDBOX1";
+  }
+};
+
+void setup()
+{
+  AF1::setup(JS_ID);
+  AF1::registerWifiAP("js-guest", "B1g5lams!lol");
+  AF1::registerStateEnt(STATE_SANDBOX1, new Sandbox1());
+}
+
+void loop()
+{
+  AF1::loop();
+}
 ```
 
-Until the dust settles, examples can be found in other repos such as [AF1 Light Show](https://github.com/jonshaw199/af1-light-show/blob/main/src/main.cpp).
+Until the dust settles, other examples can be found in [AF1 Light Show](https://github.com/jonshaw199/af1-light-show/blob/main/src/main.cpp).
 
 ## API Docs
 
