@@ -17,8 +17,6 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include <Arduino.h>
-
 #include "timeEvent.h"
 
 TECBArg::TECBArg(unsigned long long c0, unsigned long long s, unsigned long long i, int c, int m) : curMs(c0), startMs(s), intervalMs(i), cbCnt(c), maxCbCnt(m) {}
