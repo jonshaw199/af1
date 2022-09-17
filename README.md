@@ -27,7 +27,7 @@ This is a trivial example:
 
 #define DEVICE_ID 1
 
-enum af1_state_extended
+enum custom_states
 {
   STATE_SANDBOX1
 };
