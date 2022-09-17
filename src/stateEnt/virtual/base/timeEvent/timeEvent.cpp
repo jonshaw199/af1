@@ -19,7 +19,12 @@
 
 #include "timeEvent.h"
 
-TECBArg::TECBArg(unsigned long s, unsigned long i, int c, int m) : startMs(s), intervalMs(i), cbCnt(c), maxCbCnt(m) {}
+TECBArg::TECBArg(unsigned long c0, unsigned long s, unsigned long i, int c, int m) : curMs(c0), startMs(s), intervalMs(i), cbCnt(c), maxCbCnt(m) {}
+
+unsigned long TECBArg::getCurMs()
+{
+  return curMs;
+}
 
 unsigned long TECBArg::getStartMs()
 {
@@ -124,7 +129,7 @@ bool TimeEvent::isTime(unsigned long curMs)
 
 bool TimeEvent::cbIfTimeAndActive(unsigned long curMs)
 {
-  if (mode == TE_MODE_ACTIVE && isTime(curMs) && intervalMs && cb(TECBArg(startMs, intervalMs, cbCnt, maxCbCnt))) // Checking intervalMs here since default constructor doesnt even define cb; might need stub there to be safe
+  if (mode == TE_MODE_ACTIVE && isTime(curMs) && intervalMs && cb(TECBArg(curMs, startMs, intervalMs, cbCnt, maxCbCnt))) // Checking intervalMs here since default constructor doesnt even define cb; might need stub there to be safe
   {
     int elapsedMs = curMs - startMs;
     cbCnt = elapsedMs / intervalMs; // Setting cbCnt to expected value rather than just incrementing

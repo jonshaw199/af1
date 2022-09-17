@@ -24,13 +24,15 @@
 
 class TECBArg
 {
+    const unsigned long curMs;
     const unsigned long startMs;
     const unsigned long intervalMs;
     const int cbCnt;
     const int maxCbCnt;
 
 public:
-    TECBArg(unsigned long s, unsigned long i, int c, int m);
+    TECBArg(unsigned long c0, unsigned long s, unsigned long i, int c, int m);
+    unsigned long getCurMs();
     unsigned long getStartMs();
     unsigned long getIntervalMs();
     int getCbCnt();
