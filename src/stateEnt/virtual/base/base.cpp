@@ -190,14 +190,14 @@ void Base::handleOutboxMsg(AF1Msg m)
   // sendBluetooth?
 }
 
-void Base::overrideInboxHandler()
+msg_handler Base::getInboxHandler()
 {
-  setInboxMsgHandler(handleInboxMsg);
+  return handleInboxMsg;
 }
 
-void Base::overrideOutboxHandler()
+msg_handler Base::getOutboxHandler()
 {
-  setOutboxMsgHandler(handleOutboxMsg);
+  return handleOutboxMsg;
 }
 
 String Base::getName()

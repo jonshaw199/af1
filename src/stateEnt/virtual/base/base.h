@@ -104,8 +104,8 @@ public:
   virtual void loop();
   virtual bool validateStateChange(int s);
   virtual void preStateChange(int s);
-  virtual void overrideInboxHandler();
-  virtual void overrideOutboxHandler();
+  virtual msg_handler getInboxHandler();
+  virtual msg_handler getOutboxHandler();
   virtual String getName();
   virtual void serializeESPNow(AF1Msg &m);
   virtual void deserializeESPNow(AF1Msg &m);
