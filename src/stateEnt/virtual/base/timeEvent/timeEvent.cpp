@@ -17,21 +17,23 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#include <Arduino.h>
+
 #include "timeEvent.h"
 
-TECBArg::TECBArg(unsigned long c0, unsigned long s, unsigned long i, int c, int m) : curMs(c0), startMs(s), intervalMs(i), cbCnt(c), maxCbCnt(m) {}
+TECBArg::TECBArg(unsigned long long c0, unsigned long long s, unsigned long long i, int c, int m) : curMs(c0), startMs(s), intervalMs(i), cbCnt(c), maxCbCnt(m) {}
 
-unsigned long TECBArg::getCurMs()
+unsigned long long TECBArg::getCurMs()
 {
   return curMs;
 }
 
-unsigned long TECBArg::getStartMs()
+unsigned long long TECBArg::getStartMs()
 {
   return startMs;
 }
 
-unsigned long TECBArg::getIntervalMs()
+unsigned long long TECBArg::getIntervalMs()
 {
   return intervalMs;
 }
@@ -55,14 +57,14 @@ TimeEvent::TimeEvent()
   mode = TE_MODE_INACTIVE;
 }
 
-TimeEvent::TimeEvent(unsigned long s, time_event_cb c)
+TimeEvent::TimeEvent(unsigned long long s, time_event_cb c)
 {
   startMs = s;
   cb = c;
   maxCbCnt = 1;
 }
 
-TimeEvent::TimeEvent(unsigned long s, time_event_cb c, unsigned long i)
+TimeEvent::TimeEvent(unsigned long long s, time_event_cb c, unsigned long long i)
 {
   startMs = s;
   intervalMs = i;
@@ -70,7 +72,7 @@ TimeEvent::TimeEvent(unsigned long s, time_event_cb c, unsigned long i)
   maxCbCnt = MAX_CB_CNT_INF;
 }
 
-TimeEvent::TimeEvent(unsigned long s, time_event_cb c, unsigned long i, int m)
+TimeEvent::TimeEvent(unsigned long long s, time_event_cb c, unsigned long long i, int m)
 {
   startMs = s;
   intervalMs = i;
@@ -78,7 +80,7 @@ TimeEvent::TimeEvent(unsigned long s, time_event_cb c, unsigned long i, int m)
   maxCbCnt = m;
 }
 
-TimeEvent::TimeEvent(unsigned long s, time_event_cb c, unsigned long i, int m, int m2)
+TimeEvent::TimeEvent(unsigned long long s, time_event_cb c, unsigned long long i, int m, int m2)
 {
   startMs = s;
   intervalMs = i;
@@ -87,12 +89,12 @@ TimeEvent::TimeEvent(unsigned long s, time_event_cb c, unsigned long i, int m, i
   mode = m2;
 }
 
-unsigned long TimeEvent::getStartMs()
+unsigned long long TimeEvent::getStartMs()
 {
   return startMs;
 }
 
-unsigned long TimeEvent::getIntervalMs()
+unsigned long long TimeEvent::getIntervalMs()
 {
   return intervalMs;
 }
@@ -112,23 +114,24 @@ int TimeEvent::getCbCnt()
   return cbCnt;
 }
 
-unsigned long TimeEvent::getLastCbMs()
+unsigned long long TimeEvent::getLastCbMs()
 {
   return intervalMs * cbCnt + startMs;
 }
 
-unsigned long TimeEvent::getNextCbMs()
+unsigned long long TimeEvent::getNextCbMs()
 {
   return getLastCbMs() + intervalMs;
 }
 
-bool TimeEvent::isTime(unsigned long curMs)
+bool TimeEvent::isTime(unsigned long long curMs)
 {
   return curMs >= getNextCbMs() && (maxCbCnt < 0 || cbCnt < maxCbCnt);
 }
 
-bool TimeEvent::cbIfTimeAndActive(unsigned long curMs)
+bool TimeEvent::cbIfTimeAndActive(unsigned long long curMs)
 {
+  Serial.println(curMs);
   if (mode == TE_MODE_ACTIVE && isTime(curMs) && intervalMs && cb(TECBArg(curMs, startMs, intervalMs, cbCnt, maxCbCnt))) // Checking intervalMs here since default constructor doesnt even define cb; might need stub there to be safe
   {
     int elapsedMs = curMs - startMs;

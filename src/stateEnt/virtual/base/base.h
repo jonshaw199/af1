@@ -82,7 +82,7 @@ class Base
   ws_client_info wsClientInfo;
 
 protected:
-  unsigned long startMs;
+  unsigned long long startMs;
   std::map<String, IntervalEvent> intervalEventMap;
   std::map<String, TimeEvent> timeEventMap;
   static void handleInboxMsg(AF1Msg m);
@@ -111,7 +111,7 @@ public:
   virtual void deserializeESPNow(AF1Msg &m);
   virtual bool scanForESPNowPeers();
   // Interval Events
-  unsigned long getElapsedMs();
+  unsigned long long getElapsedMs();
   void resetIntervalEvents();
   void activateIntervalEvents();
   void deactivateIntervalEvents();

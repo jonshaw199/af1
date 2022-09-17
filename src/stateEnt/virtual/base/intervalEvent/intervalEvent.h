@@ -24,13 +24,13 @@
 
 class IECBArg
 {
-  const unsigned long elapsedMs;
+  const unsigned long long elapsedMs;
   const int cbCnt;
   const int maxCbCnt;
 
 public:
-  IECBArg(unsigned long e, int c, int m);
-  unsigned long getElapsedMs();
+  IECBArg(unsigned long long e, int c, int m);
+  unsigned long long getElapsedMs();
   int getCbCnt();
   int getMaxCbCnt();
 };
@@ -45,7 +45,7 @@ enum IntervalEventMode
 
 class IntervalEvent
 {
-  unsigned long intervalMs;
+  unsigned long long intervalMs;
   interval_event_cb cb;
   int maxCbCnt = MAX_CB_CNT_INF;
   int mode = IE_MODE_INACTIVE;
@@ -54,19 +54,19 @@ class IntervalEvent
 
 public:
   IntervalEvent();
-  IntervalEvent(unsigned long i, interval_event_cb c);
-  IntervalEvent(unsigned long i, interval_event_cb c, int m);
-  IntervalEvent(unsigned long i, interval_event_cb c, int m, int m2);
-  unsigned long getIntervalMs();
+  IntervalEvent(unsigned long long i, interval_event_cb c);
+  IntervalEvent(unsigned long long i, interval_event_cb c, int m);
+  IntervalEvent(unsigned long long i, interval_event_cb c, int m, int m2);
+  unsigned long long getIntervalMs();
   int getMaxCbCnt();
   interval_event_cb getCb();
 
   int getCbCnt();
 
-  unsigned long getLastCbMs();
-  unsigned long getNextCbMs();
-  bool isTime(unsigned long elapsedMs);
-  bool cbIfTimeAndActive(unsigned long elapsedMs);
+  unsigned long long getLastCbMs();
+  unsigned long long getNextCbMs();
+  bool isTime(unsigned long long elapsedMs);
+  bool cbIfTimeAndActive(unsigned long long elapsedMs);
   void setMode(int m);
   int getMode();
 

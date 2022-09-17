@@ -127,9 +127,9 @@ void Base::preStateChange(int s)
 #endif
 }
 
-unsigned long Base::getElapsedMs()
+unsigned long long Base::getElapsedMs()
 {
-  unsigned long nowMs = millis();
+  unsigned long long nowMs = millis();
   return nowMs - startMs;
 }
 

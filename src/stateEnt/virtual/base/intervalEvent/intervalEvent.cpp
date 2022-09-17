@@ -19,9 +19,9 @@
 
 #include "intervalEvent.h"
 
-IECBArg::IECBArg(unsigned long e, int c, int m) : elapsedMs(e), cbCnt(c), maxCbCnt(m) {}
+IECBArg::IECBArg(unsigned long long e, int c, int m) : elapsedMs(e), cbCnt(c), maxCbCnt(m) {}
 
-unsigned long IECBArg::getElapsedMs()
+unsigned long long IECBArg::getElapsedMs()
 {
   return elapsedMs;
 }
@@ -42,21 +42,21 @@ IntervalEvent::IntervalEvent()
   maxCbCnt = 0;
 }
 
-IntervalEvent::IntervalEvent(unsigned long i, interval_event_cb c)
+IntervalEvent::IntervalEvent(unsigned long long i, interval_event_cb c)
 {
   intervalMs = i;
   cb = c;
   maxCbCnt = MAX_CB_CNT_INF;
 }
 
-IntervalEvent::IntervalEvent(unsigned long i, interval_event_cb c, int m)
+IntervalEvent::IntervalEvent(unsigned long long i, interval_event_cb c, int m)
 {
   intervalMs = i;
   cb = c;
   maxCbCnt = m;
 }
 
-IntervalEvent::IntervalEvent(unsigned long i, interval_event_cb c, int m, int m2)
+IntervalEvent::IntervalEvent(unsigned long long i, interval_event_cb c, int m, int m2)
 {
   intervalMs = i;
   cb = c;
@@ -64,7 +64,7 @@ IntervalEvent::IntervalEvent(unsigned long i, interval_event_cb c, int m, int m2
   mode = m2;
 }
 
-unsigned long IntervalEvent::getIntervalMs()
+unsigned long long IntervalEvent::getIntervalMs()
 {
   return intervalMs;
 }
@@ -84,22 +84,22 @@ int IntervalEvent::getCbCnt()
   return cbCnt;
 }
 
-unsigned long IntervalEvent::getLastCbMs()
+unsigned long long IntervalEvent::getLastCbMs()
 {
   return intervalMs * cbCnt;
 }
 
-unsigned long IntervalEvent::getNextCbMs()
+unsigned long long IntervalEvent::getNextCbMs()
 {
   return getLastCbMs() + intervalMs;
 }
 
-bool IntervalEvent::isTime(unsigned long elapsedMs)
+bool IntervalEvent::isTime(unsigned long long elapsedMs)
 {
   return elapsedMs >= getNextCbMs() && (maxCbCnt < 0 || cbCnt < maxCbCnt);
 }
 
-bool IntervalEvent::cbIfTimeAndActive(unsigned long elapsedMs)
+bool IntervalEvent::cbIfTimeAndActive(unsigned long long elapsedMs)
 {
   if (mode == IE_MODE_ACTIVE && isTime(elapsedMs) && intervalMs && cb(IECBArg(elapsedMs, cbCnt, maxCbCnt))) // Checking intervalMs here since default constructor doesnt even define cb; might need stub there to be safe
   {

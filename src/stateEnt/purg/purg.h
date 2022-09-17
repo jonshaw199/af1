@@ -28,7 +28,7 @@
 template <class T>
 class Purg : public T
 {
-  unsigned long purgMs;
+  unsigned long long purgMs;
   int next;
 
 public:
@@ -55,7 +55,7 @@ public:
     }
   }
 
-  void setPurgMs(unsigned long ms)
+  void setPurgMs(unsigned long long ms)
   {
     purgMs = ms;
   }
@@ -64,7 +64,7 @@ public:
   {
     next = s;
   }
-  
+
   String getName()
   {
     return "STATE_PURG_" + String(next);
