@@ -1,6 +1,6 @@
 {
   "name": "AF1",
-  "version": "1.0.51",
+  "version": "1.0.52",
   "description": "Arduino/ESP32 Framework ✔ Use websocket, HTTP, and ESP-Now concurrently ✔ Websocket Client ✔ HTTP Client ✔ ESP-Now P2P ✔ State Management ✔ Event Scheduling ✔ Over-The-Air Firmware Updates",
   "keywords": "arduino, esp32, iot, espnow, websocket, client, server, ota, state, management, event, scheduling, over-the-air, firmware, updates",
   "authors": [
