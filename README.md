@@ -19,7 +19,7 @@ The AF1 core consists of a handful of pre-built "state entities" and one "state 
 
 When creating new state entities, setup, loop, serialization/deserialization, and other behavior from `Base` can be overridden as necessary.
 
-This is the most trivial example:
+This is a trivial example:
 
 ```
 #include <Arduino.h>
