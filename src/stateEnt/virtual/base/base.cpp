@@ -39,7 +39,7 @@ Base::Base()
 {
   intervalEventMap.insert(std::pair<String, IntervalEvent>("Base_1", IntervalEvent(MS_HANDSHAKE_LOOP, [](IECBArg a)
                                                                                    {
-    if (StateManager::getStateEntMap().at(StateManager::getCurState())->scanForESPNowPeers()) {
+    if (StateManager::getStateEntMap().at(StateManager::getCurState())->doScanForPeersESPNow()) {
       handleHandshakes();
     } else {
       Serial.println("ESPNow peer scan denied in current state");
@@ -257,7 +257,7 @@ void Base::deactivateTimeEvents()
   From WifiHandler
 */
 
-// Setup access point (aka open wifi network); this is used by scanForESPNowPeers() (or whatever its called)
+// Setup access point (aka open wifi network); this is used by scanForPeersESPNow()
 /*
   Unused now? How?
 */
@@ -546,13 +546,13 @@ void Base::initEspNow()
 
 bool Base::handleHandshakes()
 {
-  scanForPeers();
+  scanForPeersESPNow();
   connectToPeers();
   sendAllHandshakes();
   return true;
 }
 
-int8_t Base::scanForPeers()
+int8_t Base::scanForPeersESPNow()
 {
   Serial.println("Scanning for peers");
   int8_t networkCnt = WiFi.scanNetworks();
@@ -765,7 +765,7 @@ void Base::deserializeESPNow(AF1Msg &m)
 #endif
 }
 
-bool Base::scanForESPNowPeers()
+bool Base::doScanForPeersESPNow()
 {
   return true;
 }

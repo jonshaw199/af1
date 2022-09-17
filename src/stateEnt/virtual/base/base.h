@@ -109,7 +109,7 @@ public:
   virtual String getName();
   virtual void serializeESPNow(AF1Msg &m);
   virtual void deserializeESPNow(AF1Msg &m);
-  virtual bool scanForESPNowPeers();
+  virtual bool doScanForPeersESPNow();
   // Interval Events
   unsigned long long getElapsedMs();
   void resetIntervalEvents();
@@ -139,7 +139,7 @@ public:
   static void pushOutbox(AF1Msg m);
   static void pushInbox(AF1Msg m);
   // ESP-Now
-  static int8_t scanForPeers();
+  static int8_t scanForPeersESPNow();
   static void connectToPeers();
   static void initEspNow();
   static bool handleHandshakes();

@@ -44,7 +44,7 @@ public:
     virtual msg_handler getOutboxHandler();
     virtual void serializeESPNow(AF1Msg &m);
     virtual void deserializeESPNow(AF1Msg &m);
-    virtual bool scanForESPNowPeers();
+    virtual bool doScanForPeersESPNow();
     virtual String getName();
   */
 
