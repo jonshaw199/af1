@@ -333,8 +333,10 @@ void Base::connectToWifi()
     // Set your Gateway IP address
     IPAddress gateway(v[0].gatewayIP[0], v[0].gatewayIP[1], v[0].gatewayIP[2], v[0].gatewayIP[3]);
     IPAddress subnet(v[0].subnetIP[0], v[0].subnetIP[1], v[0].subnetIP[2], v[0].subnetIP[3]);
+    IPAddress primaryDNS(8, 8, 8, 8);
+    IPAddress secondaryDNS(8, 8, 4, 4);
     // Configures static IP address
-    if (!WiFi.config(local_IP, gateway, subnet))
+    if (!WiFi.config(local_IP, gateway, subnet, primaryDNS, secondaryDNS))
     {
       Serial.println("Static IP Failed to configure");
     }
