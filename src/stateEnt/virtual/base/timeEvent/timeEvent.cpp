@@ -131,10 +131,9 @@ bool TimeEvent::isTime(unsigned long long curMs)
 
 bool TimeEvent::cbIfTimeAndActive(unsigned long long curMs)
 {
-  Serial.println(curMs);
   if (mode == TE_MODE_ACTIVE && isTime(curMs) && intervalMs && cb(TECBArg(curMs, startMs, intervalMs, cbCnt, maxCbCnt))) // Checking intervalMs here since default constructor doesnt even define cb; might need stub there to be safe
   {
-    int elapsedMs = curMs - startMs;
+    unsigned long long elapsedMs = curMs - startMs;
     cbCnt = elapsedMs / intervalMs; // Setting cbCnt to expected value rather than just incrementing
     return true;
   }
