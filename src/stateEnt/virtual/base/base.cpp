@@ -80,7 +80,7 @@ void Base::loop()
   {
     for (std::map<String, TimeEvent>::iterator it = timeEventMap.begin(); it != timeEventMap.end(); it++)
     {
-      timeEventMap[it->first].cbIfTimeAndActive(StateManager::timeClient.getEpochTime() * 1000);
+      timeEventMap[it->first].cbIfTimeAndActive(StateManager::timeClient.getEpochTime() * (unsigned long long)1000);
     }
   }
 
