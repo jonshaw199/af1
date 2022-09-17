@@ -83,6 +83,8 @@ Until the dust settles, other examples can be found in [AF1 Light Show](https://
 
 ### Event Scheduling
 
+**Interval Events**
+
 ```
 class Demo2 : public Base
 {
@@ -97,8 +99,19 @@ public:
 }
 ```
 
-...
+**Time Events (WiFi/NTP)**
 
 ```
-...
+class Demo2 : public Base
+{
+public:
+  Demo2()
+  {
+    timeEventMap.insert(std::pair<String, TimeEvent>("Sandbox1_1", TimeEvent(1830354651000, [](TECBArg a) {
+      // Do something here every 3 seconds starting on Saturday, January 1, 2028 7:50:51 AM GMT-08:00
+      return true;
+    }, /*intervalMs*/3000 /*, maxCbCnt */)));
+  }
+}
+
 ```
