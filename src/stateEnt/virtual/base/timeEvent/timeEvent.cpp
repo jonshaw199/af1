@@ -114,6 +114,7 @@ int TimeEvent::getCbCnt()
   return cbCnt;
 }
 
+// Unlike IntervalEvents, this is only used when an intervalMs is defined
 unsigned long long TimeEvent::getLastCbMs()
 {
   return intervalMs * cbCnt + startMs;
@@ -121,7 +122,7 @@ unsigned long long TimeEvent::getLastCbMs()
 
 unsigned long long TimeEvent::getNextCbMs()
 {
-  return getLastCbMs() + intervalMs;
+  return intervalMs ? getLastCbMs() + intervalMs : startMs;
 }
 
 bool TimeEvent::isTime(unsigned long long curMs)
