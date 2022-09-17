@@ -43,10 +43,6 @@
 #define ESPNOW_CHANNEL 0
 #endif
 
-#ifndef SLAVE_CNT
-#define SLAVE_CNT 1
-#endif
-
 #ifndef DEFAULT_RETRIES
 #define DEFAULT_RETRIES 3
 #endif

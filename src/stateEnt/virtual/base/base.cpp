@@ -577,7 +577,7 @@ int8_t Base::scanForPeers()
         Serial.print(")");
         Serial.println("");
       }
-      // Check if the current network is one of our slaves
+      // Check if the current network is one of our peers
       if (SSID.indexOf(DEVICE_PREFIX) == 0) // Technically must start with a prefix
       {
         int deviceID = SSID.substring(String(DEVICE_PREFIX).length()).toInt();
@@ -594,7 +594,7 @@ int8_t Base::scanForPeers()
           Serial.print(RSSI);
           Serial.print(")");
           Serial.println("");
-          // Get BSSID (MAC Address) of the Slave
+          // Get BSSID (MAC Address) of the peer
           int mac[6];
           if (6 == sscanf(BSSIDStr.c_str(), "%x:%x:%x:%x:%x:%x", &mac[0], &mac[1], &mac[2], &mac[3], &mac[4], &mac[5]))
           {
@@ -647,7 +647,7 @@ void Base::connectToPeers()
       }
       else
       {
-        // Slave not connected; attempt to connect
+        // Peer not connected; attempt to connect
         esp_err_t connectStatus = esp_now_add_peer(&it->second.espnowPeerInfo);
         if (connectStatus == ESP_OK)
         {
@@ -678,8 +678,8 @@ void Base::connectToPeers()
   }
   else
   {
-    // No slaves found in scan
-    Serial.println("No slaves found to connect");
+    // No peers found in scan
+    Serial.println("No peers found to connect");
   }
 }
 
