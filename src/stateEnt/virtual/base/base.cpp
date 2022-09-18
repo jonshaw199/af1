@@ -908,7 +908,7 @@ void Base::receiveTimeSyncMsg(AF1Msg m)
 
 void Base::sendAllTimeSyncMessages()
 {
-  for (std::map<int, af1_peer_info>::const_iterator it = StateManager::getPeerInfoMap().begin(); it != StateManager::getPeerInfoMap().end() && it->second.handshakeResponse; it++)
+  for (std::map<int, af1_peer_info>::const_iterator it = StateManager::getPeerInfoMap().begin(); it != StateManager::getPeerInfoMap().end(); it++)
   {
     sendTimeSyncMsg({it->first});
   }
