@@ -898,7 +898,12 @@ void Base::receiveTimeSyncMsg(AF1Msg m)
   af1_time_sync_data d;
   memcpy(&d, m.getData(), sizeof(d));
   StateManager::getPeerInfoMap()[m.getSenderID()].otherTimeSync = d.ms;
-  StateManager::getPeerInfoMap()[m.getSenderID()].thisTimeSync = millis();
+  unsigned long long thisMs = millis();
+  StateManager::getPeerInfoMap()[m.getSenderID()].thisTimeSync = thisMs;
+  Serial.print("Other device time: ");
+  Serial.print(StateManager::getPeerInfoMap()[m.getSenderID()].otherTimeSync);
+  Serial.print("; This device time: ");
+  Serial.println(StateManager::getPeerInfoMap()[m.getSenderID()].thisTimeSync);
 }
 
 void Base::sendAllTimeSyncMessages()
