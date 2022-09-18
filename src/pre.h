@@ -20,11 +20,11 @@
 #define AF1 StateManager
 
 #ifndef DEVICE_PREFIX
-#define DEVICE_PREFIX JS
+#define DEVICE_PREFIX "ESP32-AF1-"
 #endif
 
 #ifndef DEVICE_AP_PASS
-#define DEVICE_AP_PASS 1234567890
+#define DEVICE_AP_PASS "1234567890"
 #endif
 
 #ifndef PRINT_WIFI_SCAN_RESULTS
