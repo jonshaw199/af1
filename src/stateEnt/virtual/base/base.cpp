@@ -895,15 +895,22 @@ void Base::sendTimeSyncMsg(std::set<int> ids)
 void Base::receiveTimeSyncMsg(AF1Msg m)
 {
   Serial.println("Receiving time sync msg from ID " + String(m.getSenderID()));
-  af1_time_sync_data d;
-  memcpy(&d, m.getData(), sizeof(d));
-  StateManager::getPeerInfoMap()[m.getSenderID()].otherTimeSync = d.ms;
-  unsigned long long thisMs = millis();
-  StateManager::getPeerInfoMap()[m.getSenderID()].thisTimeSync = thisMs;
-  Serial.print("Other device time: ");
-  Serial.print(StateManager::getPeerInfoMap()[m.getSenderID()].otherTimeSync);
-  Serial.print("; This device time: ");
-  Serial.println(StateManager::getPeerInfoMap()[m.getSenderID()].thisTimeSync);
+  if (!StateManager::getPeerInfoMap().count(m.getSenderID()))
+  {
+    af1_time_sync_data d;
+    memcpy(&d, m.getData(), sizeof(d));
+    StateManager::getPeerInfoMap()[m.getSenderID()].otherTimeSync = d.ms;
+    unsigned long long thisMs = millis();
+    StateManager::getPeerInfoMap()[m.getSenderID()].thisTimeSync = thisMs;
+    Serial.print("Other device time: ");
+    Serial.print(StateManager::getPeerInfoMap()[m.getSenderID()].otherTimeSync);
+    Serial.print("; This device time: ");
+    Serial.println(StateManager::getPeerInfoMap()[m.getSenderID()].thisTimeSync);
+  }
+  else
+  {
+    Serial.println("Time sync message rejected; need to handshake first");
+  }
 }
 
 void Base::sendAllTimeSyncMessages()
