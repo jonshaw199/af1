@@ -257,10 +257,7 @@ void Base::deactivateTimeEvents()
   From WifiHandler
 */
 
-// Setup access point (aka open wifi network); this is used by scanForPeersESPNow()
-/*
-  Unused now? How?
-*/
+// Setup access point (aka open wifi network)
 bool Base::broadcastAP()
 {
   Serial.println("Broadcasting soft AP");
