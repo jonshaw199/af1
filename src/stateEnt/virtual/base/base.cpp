@@ -264,10 +264,10 @@ void Base::deactivateTimeEvents()
 bool Base::broadcastAP()
 {
   Serial.println("Broadcasting soft AP");
-  String Prefix = DEVICE_PREFIX;
+  String Prefix = STRINGIFY(DEVICE_PREFIX);
   String id = String(StateManager::getDeviceID());
   String SSID = Prefix + id;
-  String Password = DEVICE_AP_PASS;
+  String Password = STRINGIFY(DEVICE_AP_PASS);
   return WiFi.softAP(SSID.c_str(), Password.c_str(), ESPNOW_CHANNEL, 0);
 }
 
@@ -580,9 +580,9 @@ int8_t Base::scanForPeersESPNow()
         Serial.println("");
       }
       // Check if the current network is one of our peers
-      if (SSID.indexOf(DEVICE_PREFIX) == 0) // Technically must start with a prefix
+      if (SSID.indexOf(STRINGIFY(DEVICE_PREFIX)) == 0) // Technically must start with a prefix
       {
-        int deviceID = SSID.substring(String(DEVICE_PREFIX).length()).toInt();
+        int deviceID = SSID.substring(String(STRINGIFY(DEVICE_PREFIX)).length()).toInt();
         // Check the overwrite argument and only overwrite existing entries if true
         if (!StateManager::getPeerInfoMap().count(deviceID))
         {

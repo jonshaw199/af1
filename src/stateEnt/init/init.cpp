@@ -31,7 +31,9 @@ void Init::setup()
   Serial.println(StateManager::getDeviceID());
 
   // WifiHandler init
+  broadcastAP();
   WiFi.mode(WIFI_MODE_APSTA);
+  broadcastAP(); // For AP config like SSID
   WiFi.softAPmacAddress(macAP);
   Serial.print("MAC AP: ");
   printMac(macAP);
