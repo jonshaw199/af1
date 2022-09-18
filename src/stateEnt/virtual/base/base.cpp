@@ -895,7 +895,7 @@ void Base::sendTimeSyncMsg(std::set<int> ids)
 void Base::receiveTimeSyncMsg(AF1Msg m)
 {
   Serial.println("Receiving time sync msg from ID " + String(m.getSenderID()));
-  if (!StateManager::getPeerInfoMap().count(m.getSenderID()))
+  if (StateManager::getPeerInfoMap().count(m.getSenderID()))
   {
     af1_time_sync_data d;
     memcpy(&d, m.getData(), sizeof(d));
