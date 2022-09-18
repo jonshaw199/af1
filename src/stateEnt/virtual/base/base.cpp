@@ -878,7 +878,9 @@ void Base::sendTimeSyncMsg(std::set<int> ids)
   msg.setSenderID(StateManager::getDeviceID());
   msg.setState(StateManager::getCurState());
   unsigned long long ms = millis();
-  msg.setData((uint8_t *)ms);
+  af1_time_sync_data d;
+  memcpy(&d, &ms, sizeof(d));
+  msg.setData((uint8_t *)&d);
   // Set wrapper
   msg.setRecipients(ids);
 
@@ -893,7 +895,9 @@ void Base::sendTimeSyncMsg(std::set<int> ids)
 void Base::receiveTimeSyncMsg(AF1Msg m)
 {
   Serial.println("Receiving time sync msg from ID " + String(m.getSenderID()));
-  StateManager::getPeerInfoMap()[m.getSenderID()].otherTimeSync = (unsigned long long)m.getData();
+  af1_time_sync_data d;
+  memcpy(&d, m.getData(), sizeof(d));
+  StateManager::getPeerInfoMap()[m.getSenderID()].otherTimeSync = d.ms;
   StateManager::getPeerInfoMap()[m.getSenderID()].thisTimeSync = millis();
 }
 

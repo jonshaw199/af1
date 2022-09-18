@@ -57,6 +57,11 @@ typedef struct af1_msg
   uint8_t data[100];
 } af1_msg;
 
+typedef struct af1_time_sync_data
+{
+  unsigned long long ms;
+} af1_time_sync_data;
+
 // This class is a wrapper around the af1_msg struct that actually gets sent using ESPNOW
 // ... now also wraps json that gets sent using WS
 class AF1Msg
