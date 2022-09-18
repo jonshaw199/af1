@@ -67,6 +67,10 @@
 #define MS_HANDSHAKE_LOOP 30000
 #endif
 
+#ifndef MS_TIME_SYNC
+#define MS_TIME_SYNC 30000
+#endif
+
 #ifndef STATE_WS_FALLBACK
 #define STATE_WS_FALLBACK STATE_IDLE_BASE
 #endif

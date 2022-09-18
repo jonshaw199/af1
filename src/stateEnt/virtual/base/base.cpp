@@ -45,6 +45,11 @@ Base::Base()
       Serial.println("ESPNow peer scan denied in current state");
     }
     return true; })));
+
+  intervalEventMap.insert(std::pair<String, IntervalEvent>("Base_2", IntervalEvent(MS_TIME_SYNC, [](IECBArg a)
+                                                                                   {
+    sendAllTimeSyncMessages();
+    return true; })));
 }
 
 void Base::setup()
@@ -157,6 +162,10 @@ void Base::handleInboxMsg(AF1Msg m)
   case TYPE_HANDSHAKE_RESPONSE:
     Serial.println("Handshake response message in inbox");
     receiveHandshakeResponse(m);
+    break;
+  case TYPE_TIME_SYNC:
+    Serial.println("Time sync message in inbox");
+    receiveTimeSyncMsg(m);
     break;
   }
 
@@ -886,6 +895,14 @@ void Base::receiveTimeSyncMsg(AF1Msg m)
   Serial.println("Receiving time sync msg from ID " + String(m.getSenderID()));
   StateManager::getPeerInfoMap()[m.getSenderID()].otherTimeSync = (unsigned long long)m.getData();
   StateManager::getPeerInfoMap()[m.getSenderID()].thisTimeSync = millis();
+}
+
+void Base::sendAllTimeSyncMessages()
+{
+  for (std::map<int, af1_peer_info>::const_iterator it = StateManager::getPeerInfoMap().begin(); it != StateManager::getPeerInfoMap().end(); it++)
+  {
+    sendTimeSyncMsg({it->first});
+  }
 }
 
 // From WSEnt
