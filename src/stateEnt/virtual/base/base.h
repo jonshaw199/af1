@@ -54,6 +54,8 @@ typedef struct af1_peer_info
   bool handshakeRequest;
   bool handshakeResponse;
   AF1Msg lastMsg;
+  unsigned long long otherTimeSync;
+  unsigned long long thisTimeSync;
   std::mutex mutex;
 } af1_peer_info;
 
@@ -150,6 +152,8 @@ public:
   static void receiveHandshakeResponse(AF1Msg m);
   static void sendAllHandshakes();
   static void sendMsgESPNow(AF1Msg msg);
+  static void sendTimeSyncMsg(std::set<int> ids);
+  static void receiveTimeSyncMsg(AF1Msg m);
   // Websocket
   static WebSocketClient webSocketClient;
   static WiFiClient client; // Use WiFiClient class to create TCP connections

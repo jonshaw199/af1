@@ -33,7 +33,8 @@ enum MessageType
   TYPE_HANDSHAKE_RESPONSE,
   TYPE_CHANGE_STATE,
   TYPE_RUN_DATA,
-  TYPE_RC_DATA
+  TYPE_RC_DATA,
+  TYPE_TIME_SYNC
 };
 
 enum TransportType

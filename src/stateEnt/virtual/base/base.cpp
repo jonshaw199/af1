@@ -609,6 +609,8 @@ int8_t Base::scanForPeersESPNow()
             StateManager::getPeerInfoMap()[deviceID].espnowPeerInfo = info;
             StateManager::getPeerInfoMap()[deviceID].handshakeResponse = false;
             StateManager::getPeerInfoMap()[deviceID].lastMsg = AF1Msg();
+            StateManager::getPeerInfoMap()[deviceID].otherTimeSync = 0;
+            StateManager::getPeerInfoMap()[deviceID].thisTimeSync = 0;
             StateManager::getMacToIDMap()[macToString(info.peer_addr)] = deviceID;
             Serial.println("Saved peer info for device ID " + String(deviceID));
           }
@@ -785,7 +787,7 @@ void Base::sendStateChangeMessages(int s)
 
 void Base::sendHandshakeRequests(std::set<int> ids)
 {
-  Serial.println("Sending handshake requests");
+  Serial.println("Pushing handshake requests to outbox");
 
   AF1Msg msg = AF1Msg();
 
@@ -820,13 +822,15 @@ void Base::receiveHandshakeRequest(AF1Msg m)
   StateManager::getPeerInfoMap()[m.getSenderID()].espnowPeerInfo = ei;
   StateManager::getPeerInfoMap()[m.getSenderID()].handshakeResponse = false;
   StateManager::getPeerInfoMap()[m.getSenderID()].lastMsg = AF1Msg();
+  StateManager::getPeerInfoMap()[m.getSenderID()].otherTimeSync = 0;
+  StateManager::getPeerInfoMap()[m.getSenderID()].thisTimeSync = 0;
 
   connectToPeers();
 }
 
 void Base::sendHandshakeResponses(std::set<int> ids)
 {
-  Serial.println("Sending handshake responses");
+  Serial.println("Pushing handshake responses to outbox");
 
   AF1Msg msg = AF1Msg();
 
@@ -852,6 +856,36 @@ void Base::sendAllHandshakes()
   {
     sendHandshakeRequests({it->first});
   }
+}
+
+void Base::sendTimeSyncMsg(std::set<int> ids)
+{
+  Serial.println("Pushing time sync messages to outbox");
+
+  AF1Msg msg = AF1Msg();
+
+  // Set struct
+  msg.setType(TYPE_TIME_SYNC);
+  msg.setSenderID(StateManager::getDeviceID());
+  msg.setState(StateManager::getCurState());
+  unsigned long long ms = millis();
+  msg.setData((uint8_t *)ms);
+  // Set wrapper
+  msg.setRecipients(ids);
+
+  pushOutbox(msg);
+
+  for (std::set<int>::const_iterator it = ids.begin(); it != ids.end(); it++)
+  {
+    StateManager::getPeerInfoMap()[*it].thisTimeSync = ms;
+  }
+}
+
+void Base::receiveTimeSyncMsg(AF1Msg m)
+{
+  Serial.println("Receiving time sync msg from ID " + String(m.getSenderID()));
+  StateManager::getPeerInfoMap()[m.getSenderID()].otherTimeSync = (unsigned long long)m.getData();
+  StateManager::getPeerInfoMap()[m.getSenderID()].thisTimeSync = millis();
 }
 
 // From WSEnt
