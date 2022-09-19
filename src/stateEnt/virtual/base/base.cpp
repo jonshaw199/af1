@@ -162,7 +162,6 @@ void Base::handleInboxMsg(AF1Msg m)
   case TYPE_HANDSHAKE_RESPONSE:
     Serial.println("Handshake response message in inbox");
     receiveHandshakeResponse(m);
-    sendTimeSyncMsg({m.getSenderID()});
     break;
   case TYPE_TIME_SYNC:
     Serial.println("Time sync message in inbox");

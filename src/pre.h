@@ -68,7 +68,7 @@
 #endif
 
 #ifndef MS_TIME_SYNC
-#define MS_TIME_SYNC 0
+#define MS_TIME_SYNC 30000
 #endif
 
 #ifndef STATE_WS_FALLBACK
