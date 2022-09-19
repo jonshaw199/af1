@@ -891,7 +891,9 @@ void Base::sendAllHandshakes()
 
 void Base::sendTimeSyncMsg(std::set<int> ids, bool isResponse)
 {
-  Serial.println("Pushing time sync messages to outbox");
+  Serial.print("Pushing time sync ");
+  Serial.print(isResponse ? "response " : "");
+  Serial.println("messages to outbox");
 
   AF1Msg msg = AF1Msg();
 
