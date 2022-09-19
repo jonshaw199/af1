@@ -112,11 +112,6 @@ unsigned long long TimeEvent::getNextCbMs()
   return intervalMs ? getLastCbMs() + intervalMs : startMs;
 }
 
-bool TimeEvent::getTransitory()
-{
-  return transitory;
-}
-
 bool TimeEvent::isTime(unsigned long long curMs)
 {
   return curMs >= getNextCbMs() && (maxCbCnt < 0 || cbCnt < maxCbCnt);
