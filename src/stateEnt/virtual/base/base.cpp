@@ -885,11 +885,6 @@ void Base::sendTimeSyncMsg(std::set<int> ids)
   msg.setRecipients(ids);
 
   pushOutbox(msg);
-
-  for (std::set<int>::const_iterator it = ids.begin(); it != ids.end(); it++)
-  {
-    StateManager::getPeerInfoMap()[*it].thisTimeSync = ms;
-  }
 }
 
 void Base::receiveTimeSyncMsg(AF1Msg m)
