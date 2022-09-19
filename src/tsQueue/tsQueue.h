@@ -65,6 +65,11 @@ public:
     return val;
   }
 
+  int size()
+  {
+    return q.size();
+  }
+
 protected:
   std::queue<T> q;
   mutable std::mutex m;

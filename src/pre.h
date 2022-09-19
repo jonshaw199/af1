@@ -83,5 +83,9 @@
 #define MODE_INITIAL MODE_BASIC
 #endif
 
+#ifndef SAFETY_CHECK_INBOX_OVERFLOW
+#define SAFETY_CHECK_INBOX_OVERFLOW true
+#endif
+
 #define STRINGIFY(s) STRINGIFY1(s)
 #define STRINGIFY1(s) #s
