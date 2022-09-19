@@ -64,7 +64,7 @@
 #endif
 
 #ifndef MS_HANDSHAKE_LOOP
-#define MS_HANDSHAKE_LOOP 30000
+#define MS_HANDSHAKE_LOOP 33000
 #endif
 
 #ifndef MS_TIME_SYNC
