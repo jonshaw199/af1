@@ -24,17 +24,17 @@
 
 class TECBArg
 {
-    const unsigned long long curMs;
-    const unsigned long long startMs;
-    const unsigned long long intervalMs;
+    const unsigned long curMs;
+    const unsigned long startMs;
+    const unsigned long intervalMs;
     const int cbCnt;
     const int maxCbCnt;
 
 public:
-    TECBArg(unsigned long long c0, unsigned long long s, unsigned long long i, int c, int m);
-    unsigned long long getCurMs();
-    unsigned long long getStartMs();
-    unsigned long long getIntervalMs();
+    TECBArg(unsigned long c0, unsigned long s, unsigned long i, int c, int m);
+    unsigned long getCurMs();
+    unsigned long getStartMs();
+    unsigned long getIntervalMs();
     int getCbCnt();
     int getMaxCbCnt();
 };
@@ -49,8 +49,8 @@ enum TimeEventMode
 
 class TimeEvent
 {
-    unsigned long long startMs;
-    unsigned long long intervalMs;
+    unsigned long startMs;
+    unsigned long intervalMs;
     time_event_cb cb;
     int maxCbCnt;
     bool transitory;
@@ -60,23 +60,23 @@ class TimeEvent
 
 public:
     TimeEvent();
-    TimeEvent(unsigned long long s, time_event_cb c);
-    TimeEvent(unsigned long long s, time_event_cb c, unsigned long long i);
-    TimeEvent(unsigned long long s, time_event_cb c, unsigned long long i, int m);
-    TimeEvent(unsigned long long s, time_event_cb c, unsigned long long i, int m, bool t);
-    TimeEvent(unsigned long long s, time_event_cb c, unsigned long long i, int m, bool t, int m2);
-    unsigned long long getStartMs();
-    unsigned long long getIntervalMs();
+    TimeEvent(unsigned long s, time_event_cb c);
+    TimeEvent(unsigned long s, time_event_cb c, unsigned long i);
+    TimeEvent(unsigned long s, time_event_cb c, unsigned long i, int m);
+    TimeEvent(unsigned long s, time_event_cb c, unsigned long i, int m, bool t);
+    TimeEvent(unsigned long s, time_event_cb c, unsigned long i, int m, bool t, int m2);
+    unsigned long getStartMs();
+    unsigned long getIntervalMs();
     int getMaxCbCnt();
     bool getTransitory();
     time_event_cb getCb();
 
     int getCbCnt();
 
-    unsigned long long getLastCbMs();
-    unsigned long long getNextCbMs();
-    bool isTime(unsigned long long curMs);
-    bool cbIfTimeAndActive(unsigned long long curMs);
+    unsigned long getLastCbMs();
+    unsigned long getNextCbMs();
+    bool isTime(unsigned long curMs);
+    bool cbIfTimeAndActive(unsigned long curMs);
     void setMode(int m);
     int getMode();
 

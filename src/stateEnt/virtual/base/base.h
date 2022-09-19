@@ -54,8 +54,8 @@ typedef struct af1_peer_info
   bool handshakeRequest;
   bool handshakeResponse;
   AF1Msg lastMsg;
-  unsigned long long otherTimeSync;
-  unsigned long long thisTimeSync;
+  unsigned long otherTimeSync;
+  unsigned long thisTimeSync;
   std::mutex mutex;
 } af1_peer_info;
 
@@ -84,7 +84,7 @@ class Base
   ws_client_info wsClientInfo;
 
 protected:
-  unsigned long long startMs;
+  unsigned long startMs;
   std::map<String, IntervalEvent> intervalEventMap;
   std::map<String, TimeEvent> timeEventMap;
   static void handleInboxMsg(AF1Msg m);
@@ -113,7 +113,7 @@ public:
   virtual void deserializeESPNow(AF1Msg &m);
   virtual bool doScanForPeersESPNow();
   // Interval Events
-  unsigned long long getElapsedMs();
+  unsigned long getElapsedMs();
   void resetIntervalEvents();
   void activateIntervalEvents();
   void deactivateIntervalEvents();
@@ -167,7 +167,7 @@ public:
   static void setBuiltinLED(bool on);
   std::map<String, IntervalEvent> &getIntervalEventMap();
   std::map<String, TimeEvent> &getTimeEventMap();
-  unsigned long long getStartMs();
+  unsigned long getStartMs();
 };
 
 #endif // STATEENT_VIRTUAL_BASE_BASE_H_

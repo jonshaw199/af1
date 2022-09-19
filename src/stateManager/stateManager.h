@@ -96,7 +96,7 @@ public:
   static ws_client_info getCurWSClientInfo();
   static WiFiUDP ntpUDP;
   static NTPClient timeClient;
-  static unsigned long long convertTime(int id, unsigned long long t);
+  static unsigned long convertTime(int id, unsigned long t);
 
   static void registerStateEnt(int i, Base *s);
   static void registerStringHandler(String s, string_input_handler h);

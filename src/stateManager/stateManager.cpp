@@ -413,7 +413,7 @@ ws_client_info StateManager::getCurWSClientInfo()
   return curWSClientInfo;
 }
 
-unsigned long long StateManager::convertTime(int id, unsigned long long t)
+unsigned long StateManager::convertTime(int id, unsigned long t)
 {
   if (peerInfoMap.count(id) && peerInfoMap[id].otherTimeSync) // div by 0
   {
@@ -424,7 +424,7 @@ unsigned long long StateManager::convertTime(int id, unsigned long long t)
     Serial.print("; t: ");
     Serial.print(t);
     Serial.print("; result: ");
-    unsigned long long r = peerInfoMap[id].thisTimeSync / peerInfoMap[id].otherTimeSync * t;
+    unsigned long r = peerInfoMap[id].thisTimeSync / peerInfoMap[id].otherTimeSync * t;
     Serial.println(r);
     return r;
   }

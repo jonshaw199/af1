@@ -19,19 +19,19 @@
 
 #include "timeEvent.h"
 
-TECBArg::TECBArg(unsigned long long c0, unsigned long long s, unsigned long long i, int c, int m) : curMs(c0), startMs(s), intervalMs(i), cbCnt(c), maxCbCnt(m) {}
+TECBArg::TECBArg(unsigned long c0, unsigned long s, unsigned long i, int c, int m) : curMs(c0), startMs(s), intervalMs(i), cbCnt(c), maxCbCnt(m) {}
 
-unsigned long long TECBArg::getCurMs()
+unsigned long TECBArg::getCurMs()
 {
   return curMs;
 }
 
-unsigned long long TECBArg::getStartMs()
+unsigned long TECBArg::getStartMs()
 {
   return startMs;
 }
 
-unsigned long long TECBArg::getIntervalMs()
+unsigned long TECBArg::getIntervalMs()
 {
   return intervalMs;
 }
@@ -48,25 +48,25 @@ int TECBArg::getMaxCbCnt()
 
 TimeEvent::TimeEvent() : startMs(0), intervalMs(0), maxCbCnt(0), cbCnt(0) {}
 
-TimeEvent::TimeEvent(unsigned long long s, time_event_cb c) : startMs(s), intervalMs(0), cb(c), maxCbCnt(1), cbCnt(0) {}
+TimeEvent::TimeEvent(unsigned long s, time_event_cb c) : startMs(s), intervalMs(0), cb(c), maxCbCnt(1), cbCnt(0) {}
 
-TimeEvent::TimeEvent(unsigned long long s, time_event_cb c, unsigned long long i) : startMs(s), intervalMs(i), cb(c), cbCnt(0)
+TimeEvent::TimeEvent(unsigned long s, time_event_cb c, unsigned long i) : startMs(s), intervalMs(i), cb(c), cbCnt(0)
 {
   maxCbCnt = MAX_CB_CNT_INF;
 }
 
-TimeEvent::TimeEvent(unsigned long long s, time_event_cb c, unsigned long long i, int m) : startMs(s), intervalMs(i), cb(c), maxCbCnt(m), cbCnt(0) {}
+TimeEvent::TimeEvent(unsigned long s, time_event_cb c, unsigned long i, int m) : startMs(s), intervalMs(i), cb(c), maxCbCnt(m), cbCnt(0) {}
 
-TimeEvent::TimeEvent(unsigned long long s, time_event_cb c, unsigned long long i, int m, bool t) : startMs(s), intervalMs(i), cb(c), maxCbCnt(m), cbCnt(0), transitory(t) {}
+TimeEvent::TimeEvent(unsigned long s, time_event_cb c, unsigned long i, int m, bool t) : startMs(s), intervalMs(i), cb(c), maxCbCnt(m), cbCnt(0), transitory(t) {}
 
-TimeEvent::TimeEvent(unsigned long long s, time_event_cb c, unsigned long long i, int m, bool t, int m2) : startMs(s), intervalMs(i), cb(c), maxCbCnt(m), cbCnt(0), transitory(t), mode(m2) {}
+TimeEvent::TimeEvent(unsigned long s, time_event_cb c, unsigned long i, int m, bool t, int m2) : startMs(s), intervalMs(i), cb(c), maxCbCnt(m), cbCnt(0), transitory(t), mode(m2) {}
 
-unsigned long long TimeEvent::getStartMs()
+unsigned long TimeEvent::getStartMs()
 {
   return startMs;
 }
 
-unsigned long long TimeEvent::getIntervalMs()
+unsigned long TimeEvent::getIntervalMs()
 {
   return intervalMs;
 }
@@ -92,26 +92,26 @@ bool TimeEvent::getTransitory()
 }
 
 // Unlike IntervalEvents, this is only used when an intervalMs is defined
-unsigned long long TimeEvent::getLastCbMs()
+unsigned long TimeEvent::getLastCbMs()
 {
   return intervalMs * cbCnt + startMs;
 }
 
-unsigned long long TimeEvent::getNextCbMs()
+unsigned long TimeEvent::getNextCbMs()
 {
   return intervalMs ? getLastCbMs() + intervalMs : startMs;
 }
 
-bool TimeEvent::isTime(unsigned long long curMs)
+bool TimeEvent::isTime(unsigned long curMs)
 {
   return curMs >= getNextCbMs() && (maxCbCnt < 0 || cbCnt < maxCbCnt);
 }
 
-bool TimeEvent::cbIfTimeAndActive(unsigned long long curMs)
+bool TimeEvent::cbIfTimeAndActive(unsigned long curMs)
 {
   if (mode == TE_MODE_ACTIVE && isTime(curMs) && startMs && cb(TECBArg(curMs, startMs, intervalMs, cbCnt, maxCbCnt))) // Checking intervalMs here since default constructor doesnt even define cb; might need stub there to be safe
   {
-    unsigned long long elapsedMs = curMs - startMs;
+    unsigned long elapsedMs = curMs - startMs;
     cbCnt = intervalMs ? elapsedMs / intervalMs : cbCnt + 1; // Setting cbCnt to expected value rather than just incrementing (unless intervalMs is 0)
     return true;
   }

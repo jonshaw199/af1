@@ -60,7 +60,7 @@ typedef struct af1_msg
 
 typedef struct af1_time_sync_data
 {
-  unsigned long long ms;
+  unsigned long ms;
 } af1_time_sync_data;
 
 // This class is a wrapper around the af1_msg struct that actually gets sent using ESPNOW

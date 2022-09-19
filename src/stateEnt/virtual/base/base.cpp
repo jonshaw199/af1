@@ -87,7 +87,7 @@ void Base::loop()
   {
     for (std::map<String, TimeEvent>::iterator it = timeEventMap.begin(); it != timeEventMap.end(); it++)
     {
-      timeEventMap[it->first].cbIfTimeAndActive(StateManager::timeClient.getEpochTime() * (unsigned long long)1000);
+      timeEventMap[it->first].cbIfTimeAndActive(StateManager::timeClient.getEpochTime() * (unsigned long)1000);
     }
   }
 
@@ -134,9 +134,9 @@ void Base::preStateChange(int s)
 #endif
 }
 
-unsigned long long Base::getElapsedMs()
+unsigned long Base::getElapsedMs()
 {
-  unsigned long long nowMs = millis();
+  unsigned long nowMs = millis();
   return nowMs - startMs;
 }
 
@@ -925,7 +925,7 @@ void Base::sendTimeSyncMsg(std::set<int> ids, bool isResponse)
   msg.setType(isResponse ? TYPE_TIME_SYNC_RESPONSE : TYPE_TIME_SYNC);
   msg.setSenderID(StateManager::getDeviceID());
   msg.setState(StateManager::getCurState());
-  unsigned long long ms = millis();
+  unsigned long ms = millis();
   af1_time_sync_data d;
   // memcpy(&d, &ms, sizeof(d));
   d.ms = ms;
@@ -948,7 +948,7 @@ void Base::receiveTimeSyncMsg(AF1Msg m)
     af1_time_sync_data d;
     memcpy(&d, m.getData(), sizeof(d));
     StateManager::getPeerInfoMap()[m.getSenderID()].otherTimeSync = d.ms;
-    unsigned long long thisMs = millis();
+    unsigned long thisMs = millis();
     StateManager::getPeerInfoMap()[m.getSenderID()].thisTimeSync = thisMs;
     Serial.print("Other device time: ");
     Serial.print(StateManager::getPeerInfoMap()[m.getSenderID()].otherTimeSync);
@@ -1086,7 +1086,7 @@ std::map<String, TimeEvent> &Base::getTimeEventMap()
   return timeEventMap;
 }
 
-unsigned long long Base::getStartMs()
+unsigned long Base::getStartMs()
 {
   return startMs;
 }

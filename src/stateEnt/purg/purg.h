@@ -28,7 +28,7 @@
 template <class T>
 class Purg : public T
 {
-  unsigned long long purgMs;
+  unsigned long purgMs;
   int next;
 
 public:
@@ -55,7 +55,7 @@ public:
     }
   }
 
-  void setPurgMs(unsigned long long ms)
+  void setPurgMs(unsigned long ms)
   {
     purgMs = ms;
   }
