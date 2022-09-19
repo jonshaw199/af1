@@ -48,6 +48,7 @@ class IntervalEvent
   unsigned long long intervalMs;
   interval_event_cb cb;
   int maxCbCnt = MAX_CB_CNT_INF;
+  bool transitory = false;
   int mode = IE_MODE_INACTIVE;
 
   int cbCnt = 0;
@@ -56,7 +57,8 @@ public:
   IntervalEvent();
   IntervalEvent(unsigned long long i, interval_event_cb c);
   IntervalEvent(unsigned long long i, interval_event_cb c, int m);
-  IntervalEvent(unsigned long long i, interval_event_cb c, int m, int m2);
+  IntervalEvent(unsigned long long i, interval_event_cb c, int m, bool t);
+  IntervalEvent(unsigned long long i, interval_event_cb c, int m, bool t, int m2);
   unsigned long long getIntervalMs();
   int getMaxCbCnt();
   interval_event_cb getCb();
@@ -69,6 +71,7 @@ public:
   bool cbIfTimeAndActive(unsigned long long elapsedMs);
   void setMode(int m);
   int getMode();
+  bool getTransitory();
 
   void reset();
   void activate();

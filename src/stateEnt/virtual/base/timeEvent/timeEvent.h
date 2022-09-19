@@ -53,6 +53,7 @@ class TimeEvent
     unsigned long long intervalMs;
     time_event_cb cb;
     int maxCbCnt;
+    bool transitory;
     int mode;
 
     int cbCnt;
@@ -62,10 +63,12 @@ public:
     TimeEvent(unsigned long long s, time_event_cb c);
     TimeEvent(unsigned long long s, time_event_cb c, unsigned long long i);
     TimeEvent(unsigned long long s, time_event_cb c, unsigned long long i, int m);
-    TimeEvent(unsigned long long s, time_event_cb c, unsigned long long i, int m, int m2);
+    TimeEvent(unsigned long long s, time_event_cb c, unsigned long long i, int m, bool t);
+    TimeEvent(unsigned long long s, time_event_cb c, unsigned long long i, int m, bool t, int m2);
     unsigned long long getStartMs();
     unsigned long long getIntervalMs();
     int getMaxCbCnt();
+    bool getTransitory();
     time_event_cb getCb();
 
     int getCbCnt();

@@ -67,7 +67,9 @@ TimeEvent::TimeEvent(unsigned long long s, time_event_cb c, unsigned long long i
   mode = TE_MODE_INACTIVE;
 }
 
-TimeEvent::TimeEvent(unsigned long long s, time_event_cb c, unsigned long long i, int m, int m2) : startMs(s), intervalMs(i), cb(c), maxCbCnt(m), cbCnt(0), mode(m2) {}
+TimeEvent::TimeEvent(unsigned long long s, time_event_cb c, unsigned long long i, int m, bool t) : startMs(s), intervalMs(i), cb(c), maxCbCnt(m), cbCnt(0), transitory(t) {}
+
+TimeEvent::TimeEvent(unsigned long long s, time_event_cb c, unsigned long long i, int m, bool t, int m2) : startMs(s), intervalMs(i), cb(c), maxCbCnt(m), cbCnt(0), transitory(t), mode(m2) {}
 
 unsigned long long TimeEvent::getStartMs()
 {
@@ -94,6 +96,11 @@ int TimeEvent::getCbCnt()
   return cbCnt;
 }
 
+bool TimeEvent::getTransitory()
+{
+  return transitory;
+}
+
 // Unlike IntervalEvents, this is only used when an intervalMs is defined
 unsigned long long TimeEvent::getLastCbMs()
 {
@@ -103,6 +110,11 @@ unsigned long long TimeEvent::getLastCbMs()
 unsigned long long TimeEvent::getNextCbMs()
 {
   return intervalMs ? getLastCbMs() + intervalMs : startMs;
+}
+
+bool TimeEvent::getTransitory()
+{
+  return transitory;
 }
 
 bool TimeEvent::isTime(unsigned long long curMs)

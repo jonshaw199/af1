@@ -56,11 +56,20 @@ IntervalEvent::IntervalEvent(unsigned long long i, interval_event_cb c, int m)
   maxCbCnt = m;
 }
 
-IntervalEvent::IntervalEvent(unsigned long long i, interval_event_cb c, int m, int m2)
+IntervalEvent::IntervalEvent(unsigned long long i, interval_event_cb c, int m, bool t)
 {
   intervalMs = i;
   cb = c;
   maxCbCnt = m;
+  transitory = t;
+}
+
+IntervalEvent::IntervalEvent(unsigned long long i, interval_event_cb c, int m, bool t, int m2)
+{
+  intervalMs = i;
+  cb = c;
+  maxCbCnt = m;
+  transitory = t;
   mode = m2;
 }
 
@@ -92,6 +101,11 @@ unsigned long long IntervalEvent::getLastCbMs()
 unsigned long long IntervalEvent::getNextCbMs()
 {
   return getLastCbMs() + intervalMs;
+}
+
+bool IntervalEvent::getTransitory()
+{
+  return transitory;
 }
 
 bool IntervalEvent::isTime(unsigned long long elapsedMs)
