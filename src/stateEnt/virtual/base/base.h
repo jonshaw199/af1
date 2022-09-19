@@ -165,6 +165,8 @@ public:
   static DynamicJsonDocument httpPost(String url, DynamicJsonDocument body);
   // Other
   static void setBuiltinLED(bool on);
+  std::map<String, IntervalEvent> &getIntervalEventMap();
+  std::map<String, TimeEvent> &getTimeEventMap();
 };
 
 #endif // STATEENT_VIRTUAL_BASE_BASE_H_

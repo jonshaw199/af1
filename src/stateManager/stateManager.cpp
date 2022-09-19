@@ -344,6 +344,11 @@ const std::map<int, Base *> &StateManager::getStateEntMap()
   return stateEntMap;
 }
 
+Base *StateManager::getCurStateEnt()
+{
+  return stateEntMap[curState];
+}
+
 int StateManager::getCurMode()
 {
   return curMode;

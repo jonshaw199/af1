@@ -85,6 +85,7 @@ public:
   static int getInitialState();
   static void setPurgNext(int p, int n);
   static const std::map<int, Base *> &getStateEntMap();
+  static Base *getCurStateEnt();
   static int getDeviceID();
   static void setDefaultWSClientInfo(ws_client_info w);
   static ws_client_info getDefaultWSClientInfo();

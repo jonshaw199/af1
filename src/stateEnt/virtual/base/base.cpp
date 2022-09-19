@@ -1049,3 +1049,13 @@ void Base::connectToWS()
     }
   }
 }
+
+std::map<String, IntervalEvent> &Base::getIntervalEventMap()
+{
+  return intervalEventMap;
+}
+
+std::map<String, TimeEvent> &Base::getTimeEventMap()
+{
+  return timeEventMap;
+}
