@@ -412,3 +412,12 @@ ws_client_info StateManager::getCurWSClientInfo()
 {
   return curWSClientInfo;
 }
+
+unsigned long long StateManager::convertTime(int id, unsigned long long t)
+{
+  if (peerInfoMap.count(id) && peerInfoMap[id].otherTimeSync) // div by 0
+  {
+    return peerInfoMap[id].thisTimeSync * t / peerInfoMap[id].otherTimeSync;
+  }
+  return 0;
+}
