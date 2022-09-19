@@ -424,8 +424,7 @@ unsigned long long StateManager::convertTime(int id, unsigned long long t)
     Serial.print("; t: ");
     Serial.print(t);
     Serial.print("; result: ");
-    unsigned long long r = peerInfoMap[id].thisTimeSync / peerInfoMap[id].otherTimeSync;
-    r = r * t;
+    unsigned long long r = peerInfoMap[id].thisTimeSync / peerInfoMap[id].otherTimeSync * t;
     Serial.println(r);
     return r;
   }
