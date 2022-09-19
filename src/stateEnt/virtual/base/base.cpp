@@ -1022,12 +1022,14 @@ void Base::connectToWS()
       i = StateManager::getDefaultWSClientInfo();
     }
 
-    Serial.print("connectToWS(): checking WS connection: ");
-    Serial.println(i.toString());
-
+    if (i.host.length())
+    {
+      Serial.print("connectToWS(): checking WS connection: ");
+      Serial.println(i.toString());
+    }
     if (!i.host.length())
     {
-      Serial.println("Invalid WS info; skipping");
+      // Serial.println("Invalid WS info; skipping");
     }
     else if (client && i == StateManager::getCurWSClientInfo())
     {
