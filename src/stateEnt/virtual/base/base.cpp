@@ -17,6 +17,8 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#include <vector>
+
 #include "base.h"
 #include "stateManager/stateManager.h"
 #include "pre.h"
@@ -237,9 +239,20 @@ void Base::activateIntervalEvents()
 
 void Base::deactivateIntervalEvents()
 {
+  std::vector<String> delKeys;
   for (std::map<String, IntervalEvent>::iterator it = intervalEventMap.begin(); it != intervalEventMap.end(); it++)
   {
     intervalEventMap[it->first].deactivate();
+    if (intervalEventMap[it->first].getTransitory())
+    {
+      delKeys.push_back(it->first);
+    }
+  }
+  for (String s : delKeys)
+  {
+    Serial.print("Deleting transitory IE ");
+    Serial.println(s);
+    intervalEventMap.erase(s);
   }
 }
 
@@ -261,9 +274,20 @@ void Base::activateTimeEvents()
 
 void Base::deactivateTimeEvents()
 {
+  std::vector<String> delKeys;
   for (std::map<String, TimeEvent>::iterator it = timeEventMap.begin(); it != timeEventMap.end(); it++)
   {
     timeEventMap[it->first].deactivate();
+    if (timeEventMap[it->first].getTransitory())
+    {
+      delKeys.push_back(it->first);
+    }
+  }
+  for (String s : delKeys)
+  {
+    Serial.print("Deleting transitory TE ");
+    Serial.println(s);
+    timeEventMap.erase(s);
   }
 }
 
