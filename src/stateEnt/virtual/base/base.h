@@ -68,7 +68,7 @@ public:
   String protocol;
   String toString()
   {
-    return "ws_client_info: host=" + host + ";path=" + path + ";port=" + String(port) + ";protocol" + protocol;
+    return "ws_client_info: host=" + host + ";path=" + path + ";port=" + String(port) + ";protocol=" + protocol;
   }
   bool operator==(const ws_client_info &other)
   {
