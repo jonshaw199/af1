@@ -49,7 +49,7 @@ class IntervalEvent
   interval_event_cb cb;
   int maxCbCnt = MAX_CB_CNT_INF;
   bool transitory = false;
-  int mode = IE_MODE_INACTIVE;
+  int mode = IE_MODE_ACTIVE;
 
   int cbCnt = 0;
 

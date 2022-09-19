@@ -54,7 +54,7 @@ class TimeEvent
     time_event_cb cb;
     int maxCbCnt;
     bool transitory;
-    int mode;
+    int mode = TE_MODE_ACTIVE;
 
     int cbCnt;
 

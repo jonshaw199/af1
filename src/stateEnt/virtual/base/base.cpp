@@ -1083,3 +1083,8 @@ std::map<String, TimeEvent> &Base::getTimeEventMap()
 {
   return timeEventMap;
 }
+
+unsigned long long Base::getStartMs()
+{
+  return startMs;
+}

@@ -46,26 +46,16 @@ int TECBArg::getMaxCbCnt()
   return maxCbCnt;
 }
 
-TimeEvent::TimeEvent() : startMs(0), intervalMs(0), maxCbCnt(0), cbCnt(0)
-{
-  mode = TE_MODE_INACTIVE;
-}
+TimeEvent::TimeEvent() : startMs(0), intervalMs(0), maxCbCnt(0), cbCnt(0) {}
 
-TimeEvent::TimeEvent(unsigned long long s, time_event_cb c) : startMs(s), intervalMs(0), cb(c), maxCbCnt(1), cbCnt(0)
-{
-  mode = TE_MODE_INACTIVE;
-}
+TimeEvent::TimeEvent(unsigned long long s, time_event_cb c) : startMs(s), intervalMs(0), cb(c), maxCbCnt(1), cbCnt(0) {}
 
 TimeEvent::TimeEvent(unsigned long long s, time_event_cb c, unsigned long long i) : startMs(s), intervalMs(i), cb(c), cbCnt(0)
 {
   maxCbCnt = MAX_CB_CNT_INF;
-  mode = TE_MODE_INACTIVE;
 }
 
-TimeEvent::TimeEvent(unsigned long long s, time_event_cb c, unsigned long long i, int m) : startMs(s), intervalMs(i), cb(c), maxCbCnt(m), cbCnt(0)
-{
-  mode = TE_MODE_INACTIVE;
-}
+TimeEvent::TimeEvent(unsigned long long s, time_event_cb c, unsigned long long i, int m) : startMs(s), intervalMs(i), cb(c), maxCbCnt(m), cbCnt(0) {}
 
 TimeEvent::TimeEvent(unsigned long long s, time_event_cb c, unsigned long long i, int m, bool t) : startMs(s), intervalMs(i), cb(c), maxCbCnt(m), cbCnt(0), transitory(t) {}
 
