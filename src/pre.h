@@ -64,11 +64,11 @@
 #endif
 
 #ifndef MS_HANDSHAKE_LOOP
-#define MS_HANDSHAKE_LOOP 33000
+#define MS_HANDSHAKE_LOOP 30000
 #endif
 
 #ifndef MS_TIME_SYNC
-#define MS_TIME_SYNC 30000
+#define MS_TIME_SYNC 0
 #endif
 
 #ifndef STATE_WS_FALLBACK

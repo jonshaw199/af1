@@ -152,7 +152,7 @@ public:
   static void receiveHandshakeResponse(AF1Msg m);
   static void sendAllHandshakes();
   static void sendMsgESPNow(AF1Msg msg);
-  static void sendTimeSyncMsg(std::set<int> ids);
+  static void sendTimeSyncMsg(std::set<int> ids, bool isResponse = false);
   static void receiveTimeSyncMsg(AF1Msg m);
   static void sendAllTimeSyncMessages();
   // Websocket

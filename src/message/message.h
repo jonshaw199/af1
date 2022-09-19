@@ -34,7 +34,8 @@ enum MessageType
   TYPE_CHANGE_STATE,
   TYPE_RUN_DATA,
   TYPE_RC_DATA,
-  TYPE_TIME_SYNC
+  TYPE_TIME_SYNC,
+  TYPE_TIME_SYNC_RESPONSE
 };
 
 enum TransportType

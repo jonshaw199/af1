@@ -168,6 +168,10 @@ void Base::handleInboxMsg(AF1Msg m)
     Serial.println("Time sync message in inbox");
     receiveTimeSyncMsg(m);
     break;
+  case TYPE_TIME_SYNC_RESPONSE:
+    Serial.println("Time sync response message in inbox");
+    receiveTimeSyncMsg(m);
+    break;
   }
 
 #if IMPLICIT_STATE_CHANGE
@@ -868,19 +872,20 @@ void Base::sendAllHandshakes()
   }
 }
 
-void Base::sendTimeSyncMsg(std::set<int> ids)
+void Base::sendTimeSyncMsg(std::set<int> ids, bool isResponse)
 {
   Serial.println("Pushing time sync messages to outbox");
 
   AF1Msg msg = AF1Msg();
 
   // Set struct
-  msg.setType(TYPE_TIME_SYNC);
+  msg.setType(isResponse ? TYPE_TIME_SYNC_RESPONSE : TYPE_TIME_SYNC);
   msg.setSenderID(StateManager::getDeviceID());
   msg.setState(StateManager::getCurState());
   unsigned long long ms = millis();
   af1_time_sync_data d;
-  memcpy(&d, &ms, sizeof(d));
+  // memcpy(&d, &ms, sizeof(d));
+  d.ms = ms;
   msg.setData((uint8_t *)&d);
   // Set wrapper
   msg.setRecipients(ids);
@@ -902,6 +907,11 @@ void Base::receiveTimeSyncMsg(AF1Msg m)
     Serial.print(StateManager::getPeerInfoMap()[m.getSenderID()].otherTimeSync);
     Serial.print("; This device time: ");
     Serial.println(StateManager::getPeerInfoMap()[m.getSenderID()].thisTimeSync);
+
+    if (m.getType() == TYPE_TIME_SYNC)
+    {
+      sendTimeSyncMsg({m.getSenderID()}, true);
+    }
   }
   else
   {
