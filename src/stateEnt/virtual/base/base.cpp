@@ -914,7 +914,11 @@ void Base::sendTimeSyncMsg(std::set<int> ids, bool isResponse)
 
 void Base::receiveTimeSyncMsg(AF1Msg m)
 {
-  Serial.println("Receiving time sync msg from ID " + String(m.getSenderID()));
+  Serial.print("Receiving time sync ");
+  Serial.print(m.getType() == TYPE_TIME_SYNC_RESPONSE ? "response" : "");
+  Serial.print("msg from ID ");
+  Serial.println(m.getSenderID());
+
   if (StateManager::getPeerInfoMap().count(m.getSenderID()))
   {
     af1_time_sync_data d;
