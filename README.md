@@ -4,14 +4,15 @@
 
 ### Features
 
-- :electric_plug: [Websocket Client](#overview)
+- :electric_plug: Websocket Client
 - :globe_with_meridians: HTTP Client
 - :handshake: ESP-Now P2P
-- :arrows_counterclockwise: AP/STA Mode (Use websocket, HTTP, and ESP-Now concurrently)
-- :trident: [State Management](#overview)
-- :stopwatch: [Event Scheduling](#event-scheduling)
+- :arrows_counterclockwise: AP/STA Mode (Websocket, HTTP, and ESP-Now concurrently)
+- :trident: State Management
+- :calendar: Event Scheduling
+- :stopwatch: Time Sync Multiple Devices (ESP-Now)
 - :radio: Over-The-Air (OTA) firmware updates
-- :keyboard: [Serial Input Handling](#overview)
+- :keyboard: Serial Input Handling
 
 ### Overview
 
@@ -63,7 +64,7 @@ void setup()
     static void registerStateEnt(int i, Base *s);
     static void registerStringHandler(String s, string_input_handler h);
     static void registerWifiAP(String s, String p);
-    static void registerWifiAP(String s, String p, int a, int b, int c, int d, int ga, int gb, int gc, int gd, int sa, int sb, int sc, int sd);
+    static void registerWifiAP(String s, String p, int ipA, int ipB, int ipC, int ipD, int gatewayIpA, int gatewayIpB, int gatewayIpC, int gatewayIpD, int subnetIpA, int subnetIpB, int subnetIpC, int subnetIpD);
     static void setInitialState(int s);
     static void setDefaultWSClientInfo(ws_client_info w);
   */
