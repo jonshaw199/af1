@@ -6,7 +6,7 @@
 
 - :electric_plug: Websocket Client
 - :globe_with_meridians: HTTP Client
-- :handshake: ESP-Now P2P
+- :handshake: ESP-Now P2P (Auto-Connect To Peers)
 - :arrows_counterclockwise: AP/STA Mode (Websocket, HTTP, and ESP-Now concurrently)
 - :trident: State Management
 - :calendar: Event Scheduling
