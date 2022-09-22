@@ -10,8 +10,8 @@
 - :arrows_counterclockwise: AP/STA Mode (Use websocket, HTTP, and ESP-Now concurrently)
 - :trident: State Management
 - :calendar: Event Scheduling
-- :stopwatch: Time Sync Multiple Devices (ESP-Now)
-- :radio: Over-The-Air (OTA) firmware updates
+- :stopwatch: Time Sync Devices (ESP-Now)
+- :radio: Over-The-Air (ArduinoOTA) firmware updates
 - :keyboard: Serial Input Handling
 
 ### Overview
