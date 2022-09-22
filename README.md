@@ -6,7 +6,7 @@
 
 - :electric_plug: Websocket Client
 - :globe_with_meridians: HTTP Client
-- :handshake: ESP-Now P2P (Auto-Connect To Peers)
+- :handshake: ESP-Now P2P (Auto-Connect)
 - :arrows_counterclockwise: AP/STA Mode (Use websocket, HTTP, and ESP-Now concurrently)
 - :trident: State Management
 - :calendar: Event Scheduling
@@ -46,6 +46,7 @@ public:
     virtual void serializeESPNow(AF1Msg &m);
     virtual void deserializeESPNow(AF1Msg &m);
     virtual bool doScanForPeersESPNow();
+    virtual bool doConnectToWSServer();
     virtual String getName();
   */
 
