@@ -116,6 +116,7 @@ public:
   virtual void serializeESPNow(AF1Msg &m);
   virtual void deserializeESPNow(AF1Msg &m);
   virtual bool doScanForPeersESPNow();
+  virtual bool doConnectToWSServer();
   // Interval Events
   unsigned long getElapsedMs();
   void resetIntervalEvents();

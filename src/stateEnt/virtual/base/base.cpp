@@ -1016,10 +1016,15 @@ void Base::connectToWS()
   // Only attempting to connect to websocket if wifi is connected first
   if (WiFi.status() == WL_CONNECTED)
   {
-    ws_client_info i = StateManager::getStateEntMap().at(StateManager::getCurState())->wsClientInfo;
+    ws_client_info i = StateManager::getCurStateEnt()->wsClientInfo;
     if (!i && StateManager::getDefaultWSClientInfo())
     {
       i = StateManager::getDefaultWSClientInfo();
+    }
+
+    if (!StateManager::getCurStateEnt()->doConnectToWSServer())
+    {
+      Serial.println("Websocket connections disabled in this state");
     }
 
     if (i)
@@ -1071,9 +1076,14 @@ void Base::connectToWS()
     }
     else
     {
-      Serial.println("Not connecting to websocket server");
+      Serial.println("No websocket info provided for this state; skipping.");
     }
   }
+}
+
+bool Base::doConnectToWSServer()
+{
+  return true;
 }
 
 std::map<String, IntervalEvent> &Base::getIntervalEventMap()
