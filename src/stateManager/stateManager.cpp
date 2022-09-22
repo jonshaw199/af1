@@ -195,7 +195,8 @@ int StateManager::getRequestedState()
 
 void StateManager::handleUserInput(String s)
 {
-  String s2 = s.toLowerCase();
+  String s2 = s;
+  s2.toLowerCase();
   if (stringHandlerMap.count(s2))
   {
     stringHandlerMap[s2]();
