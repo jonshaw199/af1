@@ -1017,61 +1017,61 @@ void Base::connectToWS()
   if (WiFi.status() == WL_CONNECTED)
   {
     ws_client_info i = StateManager::getStateEntMap().at(StateManager::getCurState())->wsClientInfo;
-    if (!i.host.length() && StateManager::getDefaultWSClientInfo().host.length())
+    if (!i && StateManager::getDefaultWSClientInfo())
     {
       i = StateManager::getDefaultWSClientInfo();
     }
 
-    if (i.host.length())
+    if (i)
     {
       Serial.print("connectToWS(): checking WS connection: ");
       Serial.println(i.toString());
-    }
-    if (!i.host.length())
-    {
-      // Serial.println("Invalid WS info; skipping");
-    }
-    else if (client && i == StateManager::getCurWSClientInfo())
-    {
-      Serial.println("Already connected to websocket");
+      if (client && i == StateManager::getCurWSClientInfo() || !StateManager::getCurWSClientInfo() && i == StateManager::getDefaultWSClientInfo())
+      {
+        Serial.println("Already connected to websocket");
+      }
+      else
+      {
+        // Connect to the websocket server
+        if (client.connect(i.host.c_str(), i.port))
+        {
+          Serial.println("Connected to websocket server");
+        }
+        else
+        {
+          Serial.println("Connection to websocket server failed");
+        }
+
+        int lenH = i.host.length() + 1;
+        int lenP = i.path.length() + 1;
+        int lenPr = i.protocol.length() + 1;
+        char h[lenH];
+        char p[lenP];
+        char pr[lenPr];
+        i.host.toCharArray(h, lenH);
+        i.path.toCharArray(p, lenP);
+        i.protocol.toCharArray(pr, lenPr);
+        webSocketClient.host = h;
+        webSocketClient.path = p;
+        if (i.protocol.length())
+        {
+          webSocketClient.protocol = pr;
+        }
+
+        if (webSocketClient.handshake(client))
+        {
+          Serial.println("Handshake successful");
+          StateManager::setCurWSClientInfo(i);
+        }
+        else
+        {
+          Serial.println("Handshake failed");
+        }
+      }
     }
     else
     {
-      // Connect to the websocket server
-      if (client.connect(i.host.c_str(), i.port))
-      {
-        Serial.println("Connected to websocket server");
-      }
-      else
-      {
-        Serial.println("Connection to websocket server failed");
-      }
-
-      int lenH = i.host.length() + 1;
-      int lenP = i.path.length() + 1;
-      int lenPr = i.protocol.length() + 1;
-      char h[lenH];
-      char p[lenP];
-      char pr[lenPr];
-      i.host.toCharArray(h, lenH);
-      i.path.toCharArray(p, lenP);
-      i.protocol.toCharArray(pr, lenPr);
-      webSocketClient.host = h;
-      webSocketClient.path = p;
-      if (i.protocol.length())
-      {
-        webSocketClient.protocol = pr;
-      }
-
-      if (webSocketClient.handshake(client))
-      {
-        Serial.println("Handshake successful");
-        StateManager::setCurWSClientInfo(i);
-      }
-      else
-      {
-        Serial.println("Handshake failed");
-      }
+      Serial.println("Not connecting to websocket server");
     }
   }
 }

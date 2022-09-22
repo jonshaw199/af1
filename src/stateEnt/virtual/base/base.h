@@ -74,6 +74,10 @@ public:
   {
     return host == other.host && path == other.path && port == other.port;
   }
+  operator bool() const
+  {
+    return host.length();
+  }
 };
 
 class Base
