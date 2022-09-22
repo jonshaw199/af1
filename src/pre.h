@@ -56,7 +56,7 @@
 #endif
 
 #ifndef DELAY_SEND
-#define DELAY_SEND 2
+#define DELAY_SEND 0
 #endif
 
 #ifndef MS_PURG_DEFAULT
