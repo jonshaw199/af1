@@ -66,19 +66,19 @@ StateManager::StateManager()
   stateEntMap[STATE_PURG] = new Purg<Base>();
   stateEntMap[STATE_IDLE_BASE] = new Base();
 
-  stringHandlerMap["s"] = []()
+  stringHandlerMap["init"] = []()
   {
     StateManager::setRequestedState(STATE_INIT);
   };
-  stringHandlerMap["o"] = []()
+  stringHandlerMap["ota"] = []()
   {
     setRequestedState(STATE_OTA);
   };
-  stringHandlerMap["r"] = []()
+  stringHandlerMap["restart"] = []()
   {
     StateManager::setRequestedState(STATE_RESTART);
   };
-  stringHandlerMap["i"] = []()
+  stringHandlerMap["idle"] = []()
   {
     setRequestedState(STATE_IDLE_BASE);
   };
