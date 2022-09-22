@@ -20,6 +20,8 @@
 #ifndef FRAMEWORK_FRAMEWORK_H_
 #define FRAMEWORK_FRAMEWORK_H_
 
+#include <Arduino.h>
+
 #include "pre.h"
 
 #include "stateManager/stateManager.h"
