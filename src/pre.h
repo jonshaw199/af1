@@ -48,7 +48,7 @@
 #endif
 
 #ifndef RETRIES_PURG
-#define RETRIES_PURG 10
+#define RETRIES_PURG 5
 #endif
 
 #ifndef DELAY_PREPARE_WIFI
