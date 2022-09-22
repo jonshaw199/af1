@@ -195,13 +195,15 @@ int StateManager::getRequestedState()
 
 void StateManager::handleUserInput(String s)
 {
-  if (stringHandlerMap.count(s))
+  String s2 = s.toLowerCase();
+  if (stringHandlerMap.count(s2))
   {
-    stringHandlerMap[s]();
+    stringHandlerMap[s2]();
   }
   else
   {
-    Serial.println("String input not recognized");
+    Serial.print("String input not recognized: ");
+    Serial.println(s2);
   }
 }
 
