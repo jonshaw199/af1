@@ -1026,8 +1026,7 @@ void Base::connectToWS()
     {
       Serial.println("Websocket connections disabled in this state");
     }
-
-    if (i)
+    else if (i)
     {
       Serial.print("connectToWS(): checking WS connection: ");
       Serial.println(i.toString());
