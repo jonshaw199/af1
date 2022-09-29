@@ -25,6 +25,7 @@
 #include "stateEnt/restart/restart.h"
 #include "stateEnt/init/init.h"
 #include "stateEnt/purg/purg.h"
+#include "stateEnt/virtual/sync/sync.h"
 
 int StateManager::curState;
 int StateManager::prevState;
@@ -65,10 +66,11 @@ StateManager::StateManager()
   stateEntMap[STATE_RESTART] = new Restart();
   stateEntMap[STATE_PURG] = new Purg<Base>();
   stateEntMap[STATE_IDLE_BASE] = new Base();
+  stateEntMap[STATE_SYNC_TEST] = new Sync();
 
   stringHandlerMap["init"] = []()
   {
-    StateManager::setRequestedState(STATE_INIT);
+    setRequestedState(STATE_INIT);
   };
   stringHandlerMap["ota"] = []()
   {
@@ -76,11 +78,15 @@ StateManager::StateManager()
   };
   stringHandlerMap["restart"] = []()
   {
-    StateManager::setRequestedState(STATE_RESTART);
+    setRequestedState(STATE_RESTART);
   };
   stringHandlerMap["idle"] = []()
   {
     setRequestedState(STATE_IDLE_BASE);
+  };
+  stringHandlerMap["synctest"] = []()
+  {
+    setRequestedState(STATE_SYNC_TEST);
   };
 
   initialState = STATE_IDLE_BASE;

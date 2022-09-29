@@ -57,8 +57,8 @@ Sync::Sync()
             getInstance()->startTime = millis() + (unsigned long)6000;
             
             AF1Msg msg;
-            msg.setState(STATE_SYNC);
-            msg.setType(TYPE_RUN_DATA);
+            msg.setState(StateManager::getCurState());
+            msg.setType(TYPE_TIME_SYNC_START);
             sync_data d;
             d.ms = getInstance()->startTime;
             msg.setData((uint8_t *)&d);
@@ -74,21 +74,18 @@ msg_handler Sync::getInboxHandler()
   return [](AF1Msg m)
   {
     Base::handleInboxMsg(m);
-    if (m.getState() == STATE_SYNC)
+    switch (m.getType())
     {
-      switch (m.getType())
-      {
-      case TYPE_RUN_DATA:
-        sync_data d;
-        memcpy(&d, m.getData(), sizeof(d));
-        Serial.print("Received time: ");
-        Serial.println(d.ms);
-        getInstance()->startTime = StateManager::convertTime(m.getSenderID(), d.ms);
-        Serial.print("Converted time: ");
-        Serial.println(getInstance()->startTime);
-        scheduleStart();
-        break;
-      }
+    case TYPE_TIME_SYNC_START:
+      sync_data d;
+      memcpy(&d, m.getData(), sizeof(d));
+      Serial.print("Received time: ");
+      Serial.println(d.ms);
+      getInstance()->startTime = StateManager::convertTime(m.getSenderID(), d.ms);
+      Serial.print("Converted time: ");
+      Serial.println(getInstance()->startTime);
+      scheduleStart();
+      break;
     }
   };
 }
