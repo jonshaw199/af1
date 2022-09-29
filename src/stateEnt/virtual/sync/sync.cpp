@@ -8,6 +8,11 @@ IECBArg STArg::getIECBArg()
   return iecbArg;
 }
 
+Sync *Sync::getInstance()
+{
+  return static_cast<Sync *>(StateManager::getCurStateEnt());
+}
+
 void Sync::scheduleStart()
 {
   Serial.println("Scheduling");
