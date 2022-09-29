@@ -52,9 +52,9 @@ Sync::Sync()
 #if MASTER
   // Schedule send start time
   intervalEventMap.insert(std::pair<String, IntervalEvent>("Sync_SendStartTime", IntervalEvent(
-                                                                                     3000, [](IECBArg a)
+                                                                                     MS_TIME_SYNC_SCHEDULE_START, [](IECBArg a)
                                                                                      {
-            getInstance()->startTime = millis() + (unsigned long)6000;
+            getInstance()->startTime = millis() + (unsigned long)MS_TIME_SYNC_START;
             
             AF1Msg msg;
             msg.setState(StateManager::getCurState());

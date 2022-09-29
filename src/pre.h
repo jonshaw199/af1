@@ -71,6 +71,14 @@
 #define MS_TIME_SYNC 0
 #endif
 
+#ifndef MS_TIME_SYNC_SCHEDULE_START
+#define MS_TIME_SYNC_SCHEDULE_START 2000
+#endif
+
+#ifndef MS_TIME_SYNC_START
+#define MS_TIME_SYNC_START 3000
+#endif
+
 #ifndef STATE_WS_FALLBACK
 #define STATE_WS_FALLBACK STATE_IDLE_BASE
 #endif
