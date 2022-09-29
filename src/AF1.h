@@ -26,5 +26,6 @@
 
 #include "stateManager/stateManager.h"
 #include "stateEnt/virtual/base/base.h"
+#include "stateEnt/virtual/sync/sync.h"
 
 #endif // FRAMEWORK_FRAMEWORK_H_
