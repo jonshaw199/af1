@@ -1,55 +1,61 @@
 #include "sync.h"
 #include "state/state.h"
 
+STArg::STArg(IECBArg a) : iecbArg(a) {}
+
+IECBArg STArg::getIECBArg()
+{
+  return iecbArg;
+}
+
 void Sync::scheduleStart()
 {
   Serial.println("Scheduling");
   Serial.print("Current time: ");
   Serial.print(millis());
   Serial.print("; Start time: ");
-  Serial.print(startTime);
+  Serial.print(getInstance()->startTime);
   Serial.print("; diff: ");
-  Serial.println(startTime - millis());
+  Serial.println(getInstance()->startTime - millis());
 
-  unsigned long dif = startTime - millis();
+  unsigned long dif = getInstance()->startTime - millis();
   unsigned long intervalMs = dif + StateManager::getCurStateEnt()->getElapsedMs();
 
   StateManager::getCurStateEnt()->getIntervalEventMap().insert(std::pair<String, IntervalEvent>("Sync_ScheduleStart", IntervalEvent(
                                                                                                                           intervalMs, [](IECBArg a)
                                                                                                                           {
             Serial.println("Starting");
-            getSyncedTask()();
+            getInstance()->getSyncedTask()(a);
             return true; },
                                                                                                                           1, true)));
-}
-
-void dummySyncedTask()
-{
-  StateManager::getCurStateEnt()->getIntervalEventMap().insert(std::pair<String, IntervalEvent>("Sync_Start", IntervalEvent(
-                                                                                                                  300, [](IECBArg a)
-                                                                                                                  {
-            setBuiltinLED(a.getCbCnt() % 2);
-            return true; },
-                                                                                                                  -1, true)));
 }
 
 Sync::Sync()
 {
   startTime = 0;
-  syncedTask = dummySyncedTask;
+  // Default is blinking LED but overridden using setSyncedTask()
+  syncedTask = [](STArg a)
+  {
+    StateManager::getCurStateEnt()->getIntervalEventMap().insert(std::pair<String, IntervalEvent>("Sync_Start", IntervalEvent(
+                                                                                                                    300, [](IECBArg a)
+                                                                                                                    {
+            setBuiltinLED(a.getCbCnt() % 2);
+            return true; },
+                                                                                                                    -1, true)));
+  };
 
 #if MASTER
   // Schedule send start time
   intervalEventMap.insert(std::pair<String, IntervalEvent>("Sync_SendStartTime", IntervalEvent(
                                                                                      3000, [](IECBArg a)
                                                                                      {
-            startTime = millis() + (unsigned long)6000;
+            getInstance()->startTime = millis() + (unsigned long)6000;
             
             AF1Msg msg;
             msg.setState(STATE_SYNC);
             msg.setType(TYPE_RUN_DATA);
             sync_data d;
-            d.ms = startTime;
+            d.ms = getInstance()->startTime;
             msg.setData((uint8_t *)&d);
             pushOutbox(msg);
             scheduleStart();
@@ -72,9 +78,9 @@ msg_handler Sync::getInboxHandler()
         memcpy(&d, m.getData(), sizeof(d));
         Serial.print("Received time: ");
         Serial.println(d.ms);
-        startTime = StateManager::convertTime(m.getSenderID(), d.ms);
+        getInstance()->startTime = StateManager::convertTime(m.getSenderID(), d.ms);
         Serial.print("Converted time: ");
-        Serial.println(startTime);
+        Serial.println(getInstance()->startTime);
         scheduleStart();
         break;
       }
