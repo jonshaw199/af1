@@ -1,5 +1,5 @@
 #include "sync.h"
-#include "state.h"
+#include "state/state.h"
 
 void Sync::scheduleStart()
 {
