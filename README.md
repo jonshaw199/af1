@@ -11,7 +11,7 @@
 - :stopwatch: Time Sync Devices and Tasks (uses ESP-Now under the hood; no IR or line of sight required)
 - :calendar: Event Scheduling
 - :trident: State Management
-- :radio: Over-The-Air (ArduinoOTA) firmware updates
+- :radio: Over the air (ArduinoOTA) firmware updates
 - :keyboard: Serial Input Handling
 
 ### Overview
