@@ -218,7 +218,7 @@ msg_handler Base::getOutboxHandler()
 
 String Base::getName()
 {
-  return "(unknown state)";
+  return "(unknown state name)";
 }
 
 void Base::resetIntervalEvents()

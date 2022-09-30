@@ -220,7 +220,7 @@ String StateManager::stateToString(int s)
   {
     return stateEntMap[s]->getName();
   }
-  return "Unknown state";
+  return "Unknown state name";
 }
 
 bool StateManager::handleStateChange(int s)
@@ -409,7 +409,7 @@ String StateManager::modeToString(int s)
   {
     return modeEntMap[s]->getName();
   }
-  return "Unknown state";
+  return "Unknown mode name";
 }
 
 void StateManager::setCurWSClientInfo(ws_client_info i)
