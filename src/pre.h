@@ -55,7 +55,7 @@
 #define DELAY_PREPARE_WIFI 333
 #endif
 
-// WARNING! Some delay is necessary (3ms min?)
+// WARNING! Some delay is necessary (3ms min?; try 1 and 2 sometime)
 #ifndef DELAY_SEND
 #define DELAY_SEND 3
 #endif
