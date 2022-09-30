@@ -41,12 +41,13 @@ Sync::Sync()
   // Default is blinking LED but overridden using setSyncedTask()
   syncedTask = [](STArg a)
   {
-    StateManager::getCurStateEnt()->getIntervalEventMap().insert(std::pair<String, IntervalEvent>("Sync_Start", IntervalEvent(
+    /*StateManager::getCurStateEnt()->getIntervalEventMap().insert(std::pair<String, IntervalEvent>("Sync_Start", IntervalEvent(
                                                                                                                     300, [](IECBArg a)
                                                                                                                     {
             setBuiltinLED(a.getCbCnt() % 2);
             return true; },
-                                                                                                                    -1, true)));
+                                                                                                                    -1, true)));*/
+    setBuiltinLED(1);
   };
 
 #if MASTER
