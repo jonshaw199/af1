@@ -55,8 +55,9 @@
 #define DELAY_PREPARE_WIFI 333
 #endif
 
+// WARNING! Some delay is necessary (3ms min?)
 #ifndef DELAY_SEND
-#define DELAY_SEND 0
+#define DELAY_SEND 3
 #endif
 
 #ifndef MS_PURG_DEFAULT
