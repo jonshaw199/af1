@@ -59,7 +59,9 @@ TimeEvent::TimeEvent(unsigned long s, time_event_cb c, unsigned long i, int m) :
 
 TimeEvent::TimeEvent(unsigned long s, time_event_cb c, unsigned long i, int m, bool t) : startMs(s), intervalMs(i), cb(c), maxCbCnt(m), cbCnt(0), transitory(t) {}
 
-TimeEvent::TimeEvent(unsigned long s, time_event_cb c, unsigned long i, int m, bool t, int m2) : startMs(s), intervalMs(i), cb(c), maxCbCnt(m), cbCnt(0), transitory(t), mode(m2) {}
+TimeEvent::TimeEvent(unsigned long s, time_event_cb c, unsigned long i, int m, bool t, int c2) : startMs(s), intervalMs(i), cb(c), maxCbCnt(m), cbCnt(c2), transitory(t) {}
+
+TimeEvent::TimeEvent(unsigned long s, time_event_cb c, unsigned long i, int m, bool t, int c2, int m2) : startMs(s), intervalMs(i), cb(c), maxCbCnt(m), cbCnt(c2), transitory(t), mode(m2) {}
 
 unsigned long TimeEvent::getStartMs()
 {

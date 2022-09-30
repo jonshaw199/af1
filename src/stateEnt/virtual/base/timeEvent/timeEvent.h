@@ -55,7 +55,6 @@ class TimeEvent
     int maxCbCnt;
     bool transitory;
     int mode = TE_MODE_ACTIVE;
-
     int cbCnt;
 
 public:
@@ -64,13 +63,13 @@ public:
     TimeEvent(unsigned long s, time_event_cb c, unsigned long i);
     TimeEvent(unsigned long s, time_event_cb c, unsigned long i, int m);
     TimeEvent(unsigned long s, time_event_cb c, unsigned long i, int m, bool t);
-    TimeEvent(unsigned long s, time_event_cb c, unsigned long i, int m, bool t, int m2);
+    TimeEvent(unsigned long s, time_event_cb c, unsigned long i, int m, bool t, int c2);
+    TimeEvent(unsigned long s, time_event_cb c, unsigned long i, int m, bool t, int c2, int m2);
     unsigned long getStartMs();
     unsigned long getIntervalMs();
     int getMaxCbCnt();
     bool getTransitory();
     time_event_cb getCb();
-
     int getCbCnt();
 
     unsigned long getLastCbMs();

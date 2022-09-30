@@ -64,14 +64,11 @@ IntervalEvent::IntervalEvent(unsigned long i, interval_event_cb c, int m, bool t
   transitory = t;
 }
 
-IntervalEvent::IntervalEvent(unsigned long i, interval_event_cb c, int m, bool t, int m2)
-{
-  intervalMs = i;
-  cb = c;
-  maxCbCnt = m;
-  transitory = t;
-  mode = m2;
-}
+IntervalEvent::IntervalEvent(unsigned long i, interval_event_cb c, int m, bool t, int c2)
+    : intervalMs(i), cb(c), maxCbCnt(m), transitory(t), cbCnt(c2) {}
+
+IntervalEvent::IntervalEvent(unsigned long i, interval_event_cb c, int m, bool t, int c2, int m2)
+    : intervalMs(i), cb(c), maxCbCnt(m), transitory(t), cbCnt(c2), mode(m2) {}
 
 unsigned long IntervalEvent::getIntervalMs()
 {
