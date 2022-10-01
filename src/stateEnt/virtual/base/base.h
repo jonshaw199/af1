@@ -160,6 +160,7 @@ public:
   static void sendTimeSyncMsg(std::set<int> ids, bool isResponse = false);
   static void receiveTimeSyncMsg(AF1Msg m);
   static void sendAllTimeSyncMessages();
+  static void setTimeSyncMsgTime(AF1Msg &m);
   // Websocket
   static WebSocketClient webSocketClient;
   static WiFiClient client; // Use WiFiClient class to create TCP connections

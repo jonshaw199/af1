@@ -73,7 +73,9 @@ void Base::loop()
   inbox.handleMessages([](AF1Msg &m)
                        { m.deserializeInnerMsgESPNow(); });
   outbox.handleMessages([](AF1Msg &m)
-                        { m.serializeInnerMsgESPNow(); });
+                        { 
+                          setTimeSyncMsgTime(m);
+                          m.serializeInnerMsgESPNow(); });
 
   // Handling user input
   if (Serial.available() > 0)
@@ -925,11 +927,7 @@ void Base::sendTimeSyncMsg(std::set<int> ids, bool isResponse)
   msg.setType(isResponse ? TYPE_TIME_SYNC_RESPONSE : TYPE_TIME_SYNC);
   msg.setSenderID(StateManager::getDeviceID());
   msg.setState(StateManager::getCurState());
-  unsigned long ms = millis();
-  af1_time_sync_data d;
-  // memcpy(&d, &ms, sizeof(d));
-  d.ms = ms;
-  msg.setData((uint8_t *)&d);
+  setTimeSyncMsgTime(msg);
   // Set wrapper
   msg.setRecipients(ids);
 
@@ -972,6 +970,15 @@ void Base::sendAllTimeSyncMessages()
   {
     sendTimeSyncMsg({it->first});
   }
+}
+
+void Base::setTimeSyncMsgTime(AF1Msg &m)
+{
+  unsigned long ms = millis();
+  af1_time_sync_data d;
+  // memcpy(&d, &ms, sizeof(d));
+  d.ms = ms;
+  msg.setData((uint8_t *)&d);
 }
 
 // From WSEnt
