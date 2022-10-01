@@ -19,7 +19,7 @@
 
 #include "timeEvent.h"
 
-TECBArg::TECBArg(unsigned long c0, unsigned long s, unsigned long i, int c, int m) : curMs(c0), startMs(s), intervalMs(i), cbCnt(c), maxCbCnt(m) {}
+TECBArg::TECBArg(unsigned long c0, unsigned long s, unsigned long i, unsigned long c, unsigned long m) : curMs(c0), startMs(s), intervalMs(i), cbCnt(c), maxCbCnt(m) {}
 
 unsigned long TECBArg::getCurMs()
 {
@@ -36,12 +36,12 @@ unsigned long TECBArg::getIntervalMs()
   return intervalMs;
 }
 
-int TECBArg::getCbCnt()
+unsigned long TECBArg::getCbCnt()
 {
   return cbCnt;
 }
 
-int TECBArg::getMaxCbCnt()
+unsigned long TECBArg::getMaxCbCnt()
 {
   return maxCbCnt;
 }
@@ -55,13 +55,13 @@ TimeEvent::TimeEvent(unsigned long s, time_event_cb c, unsigned long i) : startM
   maxCbCnt = MAX_CB_CNT_INF;
 }
 
-TimeEvent::TimeEvent(unsigned long s, time_event_cb c, unsigned long i, int m) : startMs(s), intervalMs(i), cb(c), maxCbCnt(m), cbCnt(0) {}
+TimeEvent::TimeEvent(unsigned long s, time_event_cb c, unsigned long i, unsigned long m) : startMs(s), intervalMs(i), cb(c), maxCbCnt(m), cbCnt(0) {}
 
-TimeEvent::TimeEvent(unsigned long s, time_event_cb c, unsigned long i, int m, bool t) : startMs(s), intervalMs(i), cb(c), maxCbCnt(m), cbCnt(0), transitory(t) {}
+TimeEvent::TimeEvent(unsigned long s, time_event_cb c, unsigned long i, unsigned long m, bool t) : startMs(s), intervalMs(i), cb(c), maxCbCnt(m), cbCnt(0), transitory(t) {}
 
-TimeEvent::TimeEvent(unsigned long s, time_event_cb c, unsigned long i, int m, bool t, int c2) : startMs(s), intervalMs(i), cb(c), maxCbCnt(m), cbCnt(c2), transitory(t) {}
+TimeEvent::TimeEvent(unsigned long s, time_event_cb c, unsigned long i, unsigned long m, bool t, unsigned long c2) : startMs(s), intervalMs(i), cb(c), maxCbCnt(m), cbCnt(c2), transitory(t) {}
 
-TimeEvent::TimeEvent(unsigned long s, time_event_cb c, unsigned long i, int m, bool t, int c2, int m2) : startMs(s), intervalMs(i), cb(c), maxCbCnt(m), cbCnt(c2), transitory(t), mode(m2) {}
+TimeEvent::TimeEvent(unsigned long s, time_event_cb c, unsigned long i, unsigned long m, bool t, unsigned long c2, int m2) : startMs(s), intervalMs(i), cb(c), maxCbCnt(m), cbCnt(c2), transitory(t), mode(m2) {}
 
 unsigned long TimeEvent::getStartMs()
 {
@@ -93,22 +93,22 @@ void TimeEvent::setCb(time_event_cb c)
   cb = c;
 }
 
-int TimeEvent::getMaxCbCnt()
+unsigned long TimeEvent::getMaxCbCnt()
 {
   return maxCbCnt;
 }
 
-void TimeEvent::setMaxCbCnt(int m)
+void TimeEvent::setMaxCbCnt(unsigned long m)
 {
   maxCbCnt = m;
 }
 
-int TimeEvent::getCbCnt()
+unsigned long TimeEvent::getCbCnt()
 {
   return cbCnt;
 }
 
-void TimeEvent::setCbCnt(int c)
+void TimeEvent::setCbCnt(unsigned long c)
 {
   cbCnt = c;
 }

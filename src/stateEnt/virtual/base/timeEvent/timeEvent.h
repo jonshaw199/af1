@@ -27,16 +27,16 @@ class TECBArg
     const unsigned long curMs;
     const unsigned long startMs;
     const unsigned long intervalMs;
-    const int cbCnt;
-    const int maxCbCnt;
+    const unsigned long cbCnt;
+    const unsigned long maxCbCnt;
 
 public:
-    TECBArg(unsigned long c0, unsigned long s, unsigned long i, int c, int m);
+    TECBArg(unsigned long c0, unsigned long s, unsigned long i, unsigned long c, unsigned long m);
     unsigned long getCurMs();
     unsigned long getStartMs();
     unsigned long getIntervalMs();
-    int getCbCnt();
-    int getMaxCbCnt();
+    unsigned long getCbCnt();
+    unsigned long getMaxCbCnt();
 };
 
 typedef bool (*time_event_cb)(TECBArg a);
@@ -52,31 +52,31 @@ class TimeEvent
     unsigned long startMs;
     unsigned long intervalMs;
     time_event_cb cb;
-    int maxCbCnt;
+    unsigned long maxCbCnt;
     bool transitory;
     int mode = TE_MODE_ACTIVE;
-    int cbCnt;
+    unsigned long cbCnt;
 
 public:
     TimeEvent();
     TimeEvent(unsigned long s, time_event_cb c);
     TimeEvent(unsigned long s, time_event_cb c, unsigned long i);
-    TimeEvent(unsigned long s, time_event_cb c, unsigned long i, int m);
-    TimeEvent(unsigned long s, time_event_cb c, unsigned long i, int m, bool t);
-    TimeEvent(unsigned long s, time_event_cb c, unsigned long i, int m, bool t, int c2);
-    TimeEvent(unsigned long s, time_event_cb c, unsigned long i, int m, bool t, int c2, int m2);
+    TimeEvent(unsigned long s, time_event_cb c, unsigned long i, unsigned long m);
+    TimeEvent(unsigned long s, time_event_cb c, unsigned long i, unsigned long m, bool t);
+    TimeEvent(unsigned long s, time_event_cb c, unsigned long i, unsigned long m, bool t, unsigned long c2);
+    TimeEvent(unsigned long s, time_event_cb c, unsigned long i, unsigned long m, bool t, unsigned long c2, int m2);
     unsigned long getStartMs();
     void setStartMs(unsigned long m);
     unsigned long getIntervalMs();
     void setIntervalMs(unsigned long m);
-    int getMaxCbCnt();
-    void setMaxCbCnt(int m);
+    unsigned long getMaxCbCnt();
+    void setMaxCbCnt(unsigned long m);
     bool getTransitory();
     void setTransitory(bool t);
     time_event_cb getCb();
     void setCb(time_event_cb c);
-    int getCbCnt();
-    void setCbCnt(int c);
+    unsigned long getCbCnt();
+    void setCbCnt(unsigned long c);
 
     unsigned long getLastCbMs();
     unsigned long getNextCbMs();

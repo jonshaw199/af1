@@ -25,14 +25,14 @@
 class IECBArg
 {
   const unsigned long elapsedMs;
-  const int cbCnt;
-  const int maxCbCnt;
+  const unsigned long cbCnt;
+  const unsigned long maxCbCnt;
 
 public:
-  IECBArg(unsigned long e, int c, int m);
+  IECBArg(unsigned long e, unsigned long c, unsigned long m);
   unsigned long getElapsedMs();
-  int getCbCnt();
-  int getMaxCbCnt();
+  unsigned long getCbCnt();
+  unsigned long getMaxCbCnt();
 };
 
 typedef bool (*interval_event_cb)(IECBArg a);
@@ -47,26 +47,26 @@ class IntervalEvent
 {
   unsigned long intervalMs;
   interval_event_cb cb;
-  int maxCbCnt = MAX_CB_CNT_INF;
+  unsigned long maxCbCnt = MAX_CB_CNT_INF;
   bool transitory = false;
   int mode = IE_MODE_ACTIVE;
-  int cbCnt = 0;
+  unsigned long cbCnt = 0;
 
 public:
   IntervalEvent();
   IntervalEvent(unsigned long i, interval_event_cb c);
-  IntervalEvent(unsigned long i, interval_event_cb c, int m);
-  IntervalEvent(unsigned long i, interval_event_cb c, int m, bool t);
-  IntervalEvent(unsigned long i, interval_event_cb c, int m, bool t, int c2);
-  IntervalEvent(unsigned long i, interval_event_cb c, int m, bool t, int c2, int m2);
+  IntervalEvent(unsigned long i, interval_event_cb c, unsigned long m);
+  IntervalEvent(unsigned long i, interval_event_cb c, unsigned long m, bool t);
+  IntervalEvent(unsigned long i, interval_event_cb c, unsigned long m, bool t, unsigned long c2);
+  IntervalEvent(unsigned long i, interval_event_cb c, unsigned long m, bool t, unsigned long c2, int m2);
   unsigned long getIntervalMs();
   void setIntervalMs(unsigned long m);
-  int getMaxCbCnt();
-  void setMaxCbCnt(int c);
+  unsigned long getMaxCbCnt();
+  void setMaxCbCnt(unsigned long c);
   interval_event_cb getCb();
   void setCb(interval_event_cb c);
-  int getCbCnt();
-  void setCbCnt(int c);
+  unsigned long getCbCnt();
+  void setCbCnt(unsigned long c);
 
   unsigned long getLastCbMs();
   unsigned long getNextCbMs();

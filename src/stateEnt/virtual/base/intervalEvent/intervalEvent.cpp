@@ -19,19 +19,19 @@
 
 #include "intervalEvent.h"
 
-IECBArg::IECBArg(unsigned long e, int c, int m) : elapsedMs(e), cbCnt(c), maxCbCnt(m) {}
+IECBArg::IECBArg(unsigned long e, unsigned long c, unsigned long m) : elapsedMs(e), cbCnt(c), maxCbCnt(m) {}
 
 unsigned long IECBArg::getElapsedMs()
 {
   return elapsedMs;
 }
 
-int IECBArg::getCbCnt()
+unsigned long IECBArg::getCbCnt()
 {
   return cbCnt;
 }
 
-int IECBArg::getMaxCbCnt()
+unsigned long IECBArg::getMaxCbCnt()
 {
   return maxCbCnt;
 }
@@ -49,14 +49,14 @@ IntervalEvent::IntervalEvent(unsigned long i, interval_event_cb c)
   maxCbCnt = MAX_CB_CNT_INF;
 }
 
-IntervalEvent::IntervalEvent(unsigned long i, interval_event_cb c, int m)
+IntervalEvent::IntervalEvent(unsigned long i, interval_event_cb c, unsigned long m)
 {
   intervalMs = i;
   cb = c;
   maxCbCnt = m;
 }
 
-IntervalEvent::IntervalEvent(unsigned long i, interval_event_cb c, int m, bool t)
+IntervalEvent::IntervalEvent(unsigned long i, interval_event_cb c, unsigned long m, bool t)
 {
   intervalMs = i;
   cb = c;
@@ -64,10 +64,10 @@ IntervalEvent::IntervalEvent(unsigned long i, interval_event_cb c, int m, bool t
   transitory = t;
 }
 
-IntervalEvent::IntervalEvent(unsigned long i, interval_event_cb c, int m, bool t, int c2)
+IntervalEvent::IntervalEvent(unsigned long i, interval_event_cb c, unsigned long m, bool t, unsigned long c2)
     : intervalMs(i), cb(c), maxCbCnt(m), transitory(t), cbCnt(c2) {}
 
-IntervalEvent::IntervalEvent(unsigned long i, interval_event_cb c, int m, bool t, int c2, int m2)
+IntervalEvent::IntervalEvent(unsigned long i, interval_event_cb c, unsigned long m, bool t, unsigned long c2, int m2)
     : intervalMs(i), cb(c), maxCbCnt(m), transitory(t), cbCnt(c2), mode(m2) {}
 
 unsigned long IntervalEvent::getIntervalMs()
@@ -90,22 +90,22 @@ void IntervalEvent::setCb(interval_event_cb c)
   cb = c;
 }
 
-int IntervalEvent::getMaxCbCnt()
+unsigned long IntervalEvent::getMaxCbCnt()
 {
   return maxCbCnt;
 }
 
-void IntervalEvent::setMaxCbCnt(int c)
+void IntervalEvent::setMaxCbCnt(unsigned long c)
 {
   maxCbCnt = c;
 }
 
-int IntervalEvent::getCbCnt()
+unsigned long IntervalEvent::getCbCnt()
 {
   return cbCnt;
 }
 
-void IntervalEvent::setCbCnt(int c)
+void IntervalEvent::setCbCnt(unsigned long c)
 {
   cbCnt = c;
 }
