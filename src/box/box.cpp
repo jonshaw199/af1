@@ -44,7 +44,7 @@ void Box::handleMessages(msg_modifier mod = dummyModifier)
     m.unlock();
     mod(msg);
     msgHandler(msg);
-    handleMessages();
+    handleMessages(mod);
   }
   else
   {
