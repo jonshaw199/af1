@@ -929,7 +929,7 @@ void Base::sendTimeSyncMsg(std::set<int> ids, bool isResponse)
   msg.setType(isResponse ? TYPE_TIME_SYNC_RESPONSE : TYPE_TIME_SYNC);
   msg.setSenderID(StateManager::getDeviceID());
   msg.setState(StateManager::getCurState());
-  setTimeSyncMsgTime(msg);
+  setTimeSyncMsgTime(msg); // Not sure if this is really necessary; time is now set right before sending which is better
   // Set wrapper
   msg.setRecipients(ids);
 
