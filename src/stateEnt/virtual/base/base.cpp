@@ -71,7 +71,10 @@ void Base::setup()
 
 void Base::loop()
 {
-  StateManager::timeClient.update();
+  if (StateManager::timeClient.isTimeSet())
+  {
+    StateManager::timeClient.update();
+  }
 
   inbox.handleMessages([](AF1Msg &m)
                        { m.deserializeInnerMsgESPNow(); });
