@@ -64,6 +64,10 @@
 #define MS_PURG_DEFAULT 999
 #endif
 
+#ifndef MS_HANDSHAKE_INITIAL
+#define MS_HANDSHAKE_INITIAL 9000
+#endif
+
 #ifndef MS_HANDSHAKE_LOOP
 #define MS_HANDSHAKE_LOOP 30000
 #endif
