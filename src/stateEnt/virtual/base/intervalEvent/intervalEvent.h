@@ -60,9 +60,13 @@ public:
   IntervalEvent(unsigned long i, interval_event_cb c, int m, bool t, int c2);
   IntervalEvent(unsigned long i, interval_event_cb c, int m, bool t, int c2, int m2);
   unsigned long getIntervalMs();
+  void setIntervalMs(unsigned long m);
   int getMaxCbCnt();
+  void setMaxCbCnt(int c);
   interval_event_cb getCb();
+  void setCb(interval_event_cb c);
   int getCbCnt();
+  void setCbCnt(int c);
 
   unsigned long getLastCbMs();
   unsigned long getNextCbMs();

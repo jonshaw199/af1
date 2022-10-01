@@ -75,9 +75,19 @@ unsigned long IntervalEvent::getIntervalMs()
   return intervalMs;
 }
 
+void IntervalEvent::setIntervalMs(unsigned long m)
+{
+  intervalMs = m;
+}
+
 interval_event_cb IntervalEvent::getCb()
 {
   return cb;
+}
+
+void IntervalEvent::setCb(interval_event_cb c)
+{
+  cb = c;
 }
 
 int IntervalEvent::getMaxCbCnt()
@@ -85,9 +95,19 @@ int IntervalEvent::getMaxCbCnt()
   return maxCbCnt;
 }
 
+void IntervalEvent::setMaxCbCnt(int c)
+{
+  maxCbCnt = c;
+}
+
 int IntervalEvent::getCbCnt()
 {
   return cbCnt;
+}
+
+void IntervalEvent::setCbCnt(int c)
+{
+  cbCnt = c;
 }
 
 unsigned long IntervalEvent::getLastCbMs()

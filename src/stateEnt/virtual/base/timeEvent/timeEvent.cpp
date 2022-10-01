@@ -68,9 +68,19 @@ unsigned long TimeEvent::getStartMs()
   return startMs;
 }
 
+void TimeEvent::setStartMs(unsigned long s)
+{
+  startMs = s;
+}
+
 unsigned long TimeEvent::getIntervalMs()
 {
   return intervalMs;
+}
+
+void TimeEvent::setIntervalMs(unsigned long i)
+{
+  intervalMs = i;
 }
 
 time_event_cb TimeEvent::getCb()
@@ -78,9 +88,19 @@ time_event_cb TimeEvent::getCb()
   return cb;
 }
 
+void TimeEvent::setCb(time_event_cb c)
+{
+  cb = c;
+}
+
 int TimeEvent::getMaxCbCnt()
 {
   return maxCbCnt;
+}
+
+void TimeEvent::setMaxCbCnt(int m)
+{
+  maxCbCnt = m;
 }
 
 int TimeEvent::getCbCnt()
@@ -88,9 +108,19 @@ int TimeEvent::getCbCnt()
   return cbCnt;
 }
 
+void TimeEvent::setCbCnt(int c)
+{
+  cbCnt = c;
+}
+
 bool TimeEvent::getTransitory()
 {
   return transitory;
+}
+
+void TimeEvent::setTransitory(bool t)
+{
+  transitory = t;
 }
 
 // Unlike IntervalEvents, this is only used when an intervalMs is defined

@@ -39,17 +39,20 @@ WiFiClient Base::client;
 
 Base::Base()
 {
-  intervalEventMap.insert(std::pair<String, IntervalEvent>("Base_1", IntervalEvent(MS_HANDSHAKE_LOOP, [](IECBArg a)
-                                                                                   {
+  intervalEventMap.insert(std::pair<String, IntervalEvent>("Base_ESPHandshake", IntervalEvent(MS_HANDSHAKE_INITIAL, [](IECBArg a)
+                                                                                              {
     if (StateManager::getStateEntMap().at(StateManager::getCurState())->doScanForPeersESPNow()) {
       handleHandshakes();
     } else {
       Serial.println("ESPNow peer scan denied in current state");
     }
+
+    StateManager::getCurStateEnt()->getIntervalEventMap().at("Base_ESPHandshake").setIntervalMs(MS_HANDSHAKE_LOOP);
+
     return true; })));
 
-  intervalEventMap.insert(std::pair<String, IntervalEvent>("Base_2", IntervalEvent(MS_TIME_SYNC, [](IECBArg a)
-                                                                                   {
+  intervalEventMap.insert(std::pair<String, IntervalEvent>("Base_TimeSync", IntervalEvent(MS_TIME_SYNC, [](IECBArg a)
+                                                                                          {
     sendAllTimeSyncMessages();
     return true; })));
 }

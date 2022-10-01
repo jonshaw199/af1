@@ -66,11 +66,17 @@ public:
     TimeEvent(unsigned long s, time_event_cb c, unsigned long i, int m, bool t, int c2);
     TimeEvent(unsigned long s, time_event_cb c, unsigned long i, int m, bool t, int c2, int m2);
     unsigned long getStartMs();
+    void setStartMs(unsigned long m);
     unsigned long getIntervalMs();
+    void setIntervalMs(unsigned long m);
     int getMaxCbCnt();
+    void setMaxCbCnt(int m);
     bool getTransitory();
+    void setTransitory(bool t);
     time_event_cb getCb();
+    void setCb(time_event_cb c);
     int getCbCnt();
+    void setCbCnt(int c);
 
     unsigned long getLastCbMs();
     unsigned long getNextCbMs();
