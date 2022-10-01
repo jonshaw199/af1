@@ -74,7 +74,9 @@ void Base::loop()
                        { m.deserializeInnerMsgESPNow(); });
   outbox.handleMessages([](AF1Msg &m)
                         { 
-                          setTimeSyncMsgTime(m);
+                          if (m.getType() == TYPE_TIME_SYNC) {
+                            setTimeSyncMsgTime(m);
+                          }
                           m.serializeInnerMsgESPNow(); });
 
   // Handling user input
@@ -974,10 +976,8 @@ void Base::sendAllTimeSyncMessages()
 
 void Base::setTimeSyncMsgTime(AF1Msg &m)
 {
-  unsigned long ms = millis();
   af1_time_sync_data d;
-  // memcpy(&d, &ms, sizeof(d));
-  d.ms = ms;
+  d.ms = millis();
   msg.setData((uint8_t *)&d);
 }
 
