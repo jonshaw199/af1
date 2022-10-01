@@ -981,7 +981,7 @@ void Base::setTimeSyncMsgTime(AF1Msg &m)
 {
   af1_time_sync_data d;
   d.ms = millis();
-  msg.setData((uint8_t *)&d);
+  m.setData((uint8_t *)&d);
 }
 
 // From WSEnt
