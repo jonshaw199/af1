@@ -90,35 +90,35 @@ int AF1Msg::getSendCnt()
   return sendCnt;
 }
 
-void AF1Msg::setType(int t)
+void AF1Msg::setType(uint8_t t)
 {
   msg.type = t;
   json["type"] = t;
 }
 
-int AF1Msg::getType()
+uint8_t AF1Msg::getType()
 {
   return msg.type;
 }
 
-void AF1Msg::setState(int s)
+void AF1Msg::setState(uint8_t s)
 {
   msg.state = s;
   json["state"] = s;
 }
 
-int AF1Msg::getState()
+uint8_t AF1Msg::getState()
 {
   return msg.state;
 }
 
-void AF1Msg::setSenderID(int id)
+void AF1Msg::setSenderID(uint8_t id)
 {
   msg.senderID = id;
   json["senderID"] = id;
 }
 
-int AF1Msg::getSenderID()
+uint8_t AF1Msg::getSenderID()
 {
   return msg.senderID;
 }
@@ -133,13 +133,13 @@ int AF1Msg::getMaxRetries()
   return maxRetries;
 }
 
-void AF1Msg::setTransportType(int t)
+void AF1Msg::setTransportType(uint8_t t)
 {
   msg.transportType = t;
   json["transportType"] = t;
 }
 
-int AF1Msg::getTransportType()
+uint8_t AF1Msg::getTransportType()
 {
   return msg.transportType;
 }

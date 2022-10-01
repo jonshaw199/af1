@@ -51,10 +51,10 @@ typedef struct af1_msg
   // Calculated
   // int msgID;
   // Required, even for WS (single source of truth)
-  int type;
-  int senderID;
-  int state;
-  int transportType;
+  uint8_t type;
+  uint8_t senderID;
+  uint8_t state;
+  uint8_t transportType;
   // State dependent and only used for espnow
   uint8_t data[100];
 } af1_msg;
@@ -83,14 +83,14 @@ public:
   std::set<int> getRecipients();
   int incrementSendCnt();
   int getSendCnt();
-  void setType(int t);
-  int getType();
-  void setState(int s);
-  int getState();
-  void setSenderID(int id);
-  int getSenderID();
-  int getTransportType();
-  void setTransportType(int t);
+  void setType(uint8_t t);
+  uint8_t getType();
+  void setState(uint8_t s);
+  uint8_t getState();
+  void setSenderID(uint8_t id);
+  uint8_t getSenderID();
+  uint8_t getTransportType();
+  void setTransportType(uint8_t t);
   void setMaxRetries(int m);
   int getMaxRetries();
   void setData(uint8_t *d);
