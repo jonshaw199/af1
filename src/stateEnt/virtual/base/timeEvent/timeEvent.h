@@ -17,6 +17,8 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#include <Arduino.h>
+
 #ifndef STATEENT_BASE_TIMEEVENT_H_
 #define STATEENT_BASE_TIMEEVENT_H_
 
@@ -29,9 +31,11 @@ class TECBArg
     const unsigned long intervalMs;
     const unsigned long cbCnt;
     const unsigned long maxCbCnt;
+    String name;
 
 public:
-    TECBArg(unsigned long c0, unsigned long s, unsigned long i, unsigned long c, unsigned long m);
+    TECBArg(String n, unsigned long c0, unsigned long s, unsigned long i, unsigned long c, unsigned long m);
+    String getName();
     unsigned long getCurMs();
     unsigned long getStartMs();
     unsigned long getIntervalMs();
@@ -54,17 +58,18 @@ class TimeEvent
     time_event_cb cb;
     unsigned long maxCbCnt;
     bool transitory;
-    int mode = TE_MODE_ACTIVE;
+    uint8_t mode = TE_MODE_ACTIVE;
     unsigned long cbCnt;
+    String name;
 
 public:
     TimeEvent();
-    TimeEvent(unsigned long s, time_event_cb c);
-    TimeEvent(unsigned long s, time_event_cb c, unsigned long i);
-    TimeEvent(unsigned long s, time_event_cb c, unsigned long i, unsigned long m);
-    TimeEvent(unsigned long s, time_event_cb c, unsigned long i, unsigned long m, bool t);
-    TimeEvent(unsigned long s, time_event_cb c, unsigned long i, unsigned long m, bool t, unsigned long c2);
-    TimeEvent(unsigned long s, time_event_cb c, unsigned long i, unsigned long m, bool t, unsigned long c2, int m2);
+    TimeEvent(String n, unsigned long s, time_event_cb c);
+    TimeEvent(String n, unsigned long s, time_event_cb c, unsigned long i);
+    TimeEvent(String n, unsigned long s, time_event_cb c, unsigned long i, unsigned long m);
+    TimeEvent(String n, unsigned long s, time_event_cb c, unsigned long i, unsigned long m, bool t);
+    TimeEvent(String n, unsigned long s, time_event_cb c, unsigned long i, unsigned long m, bool t, unsigned long c2);
+    TimeEvent(String n, unsigned long s, time_event_cb c, unsigned long i, unsigned long m, bool t, unsigned long c2, uint8_t m2);
     unsigned long getStartMs();
     void setStartMs(unsigned long m);
     unsigned long getIntervalMs();
@@ -77,13 +82,15 @@ public:
     void setCb(time_event_cb c);
     unsigned long getCbCnt();
     void setCbCnt(unsigned long c);
+    void setName(String s);
+    String getName();
 
     unsigned long getLastCbMs();
     unsigned long getNextCbMs();
     bool isTime(unsigned long curMs);
     bool cbIfTimeAndActive(unsigned long curMs);
-    void setMode(int m);
-    int getMode();
+    void setMode(uint8_t m);
+    uint8_t getMode();
 
     void reset();
     void activate();

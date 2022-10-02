@@ -19,7 +19,7 @@
 
 #include "timeEvent.h"
 
-TECBArg::TECBArg(unsigned long c0, unsigned long s, unsigned long i, unsigned long c, unsigned long m) : curMs(c0), startMs(s), intervalMs(i), cbCnt(c), maxCbCnt(m) {}
+TECBArg::TECBArg(String n, unsigned long c0, unsigned long s, unsigned long i, unsigned long c, unsigned long m) : name(n), curMs(c0), startMs(s), intervalMs(i), cbCnt(c), maxCbCnt(m) {}
 
 unsigned long TECBArg::getCurMs()
 {
@@ -46,22 +46,27 @@ unsigned long TECBArg::getMaxCbCnt()
   return maxCbCnt;
 }
 
-TimeEvent::TimeEvent() : startMs(0), intervalMs(0), maxCbCnt(0), cbCnt(0) {}
+String TECBArg::getName()
+{
+  return name;
+}
 
-TimeEvent::TimeEvent(unsigned long s, time_event_cb c) : startMs(s), intervalMs(0), cb(c), maxCbCnt(1), cbCnt(0) {}
+TimeEvent::TimeEvent() : name(""), startMs(0), intervalMs(0), maxCbCnt(0), cbCnt(0) {}
 
-TimeEvent::TimeEvent(unsigned long s, time_event_cb c, unsigned long i) : startMs(s), intervalMs(i), cb(c), cbCnt(0)
+TimeEvent::TimeEvent(String n, unsigned long s, time_event_cb c) : name(n), startMs(s), intervalMs(0), cb(c), maxCbCnt(1), cbCnt(0) {}
+
+TimeEvent::TimeEvent(String n, unsigned long s, time_event_cb c, unsigned long i) : name(n), startMs(s), intervalMs(i), cb(c), cbCnt(0)
 {
   maxCbCnt = MAX_CB_CNT_INF;
 }
 
-TimeEvent::TimeEvent(unsigned long s, time_event_cb c, unsigned long i, unsigned long m) : startMs(s), intervalMs(i), cb(c), maxCbCnt(m), cbCnt(0) {}
+TimeEvent::TimeEvent(String n, unsigned long s, time_event_cb c, unsigned long i, unsigned long m) : name(n), startMs(s), intervalMs(i), cb(c), maxCbCnt(m), cbCnt(0) {}
 
-TimeEvent::TimeEvent(unsigned long s, time_event_cb c, unsigned long i, unsigned long m, bool t) : startMs(s), intervalMs(i), cb(c), maxCbCnt(m), cbCnt(0), transitory(t) {}
+TimeEvent::TimeEvent(String n, unsigned long s, time_event_cb c, unsigned long i, unsigned long m, bool t) : name(n), startMs(s), intervalMs(i), cb(c), maxCbCnt(m), cbCnt(0), transitory(t) {}
 
-TimeEvent::TimeEvent(unsigned long s, time_event_cb c, unsigned long i, unsigned long m, bool t, unsigned long c2) : startMs(s), intervalMs(i), cb(c), maxCbCnt(m), cbCnt(c2), transitory(t) {}
+TimeEvent::TimeEvent(String n, unsigned long s, time_event_cb c, unsigned long i, unsigned long m, bool t, unsigned long c2) : name(n), startMs(s), intervalMs(i), cb(c), maxCbCnt(m), cbCnt(c2), transitory(t) {}
 
-TimeEvent::TimeEvent(unsigned long s, time_event_cb c, unsigned long i, unsigned long m, bool t, unsigned long c2, int m2) : startMs(s), intervalMs(i), cb(c), maxCbCnt(m), cbCnt(c2), transitory(t), mode(m2) {}
+TimeEvent::TimeEvent(String n, unsigned long s, time_event_cb c, unsigned long i, unsigned long m, bool t, unsigned long c2, uint8_t m2) : name(n), startMs(s), intervalMs(i), cb(c), maxCbCnt(m), cbCnt(c2), transitory(t), mode(m2) {}
 
 unsigned long TimeEvent::getStartMs()
 {
@@ -113,6 +118,16 @@ void TimeEvent::setCbCnt(unsigned long c)
   cbCnt = c;
 }
 
+String TimeEvent::getName()
+{
+  return name;
+}
+
+void TimeEvent::setName(String n)
+{
+  name = n;
+}
+
 bool TimeEvent::getTransitory()
 {
   return transitory;
@@ -141,7 +156,7 @@ bool TimeEvent::isTime(unsigned long curMs)
 
 bool TimeEvent::cbIfTimeAndActive(unsigned long curMs)
 {
-  if (mode == TE_MODE_ACTIVE && isTime(curMs) && startMs && cb(TECBArg(curMs, startMs, intervalMs, cbCnt, maxCbCnt))) // Checking intervalMs here since default constructor doesnt even define cb; might need stub there to be safe
+  if (mode == TE_MODE_ACTIVE && isTime(curMs) && startMs && cb(TECBArg(name, curMs, startMs, intervalMs, cbCnt, maxCbCnt))) // Checking intervalMs here since default constructor doesnt even define cb; might need stub there to be safe
   {
     unsigned long elapsedMs = curMs - startMs;
     cbCnt = intervalMs ? elapsedMs / intervalMs : cbCnt + 1; // Setting cbCnt to expected value rather than just incrementing (unless intervalMs is 0)
@@ -150,12 +165,12 @@ bool TimeEvent::cbIfTimeAndActive(unsigned long curMs)
   return false;
 }
 
-void TimeEvent::setMode(int m)
+void TimeEvent::setMode(uint8_t m)
 {
   mode = m;
 }
 
-int TimeEvent::getMode()
+uint8_t TimeEvent::getMode()
 {
   return mode;
 }

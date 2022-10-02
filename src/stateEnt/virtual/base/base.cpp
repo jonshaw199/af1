@@ -39,8 +39,8 @@ WiFiClient Base::client;
 
 Base::Base()
 {
-  intervalEventMap.insert(std::pair<String, IntervalEvent>("Base_ESPHandshake", IntervalEvent(MS_HANDSHAKE_INITIAL, [](IECBArg a)
-                                                                                              {
+  intervalEventMap["Base_ESPHandshake"] = IntervalEvent("Base_ESPHandshake", MS_HANDSHAKE_INITIAL, [](IECBArg a)
+                                                        {
     if (StateManager::getStateEntMap().at(StateManager::getCurState())->doScanForPeersESPNow()) {
       handleHandshakes();
     } else {
@@ -49,12 +49,12 @@ Base::Base()
 
     StateManager::getCurStateEnt()->getIntervalEventMap().at("Base_ESPHandshake").setIntervalMs(MS_HANDSHAKE_LOOP);
 
-    return true; })));
+    return true; });
 
-  intervalEventMap.insert(std::pair<String, IntervalEvent>("Base_TimeSync", IntervalEvent(MS_TIME_SYNC, [](IECBArg a)
-                                                                                          {
+  intervalEventMap["Base_TimeSync"] = IntervalEvent("Base_TimeSync", MS_TIME_SYNC, [](IECBArg a)
+                                                    {
     sendAllTimeSyncMessages();
-    return true; })));
+    return true; });
 }
 
 void Base::setup()

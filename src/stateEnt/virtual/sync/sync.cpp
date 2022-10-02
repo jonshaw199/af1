@@ -45,13 +45,14 @@ void Sync::scheduleStart()
   unsigned long dif = getInstance()->startTime - millis();
   unsigned long intervalMs = dif + StateManager::getCurStateEnt()->getElapsedMs();
 
-  StateManager::getCurStateEnt()->getIntervalEventMap().insert(std::pair<String, IntervalEvent>("Sync_ScheduleStart", IntervalEvent(
-                                                                                                                          intervalMs, [](IECBArg a)
-                                                                                                                          {
-            Serial.println("Starting");
-            getInstance()->getSyncedTask()(a);
-            return true; },
-                                                                                                                          1, true)));
+  StateManager::getCurStateEnt()->getIntervalEventMap()["Sync_ScheduleStart"] = IntervalEvent(
+      "Sync_ScheduleStart",
+      intervalMs, [](IECBArg a)
+      {
+    Serial.println("Starting");
+    getInstance()->getSyncedTask()(a);
+    return true; },
+      1, true);
 }
 
 Sync::Sync()
@@ -60,31 +61,32 @@ Sync::Sync()
   // Default is blinking LED but overridden using setSyncedTask()
   syncedTask = [](STArg a)
   {
-    StateManager::getCurStateEnt()->getIntervalEventMap().insert(std::pair<String, IntervalEvent>("Sync_Start", IntervalEvent(
-                                                                                                                    300, [](IECBArg a)
-                                                                                                                    {
-            setBuiltinLED(a.getCbCnt() % 2);
-            return true; },
-                                                                                                                    -1, true, StateManager::getCurStateEnt()->getElapsedMs() / 300)));
+    StateManager::getCurStateEnt()->getIntervalEventMap()["Sync_Start"] = IntervalEvent(
+        "Sync_Start",
+        300, [](IECBArg a)
+        {
+      setBuiltinLED(a.getCbCnt() % 2);
+      return true; },
+        -1, true, StateManager::getCurStateEnt()->getElapsedMs() / 300);
   };
 
 #if MASTER
   // Schedule send start time
-  intervalEventMap.insert(std::pair<String, IntervalEvent>("Sync_SendStartTime", IntervalEvent(
-                                                                                     MS_TIME_SYNC_SCHEDULE_START, [](IECBArg a)
-                                                                                     {
-            getInstance()->startTime = millis() + (unsigned long)MS_TIME_SYNC_START;
-            
-            AF1Msg msg;
-            msg.setState(StateManager::getCurState());
-            msg.setType(TYPE_TIME_SYNC_START);
-            sync_data d;
-            d.ms = getInstance()->startTime;
-            msg.setData((uint8_t *)&d);
-            pushOutbox(msg);
-            scheduleStart();
-            return true; },
-                                                                                     1)));
+  intervalEventMap["Sync_SendStartTime"] = IntervalEvent(
+      "Sync_SendStartTime", MS_TIME_SYNC_SCHEDULE_START, [](IECBArg a)
+      {
+    getInstance()->startTime = millis() + (unsigned long)MS_TIME_SYNC_START;
+
+    AF1Msg msg;
+    msg.setState(StateManager::getCurState());
+    msg.setType(TYPE_TIME_SYNC_START);
+    sync_data d;
+    d.ms = getInstance()->startTime;
+    msg.setData((uint8_t *)&d);
+    pushOutbox(msg);
+    scheduleStart();
+    return true; },
+      1);
 #endif
 }
 

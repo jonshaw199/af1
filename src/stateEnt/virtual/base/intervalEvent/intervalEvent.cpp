@@ -19,7 +19,7 @@
 
 #include "intervalEvent.h"
 
-IECBArg::IECBArg(unsigned long e, unsigned long c, unsigned long m) : elapsedMs(e), cbCnt(c), maxCbCnt(m) {}
+IECBArg::IECBArg(String n, unsigned long e, unsigned long c, unsigned long m) : name(n), elapsedMs(e), cbCnt(c), maxCbCnt(m) {}
 
 unsigned long IECBArg::getElapsedMs()
 {
@@ -42,33 +42,36 @@ IntervalEvent::IntervalEvent()
   maxCbCnt = 0;
 }
 
-IntervalEvent::IntervalEvent(unsigned long i, interval_event_cb c)
+IntervalEvent::IntervalEvent(String n, unsigned long i, interval_event_cb c)
 {
+  name = n;
   intervalMs = i;
   cb = c;
   maxCbCnt = MAX_CB_CNT_INF;
 }
 
-IntervalEvent::IntervalEvent(unsigned long i, interval_event_cb c, unsigned long m)
+IntervalEvent::IntervalEvent(String n, unsigned long i, interval_event_cb c, unsigned long m)
 {
+  name = n;
   intervalMs = i;
   cb = c;
   maxCbCnt = m;
 }
 
-IntervalEvent::IntervalEvent(unsigned long i, interval_event_cb c, unsigned long m, bool t)
+IntervalEvent::IntervalEvent(String n, unsigned long i, interval_event_cb c, unsigned long m, bool t)
 {
+  name = n;
   intervalMs = i;
   cb = c;
   maxCbCnt = m;
   transitory = t;
 }
 
-IntervalEvent::IntervalEvent(unsigned long i, interval_event_cb c, unsigned long m, bool t, unsigned long c2)
-    : intervalMs(i), cb(c), maxCbCnt(m), transitory(t), cbCnt(c2) {}
+IntervalEvent::IntervalEvent(String n, unsigned long i, interval_event_cb c, unsigned long m, bool t, unsigned long c2)
+    : name(n), intervalMs(i), cb(c), maxCbCnt(m), transitory(t), cbCnt(c2) {}
 
-IntervalEvent::IntervalEvent(unsigned long i, interval_event_cb c, unsigned long m, bool t, unsigned long c2, int m2)
-    : intervalMs(i), cb(c), maxCbCnt(m), transitory(t), cbCnt(c2), mode(m2) {}
+IntervalEvent::IntervalEvent(String n, unsigned long i, interval_event_cb c, unsigned long m, bool t, unsigned long c2, uint8_t m2)
+    : name(n), intervalMs(i), cb(c), maxCbCnt(m), transitory(t), cbCnt(c2), mode(m2) {}
 
 unsigned long IntervalEvent::getIntervalMs()
 {
@@ -110,6 +113,16 @@ void IntervalEvent::setCbCnt(unsigned long c)
   cbCnt = c;
 }
 
+String IntervalEvent::getName()
+{
+  return name;
+}
+
+void IntervalEvent::setName(String n)
+{
+  name = n;
+}
+
 unsigned long IntervalEvent::getLastCbMs()
 {
   return intervalMs * cbCnt;
@@ -132,7 +145,7 @@ bool IntervalEvent::isTime(unsigned long elapsedMs)
 
 bool IntervalEvent::cbIfTimeAndActive(unsigned long elapsedMs)
 {
-  if (mode == IE_MODE_ACTIVE && isTime(elapsedMs) && intervalMs && cb(IECBArg(elapsedMs, cbCnt, maxCbCnt))) // Checking intervalMs here since default constructor doesnt even define cb; might need stub there to be safe
+  if (mode == IE_MODE_ACTIVE && isTime(elapsedMs) && intervalMs && cb(IECBArg(name, elapsedMs, cbCnt, maxCbCnt))) // Checking intervalMs here since default constructor doesnt even define cb; might need stub there to be safe
   {
     cbCnt = elapsedMs / intervalMs; // Setting cbCnt to expected value rather than just incrementing
     return true;
@@ -140,12 +153,12 @@ bool IntervalEvent::cbIfTimeAndActive(unsigned long elapsedMs)
   return false;
 }
 
-void IntervalEvent::setMode(int m)
+void IntervalEvent::setMode(uint8_t m)
 {
   mode = m;
 }
 
-int IntervalEvent::getMode()
+uint8_t IntervalEvent::getMode()
 {
   return mode;
 }

@@ -20,6 +20,8 @@
 #ifndef STATEENT_BASE_INTERVALEVENT_H_
 #define STATEENT_BASE_INTERVALEVENT_H_
 
+#include <Arduino.h>
+
 #define MAX_CB_CNT_INF -1;
 
 class IECBArg
@@ -27,9 +29,11 @@ class IECBArg
   const unsigned long elapsedMs;
   const unsigned long cbCnt;
   const unsigned long maxCbCnt;
+  const String name;
 
 public:
-  IECBArg(unsigned long e, unsigned long c, unsigned long m);
+  IECBArg(String n, unsigned long e, unsigned long c, unsigned long m);
+  String getName();
   unsigned long getElapsedMs();
   unsigned long getCbCnt();
   unsigned long getMaxCbCnt();
@@ -49,16 +53,17 @@ class IntervalEvent
   interval_event_cb cb;
   unsigned long maxCbCnt = MAX_CB_CNT_INF;
   bool transitory = false;
-  int mode = IE_MODE_ACTIVE;
+  uint8_t mode = IE_MODE_ACTIVE;
   unsigned long cbCnt = 0;
+  String name = "";
 
 public:
   IntervalEvent();
-  IntervalEvent(unsigned long i, interval_event_cb c);
-  IntervalEvent(unsigned long i, interval_event_cb c, unsigned long m);
-  IntervalEvent(unsigned long i, interval_event_cb c, unsigned long m, bool t);
-  IntervalEvent(unsigned long i, interval_event_cb c, unsigned long m, bool t, unsigned long c2);
-  IntervalEvent(unsigned long i, interval_event_cb c, unsigned long m, bool t, unsigned long c2, int m2);
+  IntervalEvent(String n, unsigned long i, interval_event_cb c);
+  IntervalEvent(String n, unsigned long i, interval_event_cb c, unsigned long m);
+  IntervalEvent(String n, unsigned long i, interval_event_cb c, unsigned long m, bool t);
+  IntervalEvent(String n, unsigned long i, interval_event_cb c, unsigned long m, bool t, unsigned long c2);
+  IntervalEvent(String n, unsigned long i, interval_event_cb c, unsigned long m, bool t, unsigned long c2, uint8_t m2);
   unsigned long getIntervalMs();
   void setIntervalMs(unsigned long m);
   unsigned long getMaxCbCnt();
@@ -67,13 +72,15 @@ public:
   void setCb(interval_event_cb c);
   unsigned long getCbCnt();
   void setCbCnt(unsigned long c);
+  String getName();
+  void setName(String s);
 
   unsigned long getLastCbMs();
   unsigned long getNextCbMs();
   bool isTime(unsigned long elapsedMs);
   bool cbIfTimeAndActive(unsigned long elapsedMs);
-  void setMode(int m);
-  int getMode();
+  void setMode(uint8_t m);
+  uint8_t getMode();
   bool getTransitory();
 
   void reset();
