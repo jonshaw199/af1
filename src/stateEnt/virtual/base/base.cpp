@@ -39,7 +39,7 @@ WiFiClient Base::client;
 
 Base::Base()
 {
-  intervalEventMap["Base_ESPHandshake"] = IntervalEvent("Base_ESPHandshake", MS_HANDSHAKE_INITIAL, [](IECBArg a)
+  intervalEventMap["Base_ESPHandshake"] = IntervalEvent("Base_ESPHandshake", MS_HANDSHAKE_LOOP, [](IECBArg a)
                                                         {
     if (StateManager::getStateEntMap().at(StateManager::getCurState())->doScanForPeersESPNow()) {
       handleHandshakes();
@@ -47,7 +47,7 @@ Base::Base()
       Serial.println("ESPNow peer scan denied in current state");
     }
 
-    StateManager::getCurStateEnt()->getIntervalEventMap().at("Base_ESPHandshake").setIntervalMs(MS_HANDSHAKE_LOOP);
+    // StateManager::getCurStateEnt()->getIntervalEventMap().at("Base_ESPHandshake").setIntervalMs(MS_HANDSHAKE_LOOP);
 
     return true; });
 
