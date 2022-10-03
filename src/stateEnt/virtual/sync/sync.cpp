@@ -50,7 +50,7 @@ void Sync::scheduleStart()
       intervalMs, [](IECBArg a)
       {
     Serial.println("Starting");
-    getInstance()->getSyncedTask()(a);
+    static_cast<Sync *>(StateManager::getCurStateEnt())->doSynced(a);
     return true; },
       1, true);
 }
@@ -58,17 +58,6 @@ void Sync::scheduleStart()
 Sync::Sync()
 {
   startTime = 0;
-  // Default is blinking LED but overridden using setSyncedTask()
-  syncedTask = [](STArg a)
-  {
-    StateManager::getCurStateEnt()->getIntervalEventMap()["Sync_Start"] = IntervalEvent(
-        "Sync_Start",
-        300, [](IECBArg a)
-        {
-      setBuiltinLED(a.getCbCnt() % 2);
-      return true; },
-        -1, true, StateManager::getCurStateEnt()->getElapsedMs() / 300);
-  };
 
 #if MASTER
   // Schedule send start time
@@ -88,6 +77,17 @@ Sync::Sync()
     return true; },
       1);
 #endif
+}
+
+void Sync::doSynced(STArg a)
+{
+  StateManager::getCurStateEnt()->getIntervalEventMap()["Sync_Start"] = IntervalEvent(
+      "Sync_Start",
+      300, [](IECBArg a)
+      {
+      setBuiltinLED(a.getCbCnt() % 2);
+      return true; },
+      -1, true, StateManager::getCurStateEnt()->getElapsedMs() / 300);
 }
 
 msg_handler Sync::getInboxHandler()
@@ -120,14 +120,4 @@ void Sync::preStateChange(int s)
 {
   Base::preStateChange(s);
   setBuiltinLED(0);
-}
-
-void Sync::setSyncedTask(synced_task t)
-{
-  syncedTask = t;
-}
-
-synced_task Sync::getSyncedTask()
-{
-  return syncedTask;
 }

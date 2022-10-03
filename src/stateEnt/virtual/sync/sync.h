@@ -36,24 +36,19 @@ public:
   IECBArg getIECBArg();
 };
 
-typedef void (*synced_task)(STArg a);
-
 class Sync : public Base
 {
   unsigned long startTime;
-  synced_task syncedTask;
   static void scheduleStart();
 
 protected:
-  void setSyncedTask(synced_task t);
-
 public:
   Sync();
   static Sync *getInstance();
+  virtual void doSynced(STArg a);
   msg_handler getInboxHandler();
   bool doScanForPeersESPNow();
   void preStateChange(int s);
-  synced_task getSyncedTask();
 };
 
 #endif
