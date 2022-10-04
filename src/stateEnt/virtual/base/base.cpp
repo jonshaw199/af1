@@ -772,10 +772,6 @@ void Base::sendMsgESPNow(AF1Msg msg)
     af1_msg m = msg.getInnerMsg();
     esp_err_t result = esp_now_send(StateManager::getPeerInfoMap()[*it].espnowPeerInfo.peer_addr, (uint8_t *)&m, sizeof(m));
     // Serial.print("Send Status: ");
-    if (result != ESP_OK)
-    {
-      Serial.println("Send failed to device ID " + String(*it) + "; reason: ");
-    }
     if (result == ESP_OK)
     {
       // Serial.println("Success");
