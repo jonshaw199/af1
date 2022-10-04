@@ -56,7 +56,7 @@ typedef struct af1_msg
   uint8_t state;
   uint8_t transportType;
   // State dependent and only used for espnow
-  uint8_t data[250];
+  uint8_t data[225];
 } af1_msg;
 
 typedef struct af1_time_sync_data
