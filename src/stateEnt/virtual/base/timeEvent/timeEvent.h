@@ -57,7 +57,7 @@ class TimeEvent
     unsigned long intervalMs;
     time_event_cb cb;
     unsigned long maxCbCnt;
-    bool transitory;
+    bool temporary;
     uint8_t mode = TE_MODE_ACTIVE;
     unsigned long cbCnt;
     String name;
@@ -76,8 +76,8 @@ public:
     void setIntervalMs(unsigned long m);
     unsigned long getMaxCbCnt();
     void setMaxCbCnt(unsigned long m);
-    bool getTransitory();
-    void setTransitory(bool t);
+    bool getTemporary();
+    void setTemporary(bool t);
     time_event_cb getCb();
     void setCb(time_event_cb c);
     unsigned long getCbCnt();

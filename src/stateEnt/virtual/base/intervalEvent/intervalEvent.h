@@ -52,7 +52,7 @@ class IntervalEvent
   unsigned long intervalMs;
   interval_event_cb cb;
   unsigned long maxCbCnt = MAX_CB_CNT_INF;
-  bool transitory = false;
+  bool temporary = false;
   uint8_t mode = IE_MODE_ACTIVE;
   unsigned long cbCnt = 0;
   String name = "";
@@ -81,7 +81,7 @@ public:
   bool cbIfTimeAndActive(unsigned long elapsedMs);
   void setMode(uint8_t m);
   uint8_t getMode();
-  bool getTransitory();
+  bool getTemporary();
 
   void reset();
   void activate();

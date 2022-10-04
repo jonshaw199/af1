@@ -64,14 +64,14 @@ IntervalEvent::IntervalEvent(String n, unsigned long i, interval_event_cb c, uns
   intervalMs = i;
   cb = c;
   maxCbCnt = m;
-  transitory = t;
+  temporary = t;
 }
 
 IntervalEvent::IntervalEvent(String n, unsigned long i, interval_event_cb c, unsigned long m, bool t, unsigned long c2)
-    : name(n), intervalMs(i), cb(c), maxCbCnt(m), transitory(t), cbCnt(c2) {}
+    : name(n), intervalMs(i), cb(c), maxCbCnt(m), temporary(t), cbCnt(c2) {}
 
 IntervalEvent::IntervalEvent(String n, unsigned long i, interval_event_cb c, unsigned long m, bool t, unsigned long c2, uint8_t m2)
-    : name(n), intervalMs(i), cb(c), maxCbCnt(m), transitory(t), cbCnt(c2), mode(m2) {}
+    : name(n), intervalMs(i), cb(c), maxCbCnt(m), temporary(t), cbCnt(c2), mode(m2) {}
 
 unsigned long IntervalEvent::getIntervalMs()
 {
@@ -133,9 +133,9 @@ unsigned long IntervalEvent::getNextCbMs()
   return getLastCbMs() + intervalMs;
 }
 
-bool IntervalEvent::getTransitory()
+bool IntervalEvent::getTemporary()
 {
-  return transitory;
+  return temporary;
 }
 
 bool IntervalEvent::isTime(unsigned long elapsedMs)

@@ -253,14 +253,14 @@ void Base::deactivateIntervalEvents()
   for (std::map<String, IntervalEvent>::iterator it = intervalEventMap.begin(); it != intervalEventMap.end(); it++)
   {
     intervalEventMap[it->first].deactivate();
-    if (intervalEventMap[it->first].getTransitory())
+    if (intervalEventMap[it->first].getTemporary())
     {
       delKeys.push_back(it->first);
     }
   }
   for (String s : delKeys)
   {
-    Serial.print("Deleting transitory IE ");
+    Serial.print("Deleting temporary IE ");
     Serial.println(s);
     intervalEventMap.erase(s);
   }
@@ -288,14 +288,14 @@ void Base::deactivateTimeEvents()
   for (std::map<String, TimeEvent>::iterator it = timeEventMap.begin(); it != timeEventMap.end(); it++)
   {
     timeEventMap[it->first].deactivate();
-    if (timeEventMap[it->first].getTransitory())
+    if (timeEventMap[it->first].getTemporary())
     {
       delKeys.push_back(it->first);
     }
   }
   for (String s : delKeys)
   {
-    Serial.print("Deleting transitory TE ");
+    Serial.print("Deleting temporary TE ");
     Serial.println(s);
     timeEventMap.erase(s);
   }

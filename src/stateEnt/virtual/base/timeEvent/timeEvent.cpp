@@ -62,11 +62,11 @@ TimeEvent::TimeEvent(String n, unsigned long s, time_event_cb c, unsigned long i
 
 TimeEvent::TimeEvent(String n, unsigned long s, time_event_cb c, unsigned long i, unsigned long m) : name(n), startMs(s), intervalMs(i), cb(c), maxCbCnt(m), cbCnt(0) {}
 
-TimeEvent::TimeEvent(String n, unsigned long s, time_event_cb c, unsigned long i, unsigned long m, bool t) : name(n), startMs(s), intervalMs(i), cb(c), maxCbCnt(m), cbCnt(0), transitory(t) {}
+TimeEvent::TimeEvent(String n, unsigned long s, time_event_cb c, unsigned long i, unsigned long m, bool t) : name(n), startMs(s), intervalMs(i), cb(c), maxCbCnt(m), cbCnt(0), temporary(t) {}
 
-TimeEvent::TimeEvent(String n, unsigned long s, time_event_cb c, unsigned long i, unsigned long m, bool t, unsigned long c2) : name(n), startMs(s), intervalMs(i), cb(c), maxCbCnt(m), cbCnt(c2), transitory(t) {}
+TimeEvent::TimeEvent(String n, unsigned long s, time_event_cb c, unsigned long i, unsigned long m, bool t, unsigned long c2) : name(n), startMs(s), intervalMs(i), cb(c), maxCbCnt(m), cbCnt(c2), temporary(t) {}
 
-TimeEvent::TimeEvent(String n, unsigned long s, time_event_cb c, unsigned long i, unsigned long m, bool t, unsigned long c2, uint8_t m2) : name(n), startMs(s), intervalMs(i), cb(c), maxCbCnt(m), cbCnt(c2), transitory(t), mode(m2) {}
+TimeEvent::TimeEvent(String n, unsigned long s, time_event_cb c, unsigned long i, unsigned long m, bool t, unsigned long c2, uint8_t m2) : name(n), startMs(s), intervalMs(i), cb(c), maxCbCnt(m), cbCnt(c2), temporary(t), mode(m2) {}
 
 unsigned long TimeEvent::getStartMs()
 {
@@ -128,14 +128,14 @@ void TimeEvent::setName(String n)
   name = n;
 }
 
-bool TimeEvent::getTransitory()
+bool TimeEvent::getTemporary()
 {
-  return transitory;
+  return temporary;
 }
 
-void TimeEvent::setTransitory(bool t)
+void TimeEvent::setTemporary(bool t)
 {
-  transitory = t;
+  temporary = t;
 }
 
 // Unlike IntervalEvents, this is only used when an intervalMs is defined
