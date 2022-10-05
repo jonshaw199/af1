@@ -110,22 +110,6 @@ protected:
   static HTTPClient httpClient;
   static WiFiMulti wifiMulti;
 
-public:
-  Base();
-  // Virtual
-  virtual void setup();
-  virtual void loop();
-  virtual bool validateStateChange(int s);
-  virtual void preStateChange(int s);
-  virtual msg_handler getInboxHandler();
-  virtual msg_handler getOutboxHandler();
-  virtual String getName();
-  virtual void serializeESPNow(AF1Msg &m);
-  virtual void deserializeESPNow(AF1Msg &m);
-  virtual bool doScanForPeersESPNow();
-  virtual bool doConnectToWSServer();
-  virtual void doSynced();
-  virtual bool doSync();
   // Interval Events
   unsigned long getElapsedMs();
   void resetIntervalEvents();
@@ -135,25 +119,10 @@ public:
   void activateTimeEvents();
   void deactivateTimeEvents();
 
-  void setWSClientInfo(ws_client_info w);
-  ws_client_info getWSClientInfo();
-
   // Wifi
   static bool broadcastAP();
-  static String macToString(const uint8_t *m);
-  static void printMac(const uint8_t *m);
-  static uint8_t *getMacSTA();
-  static uint8_t *getMacAP();
   static void connectToWifi();
-  // Inbox/Outbox
-  static const TSQueue<AF1Msg> &getOutbox();
-  static const TSQueue<AF1Msg> &getInbox();
-  static void handleInboxMessages();
-  static void handleOutboxMessages();
-  static void setInboxMsgHandler(msg_handler h);
-  static void setOutboxMsgHandler(msg_handler h);
-  static void pushOutbox(AF1Msg m);
-  static void pushInbox(AF1Msg m);
+
   // ESP-Now
   static int8_t scanForPeersESPNow();
   static void connectToPeers();
@@ -170,11 +139,44 @@ public:
   static void receiveTimeSyncMsg(AF1Msg m);
   static void sendAllTimeSyncMessages();
   static void setTimeSyncMsgTime(AF1Msg &m);
+
+  // Websocket
+  static void sendMsgWS(AF1Msg msg);
+  static void connectToWS();
+
+public:
+  Base();
+  // Virtual
+  virtual void setup();
+  virtual void loop();
+  virtual bool validateStateChange(int s);
+  virtual void preStateChange(int s);
+  virtual msg_handler getInboxHandler();
+  virtual msg_handler getOutboxHandler();
+  virtual String getName();
+  virtual void serializeESPNow(AF1Msg &m);
+  virtual void deserializeESPNow(AF1Msg &m);
+  virtual bool doScanForPeersESPNow();
+  virtual bool doConnectToWSServer();
+  virtual void doSynced();
+  virtual bool doSync();
+
+  void setWSClientInfo(ws_client_info w);
+  ws_client_info getWSClientInfo();
+
+  // Wifi
+  static String macToString(const uint8_t *m);
+  static void printMac(const uint8_t *m);
+  static uint8_t *getMacSTA();
+  static uint8_t *getMacAP();
+  // Inbox/Outbox
+  static void setInboxMsgHandler(msg_handler h);
+  static void setOutboxMsgHandler(msg_handler h);
+  static void pushOutbox(AF1Msg m);
+  static void pushInbox(AF1Msg m);
   // Websocket
   static WebSocketClient webSocketClient;
   static WiFiClient client; // Use WiFiClient class to create TCP connections
-  static void sendMsgWS(AF1Msg msg);
-  static void connectToWS();
   // HTTP
   static DynamicJsonDocument httpFetch(String url);
   static DynamicJsonDocument httpPost(String url, DynamicJsonDocument body);
@@ -183,7 +185,7 @@ public:
   std::map<String, IntervalEvent> &getIntervalEventMap();
   std::map<String, TimeEvent> &getTimeEventMap();
   unsigned long getStartMs();
-
+  // Sync
   static void scheduleSyncStart();
   void setSyncStartTime(unsigned long s);
   unsigned long getSyncStartTime();

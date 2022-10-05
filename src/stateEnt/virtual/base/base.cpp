@@ -450,16 +450,6 @@ void Base::connectToWifi()
   From MessageHandler
 */
 
-const TSQueue<AF1Msg> &Base::getOutbox()
-{
-  return outbox;
-}
-
-const TSQueue<AF1Msg> &Base::getInbox()
-{
-  return inbox;
-}
-
 void Base::setInboxMsgHandler(msg_handler h)
 {
   inbox.setMsgHandler(h);
