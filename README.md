@@ -46,6 +46,7 @@ public:
     virtual void deserializeESPNow(AF1Msg &m);
     virtual bool doScanForPeersESPNow();
     virtual bool doConnectToWSServer();
+    virtual bool doSync();
     virtual String getName();
   */
 
@@ -114,5 +115,4 @@ public:
     }, /*intervalMs*/3000 /*, maxCbCnt */)));
   }
 }
-
 ```
