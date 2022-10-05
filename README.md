@@ -36,6 +36,7 @@ class Sandbox1 : public Base
 {
 public:
   /*
+    // Virtual methods
     virtual void setup();
     virtual void loop();
     virtual bool validateStateChange(int s);
@@ -49,6 +50,10 @@ public:
     virtual bool doSync();
     virtual void doSynced();
     virtual String getName();
+    // Other commonly used methods
+    void setWSClientInfo(ws_client_info w);
+    static DynamicJsonDocument httpFetch(String url);
+    static DynamicJsonDocument httpPost(String url, DynamicJsonDocument body);
   */
 
   String getName()
