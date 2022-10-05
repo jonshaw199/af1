@@ -80,12 +80,28 @@ public:
   }
 };
 
+typedef struct sync_data
+{
+  unsigned long ms;
+} sync_data;
+
+class STArg
+{
+  const IECBArg iecbArg;
+
+public:
+  STArg(IECBArg a);
+  IECBArg getIECBArg();
+};
+
 class Base
 {
   static void onESPNowDataSent(const uint8_t *mac_addr, esp_now_send_status_t status);
   static void onESPNowDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len);
 
   ws_client_info wsClientInfo;
+
+  unsigned long syncStartTime;
 
 protected:
   unsigned long startMs;
@@ -117,6 +133,8 @@ public:
   virtual void deserializeESPNow(AF1Msg &m);
   virtual bool doScanForPeersESPNow();
   virtual bool doConnectToWSServer();
+  virtual void doSynced(STArg a);
+  virtual bool doSync();
   // Interval Events
   unsigned long getElapsedMs();
   void resetIntervalEvents();
@@ -174,6 +192,10 @@ public:
   std::map<String, IntervalEvent> &getIntervalEventMap();
   std::map<String, TimeEvent> &getTimeEventMap();
   unsigned long getStartMs();
+
+  static void scheduleSyncStart();
+  void setSyncStartTime(unsigned long s);
+  unsigned long getSyncStartTime();
 };
 
 #endif // STATEENT_VIRTUAL_BASE_BASE_H_

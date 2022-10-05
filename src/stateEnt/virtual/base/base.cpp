@@ -37,6 +37,13 @@ WebSocketClient Base::webSocketClient;
 // Use WiFiClient class to create TCP connections
 WiFiClient Base::client;
 
+STArg::STArg(IECBArg a) : iecbArg(a) {}
+
+IECBArg STArg::getIECBArg()
+{
+  return iecbArg;
+}
+
 Base::Base()
 {
   intervalEventMap["Base_ESPHandshake"] = IntervalEvent("Base_ESPHandshake", MS_HANDSHAKE_LOOP, [](IECBArg a)
@@ -55,6 +62,28 @@ Base::Base()
                                                     {
     sendAllTimeSyncMessages();
     return true; });
+
+  syncStartTime = 0;
+
+#if MASTER
+  intervalEventMap["Base_SendSyncStartTime"] = IntervalEvent(
+      "Base_SendSyncStartTime", MS_TIME_SYNC_SCHEDULE_START, [](IECBArg a)
+      {
+        if (StateManager::getCurStateEnt()->doSync()) {
+          StateManager::getCurStateEnt()->setSyncStartTime(millis() + (unsigned long)MS_TIME_SYNC_START);
+
+          AF1Msg msg;
+          msg.setState(StateManager::getCurState());
+          msg.setType(TYPE_TIME_SYNC_START);
+          sync_data d;
+          d.ms = StateManager::getCurStateEnt()->getSyncStartTime();
+          msg.setData((uint8_t *)&d);
+          pushOutbox(msg);
+          scheduleSyncStart();
+        }
+        return true; },
+      1);
+#endif
 }
 
 void Base::setup()
@@ -142,6 +171,11 @@ void Base::preStateChange(int s)
 #if MASTER
   sendStateChangeMessages(s);
 #endif
+
+  if (doSync())
+  {
+    setBuiltinLED(0);
+  }
 }
 
 unsigned long Base::getElapsedMs()
@@ -183,6 +217,16 @@ void Base::handleInboxMsg(AF1Msg m)
   case TYPE_TIME_SYNC_RESPONSE:
     Serial.println("Time sync response message in inbox");
     receiveTimeSyncMsg(m);
+    break;
+  case TYPE_TIME_SYNC_START:
+    sync_data d;
+    memcpy(&d, m.getData(), sizeof(d));
+    Serial.print("Received time: ");
+    Serial.println(d.ms);
+    StateManager::getCurStateEnt()->setSyncStartTime(StateManager::convertTime(m.getSenderID(), d.ms));
+    Serial.print("Converted time: ");
+    Serial.println(StateManager::getCurStateEnt()->getSyncStartTime());
+    scheduleSyncStart();
     break;
   }
 
@@ -829,7 +873,7 @@ void Base::deserializeESPNow(AF1Msg &m)
 
 bool Base::doScanForPeersESPNow()
 {
-  return true;
+  return !doSync();
 }
 
 void Base::sendStateChangeMessages(int s)
@@ -1091,7 +1135,7 @@ void Base::connectToWS()
 
 bool Base::doConnectToWSServer()
 {
-  return true;
+  return !doSync();
 }
 
 std::map<String, IntervalEvent> &Base::getIntervalEventMap()
@@ -1107,4 +1151,55 @@ std::map<String, TimeEvent> &Base::getTimeEventMap()
 unsigned long Base::getStartMs()
 {
   return startMs;
+}
+
+void Base::scheduleSyncStart()
+{
+  unsigned long s = StateManager::getCurStateEnt()->getSyncStartTime();
+
+  Serial.println("Scheduling");
+  Serial.print("Current time: ");
+  Serial.print(millis());
+  Serial.print("; Start time: ");
+  Serial.print(s);
+  Serial.print("; diff: ");
+  Serial.println(s - millis());
+
+  unsigned long dif = s - millis();
+  unsigned long intervalMs = dif + StateManager::getCurStateEnt()->getElapsedMs();
+
+  StateManager::getCurStateEnt()->getIntervalEventMap()["Sync_ScheduleSyncStart"] = IntervalEvent(
+      "Sync_ScheduleSyncStart",
+      intervalMs, [](IECBArg a)
+      {
+    Serial.println("Starting");
+    StateManager::getCurStateEnt()->doSynced(a);
+    return true; },
+      1, true);
+}
+
+void Base::doSynced(STArg a)
+{
+  StateManager::getCurStateEnt()->getIntervalEventMap()["Base_SyncStart"] = IntervalEvent(
+      "Base_SyncStart",
+      300, [](IECBArg a)
+      {
+      setBuiltinLED(a.getCbCnt() % 2);
+      return true; },
+      -1, true, StateManager::getCurStateEnt()->getElapsedMs() / 300);
+}
+
+void Base::setSyncStartTime(unsigned long s)
+{
+  syncStartTime = s;
+}
+
+unsigned long Base::getSyncStartTime()
+{
+  return syncStartTime;
+}
+
+bool Base::doSync()
+{
+  return false;
 }
