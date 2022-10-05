@@ -37,13 +37,6 @@ WebSocketClient Base::webSocketClient;
 // Use WiFiClient class to create TCP connections
 WiFiClient Base::client;
 
-STArg::STArg(IECBArg a) : iecbArg(a) {}
-
-IECBArg STArg::getIECBArg()
-{
-  return iecbArg;
-}
-
 Base::Base()
 {
   intervalEventMap["Base_ESPHandshake"] = IntervalEvent("Base_ESPHandshake", MS_HANDSHAKE_LOOP, [](IECBArg a)
@@ -1173,12 +1166,12 @@ void Base::scheduleSyncStart()
       intervalMs, [](IECBArg a)
       {
     Serial.println("Starting");
-    StateManager::getCurStateEnt()->doSynced(a);
+    StateManager::getCurStateEnt()->doSynced();
     return true; },
       1, true);
 }
 
-void Base::doSynced(STArg a)
+void Base::doSynced()
 {
   StateManager::getCurStateEnt()->getIntervalEventMap()["Base_SyncStart"] = IntervalEvent(
       "Base_SyncStart",

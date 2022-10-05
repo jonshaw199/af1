@@ -85,15 +85,6 @@ typedef struct sync_data
   unsigned long ms;
 } sync_data;
 
-class STArg
-{
-  const IECBArg iecbArg;
-
-public:
-  STArg(IECBArg a);
-  IECBArg getIECBArg();
-};
-
 class Base
 {
   static void onESPNowDataSent(const uint8_t *mac_addr, esp_now_send_status_t status);
@@ -133,7 +124,7 @@ public:
   virtual void deserializeESPNow(AF1Msg &m);
   virtual bool doScanForPeersESPNow();
   virtual bool doConnectToWSServer();
-  virtual void doSynced(STArg a);
+  virtual void doSynced();
   virtual bool doSync();
   // Interval Events
   unsigned long getElapsedMs();
