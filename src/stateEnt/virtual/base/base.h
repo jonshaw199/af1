@@ -118,11 +118,9 @@ protected:
   void resetTimeEvents();
   void activateTimeEvents();
   void deactivateTimeEvents();
-
   // Wifi
   static bool broadcastAP();
   static void connectToWifi();
-
   // ESP-Now
   static int8_t scanForPeersESPNow();
   static void connectToPeers();
@@ -139,7 +137,6 @@ protected:
   static void receiveTimeSyncMsg(AF1Msg m);
   static void sendAllTimeSyncMessages();
   static void setTimeSyncMsgTime(AF1Msg &m);
-
   // Websocket
   static void sendMsgWS(AF1Msg msg);
   static void connectToWS();
@@ -160,10 +157,6 @@ public:
   virtual bool doConnectToWSServer();
   virtual void doSynced();
   virtual bool doSync();
-
-  void setWSClientInfo(ws_client_info w);
-  ws_client_info getWSClientInfo();
-
   // Wifi
   static String macToString(const uint8_t *m);
   static void printMac(const uint8_t *m);
@@ -177,6 +170,8 @@ public:
   // Websocket
   static WebSocketClient webSocketClient;
   static WiFiClient client; // Use WiFiClient class to create TCP connections
+  void setWSClientInfo(ws_client_info w);
+  ws_client_info getWSClientInfo();
   // HTTP
   static DynamicJsonDocument httpFetch(String url);
   static DynamicJsonDocument httpPost(String url, DynamicJsonDocument body);
