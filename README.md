@@ -15,9 +15,9 @@
 
 ### Overview
 
-The AF1 core consists of a handful of pre-built "state entities" and one "state manager". A state entity defines the behavior for a state, and new state entities can be created by extending either the `Base` class or its descendent, the `Sync` class, the latter of which provides "time synchronization" functionality among multiple ESP32 devices within the same general vicinity.
+The AF1 core consists of a handful of pre-built "state entities" and one "state manager". A state entity defines the behavior for a state, and new state entities can be created by extending the `Base` class.
 
-When creating new state entities, setup, loop, serialization/deserialization, and other behavior from `Base` can be overridden as necessary (TODO `Sync` documentation).
+When creating new state entities, setup, loop, serialization/deserialization, and other behavior from `Base` can be overridden as necessary.
 
 This is a trivial example:
 
@@ -114,4 +114,5 @@ public:
     }, /*intervalMs*/3000 /*, maxCbCnt */)));
   }
 }
+
 ```
