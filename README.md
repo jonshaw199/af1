@@ -47,6 +47,7 @@ public:
     virtual bool doScanForPeersESPNow();
     virtual bool doConnectToWSServer();
     virtual bool doSync();
+    virtual void doSynced();
     virtual String getName();
   */
 
