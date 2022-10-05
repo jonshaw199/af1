@@ -29,6 +29,10 @@ public:
   {
     return true;
   }
+  String getName()
+  {
+    return "SyncTest";
+  }
 };
 
 #endif
