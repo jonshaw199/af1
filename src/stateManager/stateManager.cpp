@@ -84,7 +84,7 @@ StateManager::StateManager()
   {
     setRequestedState(STATE_SYNC_TEST);
   };
-  stringHandlerMap["h"] = []()
+  stringHandlerMap["hs"] = []()
   {
     getCurStateEnt()->handleHandshakes(true);
   };
