@@ -203,7 +203,12 @@ void StateManager::handleUserInput(String s)
 {
   String s2 = s;
   s2.toLowerCase();
-  if (stringHandlerMap.count(s2))
+  int wildIndex = s2.indexOf("*");
+  if (wildIndex >= 0 && stringHandlerMap.count(s2.substring(0, wildIndex + 1)))
+  {
+    stringHandlerMap[s2.substring(0, wildIndex + 1)]();
+  }
+  else if (stringHandlerMap.count(s2))
   {
     stringHandlerMap[s2]();
   }
