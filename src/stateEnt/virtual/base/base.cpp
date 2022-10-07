@@ -635,12 +635,11 @@ void Base::initEspNow()
   }
 }
 
-bool Base::handleHandshakes()
+void Base::handleHandshakes(bool resend)
 {
   scanForPeersESPNow();
   connectToPeers();
-  sendAllHandshakes();
-  return true;
+  sendAllHandshakes(resend);
 }
 
 int8_t Base::scanForPeersESPNow()
@@ -938,9 +937,9 @@ void Base::receiveHandshakeResponse(AF1Msg m)
   StateManager::getPeerInfoMap()[m.getSenderID()].handshakeResponse = true;
 }
 
-void Base::sendAllHandshakes()
+void Base::sendAllHandshakes(bool resend)
 {
-  for (std::map<int, af1_peer_info>::const_iterator it = StateManager::getPeerInfoMap().begin(); it != StateManager::getPeerInfoMap().end() && !it->second.handshakeRequest; it++)
+  for (std::map<int, af1_peer_info>::const_iterator it = StateManager::getPeerInfoMap().begin(); it != StateManager::getPeerInfoMap().end() && (!it->second.handshakeRequest || resend); it++)
   {
     sendHandshakeRequests({it->first});
   }

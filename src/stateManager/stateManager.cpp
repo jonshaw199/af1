@@ -68,10 +68,6 @@ StateManager::StateManager()
   stateEntMap[STATE_IDLE_BASE] = new Base();
   stateEntMap[STATE_SYNC_TEST] = new SyncTest();
 
-  stringHandlerMap["init"] = []()
-  {
-    setRequestedState(STATE_INIT);
-  };
   stringHandlerMap["ota"] = []()
   {
     setRequestedState(STATE_OTA);
@@ -87,6 +83,10 @@ StateManager::StateManager()
   stringHandlerMap["synctest"] = []()
   {
     setRequestedState(STATE_SYNC_TEST);
+  };
+  stringHandlerMap["h"] = []()
+  {
+    getCurStateEnt()->handleHandshakes(true);
   };
 
   initialState = STATE_IDLE_BASE;
