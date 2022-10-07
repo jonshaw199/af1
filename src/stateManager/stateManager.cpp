@@ -68,26 +68,16 @@ StateManager::StateManager()
   stateEntMap[STATE_IDLE_BASE] = new Base();
   stateEntMap[STATE_SYNC_TEST] = new SyncTest();
 
-  stringHandlerMap["ota"] = []()
-  {
-    setRequestedState(STATE_OTA);
-  };
-  stringHandlerMap["restart"] = []()
-  {
-    setRequestedState(STATE_RESTART);
-  };
-  stringHandlerMap["idle"] = []()
-  {
-    setRequestedState(STATE_IDLE_BASE);
-  };
-  stringHandlerMap["synctest"] = []()
-  {
-    setRequestedState(STATE_SYNC_TEST);
-  };
-  stringHandlerMap["hs"] = []()
-  {
-    getCurStateEnt()->handleHandshakes(true);
-  };
+  registerStringHandler("ota", [](SHArg a)
+                        { setRequestedState(STATE_OTA); });
+  registerStringHandler("restart", [](SHArg a)
+                        { setRequestedState(STATE_RESTART); });
+  registerStringHandler("idle", [](SHArg a)
+                        { setRequestedState(STATE_IDLE_BASE); });
+  registerStringHandler("synctest", [](SHArg a)
+                        { setRequestedState(STATE_SYNC_TEST); });
+  registerStringHandler("hs", [](SHArg a)
+                        { getCurStateEnt()->handleHandshakes(true); });
 
   initialState = STATE_IDLE_BASE;
   defaultWSClientInfo = {"", "", 0, ""};
@@ -206,11 +196,11 @@ void StateManager::handleUserInput(String s)
   int wildIndex = s2.indexOf("*");
   if (wildIndex >= 0 && stringHandlerMap.count(s2.substring(0, wildIndex + 1)))
   {
-    stringHandlerMap[s2.substring(0, wildIndex + 1)]();
+    stringHandlerMap[s2.substring(0, wildIndex + 1)](SHArg(s2, s2.substring(wildIndex + 1)));
   }
   else if (stringHandlerMap.count(s2))
   {
-    stringHandlerMap[s2]();
+    stringHandlerMap[s2](SHArg(s2));
   }
   else
   {

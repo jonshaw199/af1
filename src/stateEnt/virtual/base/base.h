@@ -37,7 +37,24 @@
 #include "message/message.h"
 #include "box/box.h"
 
-typedef void (*string_input_handler)();
+class SHArg
+{
+  String string;
+  String value;
+
+public:
+  SHArg(String s, String v = "") : string(s), value(v){};
+  String getString()
+  {
+    return string;
+  }
+  String getValue()
+  {
+    return value;
+  }
+};
+
+typedef void (*string_input_handler)(SHArg a);
 
 struct wifi_ap_info
 {
