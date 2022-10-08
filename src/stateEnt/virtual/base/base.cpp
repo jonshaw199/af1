@@ -962,6 +962,7 @@ void Base::sendTimeSyncMsg(std::set<int> ids, bool isResponse)
   setTimeSyncMsgTime(msg); // Not sure if this is really necessary; time is now set right before sending which is better
   // Set wrapper
   msg.setRecipients(ids);
+  msg.setMaxRetries(DEFAULT_RETRIES);
 
   pushOutbox(msg);
 }
