@@ -580,6 +580,8 @@ void Base::onESPNowDataSent(const uint8_t *mac_addr, esp_now_send_status_t statu
     int peerDeviceID = StateManager::getMacToIDMap()[macToString(mac_addr)];
 #if PRINT_MSG_SEND
     Serial.println("Delivery failed to peer ID " + String(peerDeviceID));
+#else
+    Serial.print("X");
 #endif
     StateManager::getPeerInfoMap()[peerDeviceID].mutex.lock();
     // Check if there are more retries remaining and retry if so
