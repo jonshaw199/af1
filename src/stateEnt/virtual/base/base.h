@@ -211,6 +211,8 @@ public:
   static void scheduleSyncStart();
   void setSyncStartTime(unsigned long s);
   unsigned long getSyncStartTime();
+
+  static uint8_t getNextMsgID();
 };
 
 #endif // STATEENT_VIRTUAL_BASE_BASE_H_
