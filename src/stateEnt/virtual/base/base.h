@@ -97,6 +97,13 @@ public:
   }
 };
 
+class msg_info
+{
+public:
+  unsigned long outboxTime;
+  std::mutex mutex;
+};
+
 typedef struct sync_data
 {
   unsigned long ms;
@@ -106,6 +113,8 @@ class Base
 {
   static void onESPNowDataSent(const uint8_t *mac_addr, esp_now_send_status_t status);
   static void onESPNowDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len);
+
+  static bool handleESPNowRecvMesh(AF1Msg m);
 
   ws_client_info wsClientInfo;
 

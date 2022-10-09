@@ -23,6 +23,7 @@
 AF1Msg::AF1Msg() : json(1024)
 {
   msg = {};
+  msg.id = StateManager::getNextMsgID();
   msg.state = STATE_IDLE_BASE;
   msg.senderID = StateManager::getDeviceID();
   msg.type = TYPE_NONE;
@@ -33,6 +34,7 @@ AF1Msg::AF1Msg() : json(1024)
   retries = 0;
   maxRetries = 0;
 
+  json["id"] = msg.id;
   json["state"] = msg.state;
   json["type"] = msg.type;
   json["senderID"] = msg.senderID;
@@ -48,6 +50,7 @@ AF1Msg::AF1Msg(af1_msg m) : json(1024)
   retries = 0;
   maxRetries = 0;
 
+  json["id"] = msg.id;
   json["state"] = msg.state;
   json["type"] = msg.type;
   json["senderID"] = msg.senderID;
@@ -57,6 +60,7 @@ AF1Msg::AF1Msg(af1_msg m) : json(1024)
 AF1Msg::AF1Msg(DynamicJsonDocument d) : json(1024)
 {
   msg = {};
+  msg.id = d["id"];
   msg.state = d["state"];
   msg.senderID = d["senderID"];
   msg.type = d["type"];
@@ -88,6 +92,17 @@ int AF1Msg::incrementSendCnt()
 int AF1Msg::getSendCnt()
 {
   return sendCnt;
+}
+
+uint8_t AF1Msg::getID()
+{
+  return msg.id;
+}
+
+void AF1Msg::setID(uint8_t i)
+{
+  msg.id = i;
+  json["id"] = i;
 }
 
 void AF1Msg::setType(uint8_t t)

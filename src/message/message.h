@@ -49,7 +49,7 @@ enum TransportType
 typedef struct af1_msg
 {
   // Calculated
-  // int msgID;
+  uint8_t id;
   // Required, even for WS (single source of truth)
   uint8_t type;
   uint8_t senderID;
@@ -83,6 +83,8 @@ public:
   std::set<int> getRecipients();
   int incrementSendCnt();
   int getSendCnt();
+  uint8_t getID();
+  void setID(uint8_t i);
   void setType(uint8_t t);
   uint8_t getType();
   void setState(uint8_t s);
