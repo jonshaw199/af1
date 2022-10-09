@@ -38,7 +38,6 @@ WebSocketClient Base::webSocketClient;
 WiFiClient Base::client;
 
 static msg_info msgInfoArr[255];
-static uint8_t nextMsgID = 255;
 
 Base::Base()
 {
@@ -1207,9 +1206,4 @@ unsigned long Base::getSyncStartTime()
 bool Base::doSync()
 {
   return false;
-}
-
-uint8_t Base::getNextMsgID()
-{
-  return nextMsgID++;
 }
