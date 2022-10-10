@@ -809,16 +809,14 @@ void Base::sendMsgESPNow(AF1Msg msg)
 {
   msg.setTransportType(TRANSPORT_ESPNOW);
 
-  std::set<int> recipientIDs = StateManager::getPeerIDs();
-
-  if (!recipientIDs.size())
+  if (!StateManager::getPeerIDs().size())
   {
 #if PRINT_MSG_SEND
     Serial.println("No ESPNow peers; unable to send message");
 #endif
   }
 
-  for (std::set<int>::iterator it = recipientIDs.begin(); it != recipientIDs.end(); it++)
+  for (std::set<int>::iterator it = StateManager::getPeerIDs().begin(); it != StateManager::getPeerIDs().end(); it++)
   {
     StateManager::getPeerInfoMap()[*it].mutex.lock();
     // Update last msg sent for this peer (now doing this even if sending fails)
