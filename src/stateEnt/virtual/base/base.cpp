@@ -37,9 +37,6 @@ WebSocketClient Base::webSocketClient;
 // Use WiFiClient class to create TCP connections
 WiFiClient Base::client;
 
-static msg_info msgInfoArr[255];
-static uint8_t nextMsgID = 255;
-
 Base::Base()
 {
   intervalEventMap["Base_ESPHandshake"] = IntervalEvent("Base_ESPHandshake", MS_HANDSHAKE_LOOP, [](IECBArg a)
@@ -628,16 +625,7 @@ void Base::onESPNowDataRecv(const uint8_t *mac, const uint8_t *incomingData, int
 
 bool Base::handleESPNowRecvMesh(AF1Msg m)
 {
-  msgInfoArr[m.getID()].mutex.lock();
-  // Avoid an infinite loop of msg sending among peers
-  if (msgInfoArr[m.getID()].outboxTime + 5000 > millis())
-  {
-    msgInfoArr[m.getID()].outboxTime = millis();
-    pushOutbox(m);
-    return true;
-  }
-  msgInfoArr[m.getID()].mutex.unlock();
-  return false;
+  return true;
 }
 
 void Base::initEspNow()
@@ -1204,9 +1192,4 @@ unsigned long Base::getSyncStartTime()
 bool Base::doSync()
 {
   return false;
-}
-
-uint8_t Base::getNextMsgID()
-{
-  return nextMsgID++;
 }
