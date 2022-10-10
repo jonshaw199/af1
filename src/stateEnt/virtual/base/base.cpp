@@ -198,12 +198,12 @@ void Base::handleInboxMsg(AF1Msg m)
   case TYPE_HANDSHAKE_REQUEST:
     Serial.println("Handshake request message in inbox");
     receiveHandshakeRequest(m);
-    sendHandshakeResponse(m.getSenderID());
+    sendHandshakeResponses({m.getSenderID()});
     break;
   case TYPE_HANDSHAKE_RESPONSE:
     Serial.println("Handshake response message in inbox");
     receiveHandshakeResponse(m);
-    sendTimeSyncMsg(m.getSenderID());
+    sendTimeSyncMsg({m.getSenderID()});
     break;
   case TYPE_TIME_SYNC:
     Serial.println("Time sync message in inbox");
@@ -594,7 +594,7 @@ void Base::onESPNowDataSent(const uint8_t *mac_addr, esp_now_send_status_t statu
 #endif
       AF1Msg msg = StateManager::getPeerInfoMap()[peerDeviceID].lastMsg;
       msg.incrementSendCnt();
-      msg.setRecipientID(peerDeviceID);
+      msg.setRecipients({peerDeviceID}); // Only resending to 1 device!
       pushOutbox(msg);
       // outbox.enqueue(msg);
     }
@@ -800,14 +800,17 @@ void Base::sendMsgESPNow(AF1Msg msg)
 {
   msg.setTransportType(TRANSPORT_ESPNOW);
 
-  if (!StateManager::getPeerIDs().size())
+  // If recipients set is empty then send to all
+  std::set<int> recipientIDs = msg.getRecipients().size() ? msg.getRecipients() : StateManager::getPeerIDs();
+
+  if (!recipientIDs.size())
   {
 #if PRINT_MSG_SEND
     Serial.println("No ESPNow peers; unable to send message");
 #endif
   }
 
-  for (std::set<int>::iterator it = StateManager::getPeerIDs().begin(); it != StateManager::getPeerIDs().end(); it++)
+  for (std::set<int>::iterator it = recipientIDs.begin(); it != recipientIDs.end(); it++)
   {
     StateManager::getPeerInfoMap()[*it].mutex.lock();
     // Update last msg sent for this peer (now doing this even if sending fails)
@@ -885,11 +888,12 @@ void Base::sendStateChangeMessages(int s)
   msg.setType(TYPE_CHANGE_STATE);
   msg.setSenderID(StateManager::getDeviceID());
   msg.setState(s);
+  msg.setMaxRetries(DEFAULT_RETRIES);
 
   pushOutbox(msg);
 }
 
-void Base::sendHandshakeRequest(uint8_t recipient)
+void Base::sendHandshakeRequests(std::set<int> ids)
 {
   Serial.println("Pushing handshake requests to outbox");
 
@@ -900,11 +904,15 @@ void Base::sendHandshakeRequest(uint8_t recipient)
   msg.setSenderID(StateManager::getDeviceID());
   msg.setState(StateManager::getCurState()); // msg.setState(STATE_HANDSHAKE);
   msg.setData(getMacAP());
-  msg.setRecipientID(recipient);
+  // Set wrapper
+  msg.setRecipients(ids);
 
   pushOutbox(msg);
 
-  StateManager::getPeerInfoMap()[recipient].handshakeRequest = true;
+  for (std::set<int>::const_iterator it = ids.begin(); it != ids.end(); it++)
+  {
+    StateManager::getPeerInfoMap()[*it].handshakeRequest = true;
+  }
 }
 
 void Base::receiveHandshakeRequest(AF1Msg m)
@@ -928,7 +936,7 @@ void Base::receiveHandshakeRequest(AF1Msg m)
   connectToPeers();
 }
 
-void Base::sendHandshakeResponse(uint8_t recipient)
+void Base::sendHandshakeResponses(std::set<int> ids)
 {
   Serial.println("Pushing handshake responses to outbox");
 
@@ -938,7 +946,8 @@ void Base::sendHandshakeResponse(uint8_t recipient)
   msg.setType(TYPE_HANDSHAKE_RESPONSE);
   msg.setSenderID(StateManager::getDeviceID());
   msg.setState(StateManager::getCurState()); // msg.setState(STATE_HANDSHAKE);
-  msg.setRecipientID(recipient);
+  // Set wrapper
+  msg.setRecipients(ids);
 
   pushOutbox(msg);
 }
@@ -953,11 +962,11 @@ void Base::sendAllHandshakes(bool resend)
 {
   for (std::map<int, af1_peer_info>::const_iterator it = StateManager::getPeerInfoMap().begin(); it != StateManager::getPeerInfoMap().end() && (!it->second.handshakeRequest || resend); it++)
   {
-    sendHandshakeRequest(it->first);
+    sendHandshakeRequests({it->first});
   }
 }
 
-void Base::sendTimeSyncMsg(uint8_t recipient, bool isResponse)
+void Base::sendTimeSyncMsg(std::set<int> ids, bool isResponse)
 {
   Serial.print("Pushing time sync ");
   Serial.print(isResponse ? "response " : "");
@@ -970,7 +979,9 @@ void Base::sendTimeSyncMsg(uint8_t recipient, bool isResponse)
   msg.setSenderID(StateManager::getDeviceID());
   msg.setState(StateManager::getCurState());
   setTimeSyncMsgTime(msg); // Not sure if this is really necessary; time is now set right before sending which is better
-  msg.setRecipientID(recipient);
+  // Set wrapper
+  msg.setRecipients(ids);
+  msg.setMaxRetries(DEFAULT_RETRIES);
 
   pushOutbox(msg);
 }
@@ -996,7 +1007,7 @@ void Base::receiveTimeSyncMsg(AF1Msg m)
 
     if (m.getType() == TYPE_TIME_SYNC)
     {
-      sendTimeSyncMsg(m.getSenderID(), true);
+      sendTimeSyncMsg({m.getSenderID()}, true);
     }
   }
   else
@@ -1009,7 +1020,7 @@ void Base::sendAllTimeSyncMessages()
 {
   for (std::map<int, af1_peer_info>::const_iterator it = StateManager::getPeerInfoMap().begin(); it != StateManager::getPeerInfoMap().end(); it++)
   {
-    sendTimeSyncMsg(it->first);
+    sendTimeSyncMsg({it->first});
   }
 }
 

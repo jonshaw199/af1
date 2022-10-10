@@ -152,13 +152,13 @@ protected:
   static void connectToPeers();
   static void initEspNow();
   static void sendStateChangeMessages(int s);
-  static void sendHandshakeRequest(uint8_t recipient);
+  static void sendHandshakeRequests(std::set<int> ids);
   static void receiveHandshakeRequest(AF1Msg m);
-  static void sendHandshakeResponse(uint8_t recipient);
+  static void sendHandshakeResponses(std::set<int> ids);
   static void receiveHandshakeResponse(AF1Msg m);
   static void sendAllHandshakes(bool resend = false);
   static void sendMsgESPNow(AF1Msg msg);
-  static void sendTimeSyncMsg(uint8_t recipient, bool isResponse = false);
+  static void sendTimeSyncMsg(std::set<int> ids, bool isResponse = false);
   static void receiveTimeSyncMsg(AF1Msg m);
   static void sendAllTimeSyncMessages();
   static void setTimeSyncMsgTime(AF1Msg &m);
