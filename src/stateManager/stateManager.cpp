@@ -423,7 +423,6 @@ unsigned long StateManager::convertTime(int id, unsigned long t)
 {
   if (peerInfoMap.count(id))
   {
-    std::lock_guard<std::mutex> lock(peerInfoMap[id].mutex);
     unsigned long dif = t - peerInfoMap[id].otherTimeSync;
     return peerInfoMap[id].thisTimeSync + dif;
   }
