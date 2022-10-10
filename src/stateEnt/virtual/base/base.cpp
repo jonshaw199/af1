@@ -622,11 +622,8 @@ void Base::onESPNowDataRecv(const uint8_t *mac, const uint8_t *incomingData, int
   af1_msg msg;
   memcpy(&msg, incomingData, sizeof(msg));
   AF1Msg msgWrapper = msg;
-  if (msg.senderID != StateManager::getDeviceID())
-  {
-    pushInbox(msg);
-    handleESPNowRecvMesh(msg);
-  }
+  pushInbox(msg);
+  handleESPNowRecvMesh(msg);
 }
 
 bool Base::handleESPNowRecvMesh(AF1Msg m)
