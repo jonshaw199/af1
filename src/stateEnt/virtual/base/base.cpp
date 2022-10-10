@@ -1068,7 +1068,7 @@ void Base::connectToWS()
     {
       Serial.print("connectToWS(): checking WS connection: ");
       Serial.println(i.toString());
-      if (client && i == StateManager::getCurWSClientInfo() || !StateManager::getCurWSClientInfo() && i == StateManager::getDefaultWSClientInfo())
+      if (client && (i == StateManager::getCurWSClientInfo() || !StateManager::getCurWSClientInfo()) && i == StateManager::getDefaultWSClientInfo())
       {
         Serial.println("Already connected to websocket");
       }
