@@ -724,6 +724,7 @@ int8_t Base::scanForPeersESPNow()
             info.channel = ESPNOW_CHANNEL;
             info.encrypt = 0; // no encryption
             info.ifidx = WIFI_IF_AP;
+            std::lock_guard<std::mutex> lock(StateManager::getPeerInfoMap()[deviceID].mutex);
             StateManager::getPeerInfoMap()[deviceID].espnowPeerInfo = info;
             StateManager::getPeerInfoMap()[deviceID].handshakeResponse = false;
             StateManager::getPeerInfoMap()[deviceID].lastMsg = AF1Msg();
@@ -914,6 +915,7 @@ void Base::sendHandshakeRequest(uint8_t recipient)
 
   pushOutbox(msg);
 
+  std::lock_guard<std::mutex> lock(StateManager::getPeerInfoMap()[recipient].mutex);
   StateManager::getPeerInfoMap()[recipient].handshakeRequest = true;
 }
 
@@ -929,6 +931,8 @@ void Base::receiveHandshakeRequest(AF1Msg m)
   ei.channel = ESPNOW_CHANNEL;
   ei.encrypt = 0; // No encryption
   ei.ifidx = WIFI_IF_AP;
+
+  std::lock_guard<std::mutex> lock(StateManager::getPeerInfoMap()[m.getSenderID()].mutex);
   StateManager::getPeerInfoMap()[m.getSenderID()].espnowPeerInfo = ei;
   StateManager::getPeerInfoMap()[m.getSenderID()].handshakeResponse = false;
   StateManager::getPeerInfoMap()[m.getSenderID()].lastMsg = AF1Msg();
@@ -956,6 +960,7 @@ void Base::sendHandshakeResponse(uint8_t recipient)
 void Base::receiveHandshakeResponse(AF1Msg m)
 {
   Serial.println("Receiving handshake response from ID " + String(m.getSenderID()));
+  std::lock_guard<std::mutex> lock(StateManager::getPeerInfoMap()[m.getSenderID()].mutex);
   StateManager::getPeerInfoMap()[m.getSenderID()].handshakeResponse = true;
 }
 
@@ -996,6 +1001,7 @@ void Base::receiveTimeSyncMsg(AF1Msg m)
   {
     af1_time_sync_data d;
     memcpy(&d, m.getData(), sizeof(d));
+    std::lock_guard<std::mutex> lock(StateManager::getPeerInfoMap()[m.getSenderID()].mutex);
     StateManager::getPeerInfoMap()[m.getSenderID()].otherTimeSync = d.ms;
     unsigned long thisMs = millis();
     StateManager::getPeerInfoMap()[m.getSenderID()].thisTimeSync = thisMs;
