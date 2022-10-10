@@ -26,6 +26,8 @@
 
 #include "state/state.h"
 
+#define RECIPIENT_ALL 255
+
 enum MessageType
 {
   TYPE_NONE = 100,
