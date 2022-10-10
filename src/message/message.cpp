@@ -27,7 +27,7 @@ AF1Msg::AF1Msg() : json(1024)
   msg.id = StateManager::getNextMsgID();
   msg.state = STATE_IDLE_BASE;
   msg.senderID = StateManager::getDeviceID();
-  msg.recipientID = RECIPIENT_ALL;
+  msg.recipientID = 255;
   msg.type = TYPE_NONE;
   msg.transportType = TRANSPORT_NONE;
 
