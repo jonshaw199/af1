@@ -620,12 +620,7 @@ void Base::onESPNowDataRecv(const uint8_t *mac, const uint8_t *incomingData, int
   memcpy(&msg, incomingData, sizeof(msg));
   AF1Msg msgWrapper = msg;
   pushInbox(msg);
-  handleESPNowRecvMesh(msg);
-}
-
-bool Base::handleESPNowRecvMesh(AF1Msg m)
-{
-  return true;
+  // inbox.enqueue(msgWrapper);
 }
 
 void Base::initEspNow()
