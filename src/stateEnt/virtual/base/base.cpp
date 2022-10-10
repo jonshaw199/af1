@@ -636,15 +636,14 @@ void Base::onESPNowDataRecv(const uint8_t *mac, const uint8_t *incomingData, int
 
 bool Base::handleESPNowRecvMesh(AF1Msg m)
 {
-  msgInfoArr[m.getID()].mutex.lock();
+  std::lock_guard<std::mutex> lock(msgInfoArr[m.getID()].mutex);
   // Avoid an infinite loop of msg sending among peers
-  if (msgInfoArr[m.getID()].outboxTime + 5000 > millis())
+  if (msgInfoArr[m.getID()].outboxTime + 3000 > millis())
   {
     msgInfoArr[m.getID()].outboxTime = millis();
     pushOutbox(m);
     return true;
   }
-  msgInfoArr[m.getID()].mutex.unlock();
   return false;
 }
 
