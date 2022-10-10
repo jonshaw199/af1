@@ -19,6 +19,7 @@
 
 #include "message.h"
 #include "stateManager/stateManager.h"
+#include "pre.h"
 
 AF1Msg::AF1Msg() : json(1024)
 {
@@ -26,18 +27,19 @@ AF1Msg::AF1Msg() : json(1024)
   msg.id = StateManager::getNextMsgID();
   msg.state = STATE_IDLE_BASE;
   msg.senderID = StateManager::getDeviceID();
+  msg.recipientID = 255;
   msg.type = TYPE_NONE;
   msg.transportType = TRANSPORT_NONE;
 
-  recipients = {};
   sendCnt = 0;
   retries = 0;
-  maxRetries = 0;
+  maxRetries = DEFAULT_RETRIES;
 
   json["id"] = msg.id;
   json["state"] = msg.state;
   json["type"] = msg.type;
   json["senderID"] = msg.senderID;
+  json["recipientID"] = msg.recipientID;
   json["transportType"] = msg.transportType;
 }
 
@@ -45,15 +47,15 @@ AF1Msg::AF1Msg(af1_msg m) : json(1024)
 {
   msg = m;
 
-  recipients = {};
   sendCnt = 0;
   retries = 0;
-  maxRetries = 0;
+  maxRetries = DEFAULT_RETRIES;
 
   json["id"] = msg.id;
   json["state"] = msg.state;
   json["type"] = msg.type;
   json["senderID"] = msg.senderID;
+  json["recipientID"] = msg.recipientID;
   json["transportType"] = msg.transportType;
 }
 
@@ -63,25 +65,15 @@ AF1Msg::AF1Msg(DynamicJsonDocument d) : json(1024)
   msg.id = d["id"];
   msg.state = d["state"];
   msg.senderID = d["senderID"];
+  msg.recipientID = d["recipientID"];
   msg.type = d["type"];
   msg.transportType = d["transportType"];
 
-  recipients = {};
   sendCnt = 0;
   retries = 0;
-  maxRetries = 0;
+  maxRetries = DEFAULT_RETRIES;
 
   json = d;
-}
-
-std::set<int> AF1Msg::getRecipients()
-{
-  return recipients;
-}
-
-void AF1Msg::setRecipients(std::set<int> r)
-{
-  recipients = r;
 }
 
 int AF1Msg::incrementSendCnt()
@@ -136,6 +128,17 @@ void AF1Msg::setSenderID(uint8_t id)
 uint8_t AF1Msg::getSenderID()
 {
   return msg.senderID;
+}
+
+void AF1Msg::setRecipientID(uint8_t id)
+{
+  msg.recipientID = id;
+  json["recipientID"] = id;
+}
+
+uint8_t AF1Msg::getRecipientID()
+{
+  return msg.recipientID;
 }
 
 void AF1Msg::setMaxRetries(int m)

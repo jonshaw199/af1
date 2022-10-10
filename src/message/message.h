@@ -53,6 +53,7 @@ typedef struct af1_msg
   // Required, even for WS (single source of truth)
   uint8_t type;
   uint8_t senderID;
+  uint8_t recipientID;
   uint8_t state;
   uint8_t transportType;
   // State dependent and only used for espnow
@@ -70,7 +71,6 @@ class AF1Msg
 {
   af1_msg msg;
   DynamicJsonDocument json;
-  std::set<int> recipients;
   int sendCnt;
   int retries;
   int maxRetries;
@@ -79,8 +79,6 @@ public:
   AF1Msg();
   AF1Msg(af1_msg m);
   AF1Msg(DynamicJsonDocument d);
-  void setRecipients(std::set<int> r);
-  std::set<int> getRecipients();
   int incrementSendCnt();
   int getSendCnt();
   uint8_t getID();
@@ -91,6 +89,8 @@ public:
   uint8_t getState();
   void setSenderID(uint8_t id);
   uint8_t getSenderID();
+  void setRecipientID(uint8_t id);
+  uint8_t getRecipientID();
   uint8_t getTransportType();
   void setTransportType(uint8_t t);
   void setMaxRetries(int m);
