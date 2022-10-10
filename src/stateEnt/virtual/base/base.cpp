@@ -731,12 +731,14 @@ int8_t Base::scanForPeersESPNow()
             StateManager::getPeerInfoMap()[deviceID].otherTimeSync = 0;
             StateManager::getPeerInfoMap()[deviceID].thisTimeSync = 0;
             StateManager::getMacToIDMap()[macToString(info.peer_addr)] = deviceID;
-            Serial.println("Saved peer info for device ID " + String(deviceID));
+            Serial.print("Saved peer info for device ID ");
+            Serial.println(deviceID);
           }
         }
         else
         {
-          Serial.println("Peer info already collected for device ID " + String(deviceID));
+          Serial.print("Peer info already collected for device ID ");
+          Serial.println(deviceID);
         }
       }
     }

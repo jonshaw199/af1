@@ -329,6 +329,7 @@ std::set<int> StateManager::getPeerIDs()
   std::set<int> result;
   for (std::map<int, af1_peer_info>::iterator it = peerInfoMap.begin(); it != peerInfoMap.end(); it++)
   {
+    std::lock_guard<std::mutex> lock(it->second.mutex);
     result.insert(it->first);
   }
   return result;
