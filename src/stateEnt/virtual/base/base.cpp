@@ -623,28 +623,27 @@ void Base::onESPNowDataRecv(const uint8_t *mac, const uint8_t *incomingData, int
   AF1Msg msgWrapper = msg;
   if (msg.senderID != StateManager::getDeviceID())
   {
-    if (msg.recipientID == StateManager::getDeviceID() || msg.recipientID == RECIPIENT_ALL)
+    std::lock_guard<std::mutex> lock(msgInfoArr[msg.id].mutex);
+    if (msgInfoArr[msg.id].outboxTime + 1000 < millis())
     {
-      pushInbox(msg);
-    }
-    if (msg.recipientID != StateManager::getDeviceID())
-    {
-      handleESPNowRecvMesh(msg);
-    }
-  }
-}
+      msgInfoArr[msg.id].outboxTime = millis();
 
-bool Base::handleESPNowRecvMesh(AF1Msg m)
-{
-  std::lock_guard<std::mutex> lock(msgInfoArr[m.getID()].mutex);
-  // Avoid an infinite loop of msg sending among peers
-  if (msgInfoArr[m.getID()].outboxTime + 3000 > millis())
-  {
-    msgInfoArr[m.getID()].outboxTime = millis();
-    pushOutbox(m);
-    return true;
+      if (msg.recipientID == StateManager::getDeviceID() || msg.recipientID == RECIPIENT_ALL)
+      {
+        pushInbox(msg);
+      }
+      if (msg.recipientID != StateManager::getDeviceID())
+      {
+        pushOutbox(msg); // Mesh
+      }
+    }
+    else
+    {
+#if PRINT_MSG_SEND
+      Serial.println("Msg already handled; doing nothing to avoid total chaos");
+#endif
+    }
   }
-  return false;
 }
 
 void Base::initEspNow()
@@ -832,6 +831,7 @@ void Base::sendMsgESPNow(AF1Msg msg)
       // Update the send count of that last msg
       StateManager::getPeerInfoMap()[*it].lastMsg.incrementSendCnt();
     }
+
     else if (result == ESP_ERR_ESPNOW_NOT_INIT)
     {
       // How did we get so far!!
@@ -861,6 +861,28 @@ void Base::sendMsgESPNow(AF1Msg msg)
     {
       Serial.println("Not sure what happened");
     }
+
+    if (result != ESP_OK)
+    {
+      Serial.print("X");
+      if (StateManager::getPeerInfoMap()[*it].lastMsg.getSendCnt() - 1 < StateManager::getPeerInfoMap()[*it].lastMsg.getMaxRetries())
+      {
+#if PRINT_MSG_SEND
+        Serial.println("sendMsgESPNow(): Retrying send to device ID " + String(*it));
+#endif
+        AF1Msg msg = StateManager::getPeerInfoMap()[*it].lastMsg;
+        msg.incrementSendCnt();
+        msg.setRecipientID(*it); // Only retrying send to this 1 recipient?
+        pushOutbox(msg);
+      }
+      else
+      {
+#if PRINT_MSG_SEND
+        Serial.println("sendMsgESPNow(): Max retries reached; not sending");
+#endif
+      }
+    }
+
     StateManager::getPeerInfoMap()[*it].mutex.unlock();
     delay(DELAY_SEND);
   }
