@@ -54,8 +54,6 @@ static std::map<String, int> macToIDMap;
 WiFiUDP StateManager::ntpUDP;
 NTPClient StateManager::timeClient(ntpUDP);
 
-static uint8_t nextMsgID = 255;
-
 StateManager::StateManager()
 {
   modeEntMap[MODE_BASIC] = new Basic();
@@ -426,9 +424,4 @@ unsigned long StateManager::convertTime(int id, unsigned long t)
     return peerInfoMap[id].thisTimeSync + dif;
   }
   return 0;
-}
-
-uint8_t StateManager::getNextMsgID()
-{
-  return nextMsgID++;
 }

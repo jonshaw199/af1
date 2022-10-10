@@ -97,7 +97,6 @@ public:
   static WiFiUDP ntpUDP;
   static NTPClient timeClient;
   static unsigned long convertTime(int id, unsigned long t);
-  static uint8_t getNextMsgID();
 
   static void registerStateEnt(int i, Base *s);
   static void registerStringHandler(String s, string_input_handler h);
