@@ -791,7 +791,7 @@ void Base::sendMsgESPNow(AF1Msg msg)
 #endif
   }
 
-  for (std::set<int>::iterator it = recipientIDs.begin(); it != recipientIDs.end(); it++)
+  for (std::set<int>::iterator it = recipientIDs.begin(); it != recipientIDs.end() && StateManager::getPeerInfoMap().count(*it); it++)
   {
     StateManager::getPeerInfoMap()[*it].mutex.lock();
     // Update last msg sent for this peer (now doing this even if sending fails)
