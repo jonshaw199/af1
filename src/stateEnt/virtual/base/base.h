@@ -127,14 +127,6 @@ protected:
   static HTTPClient httpClient;
   static WiFiMulti wifiMulti;
 
-  // Interval Events
-  unsigned long getElapsedMs();
-  void resetIntervalEvents();
-  void activateIntervalEvents();
-  void deactivateIntervalEvents();
-  void resetTimeEvents();
-  void activateTimeEvents();
-  void deactivateTimeEvents();
   // Wifi
   static bool broadcastAP();
   static void connectToWifi();
@@ -202,6 +194,14 @@ public:
   static void scheduleSyncStart();
   void setSyncStartTime(unsigned long s);
   unsigned long getSyncStartTime();
+  // Interval Events
+  unsigned long getElapsedMs();
+  void resetIntervalEvents();
+  void activateIntervalEvents();
+  void deactivateIntervalEvents();
+  void resetTimeEvents();
+  void activateTimeEvents();
+  void deactivateTimeEvents();
 };
 
 #endif // STATEENT_VIRTUAL_BASE_BASE_H_
