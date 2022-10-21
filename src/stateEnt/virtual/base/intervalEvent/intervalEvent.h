@@ -66,6 +66,7 @@ public:
   IntervalEvent(String n, unsigned long i, interval_event_cb c, unsigned long m, bool t, unsigned long c2, uint8_t m2);
   unsigned long getIntervalMs();
   void setIntervalMs(unsigned long m);
+  void setIntervalMs(unsigned long m, unsigned long elapsedMs); // Updates cbCnt based on elapsedMs
   unsigned long getMaxCbCnt();
   void setMaxCbCnt(unsigned long c);
   interval_event_cb getCb();

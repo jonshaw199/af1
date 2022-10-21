@@ -83,6 +83,12 @@ void IntervalEvent::setIntervalMs(unsigned long m)
   intervalMs = m;
 }
 
+void IntervalEvent::setIntervalMs(unsigned long m, unsigned long elapsedMs)
+{
+  intervalMs = m;
+  cbCnt = m > 0 ? elapsedMs / m : 0;
+}
+
 interval_event_cb IntervalEvent::getCb()
 {
   return cb;
@@ -145,9 +151,9 @@ bool IntervalEvent::isTime(unsigned long elapsedMs)
 
 bool IntervalEvent::cbIfTimeAndActive(unsigned long elapsedMs)
 {
-  if (mode == IE_MODE_ACTIVE && isTime(elapsedMs) && intervalMs && cb(IECBArg(name, elapsedMs, cbCnt, maxCbCnt))) // Checking intervalMs here since default constructor doesnt even define cb; might need stub there to be safe
+  if (mode == IE_MODE_ACTIVE && isTime(elapsedMs) && cb(IECBArg(name, elapsedMs, cbCnt, maxCbCnt)))
   {
-    cbCnt = elapsedMs / intervalMs; // Setting cbCnt to expected value rather than just incrementing
+    cbCnt = intervalMs > 0 ? elapsedMs / intervalMs : 0; // Setting cbCnt to expected value rather than just incrementing
     return true;
   }
   return false;
