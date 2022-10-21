@@ -51,10 +51,10 @@ Base::Base()
 
     return true; });
 
-  intervalEventMap["Base_TimeSync"] = IntervalEvent("Base_TimeSync", MS_TIME_SYNC, [](IECBArg a)
+  /*intervalEventMap["Base_TimeSync"] = IntervalEvent("Base_TimeSync", MS_TIME_SYNC, [](IECBArg a)
                                                     {
     sendAllTimeSyncMessages();
-    return true; });
+    return true; });*/
 
   syncStartTime = 0;
 
