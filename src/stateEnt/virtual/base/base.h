@@ -36,6 +36,7 @@
 #include "state/state.h"
 #include "message/message.h"
 #include "box/box.h"
+#include "event/event.h"
 
 class SHArg
 {
@@ -199,9 +200,11 @@ public:
   void resetIntervalEvents();
   void activateIntervalEvents();
   void deactivateIntervalEvents();
+  static void setIntervalEventIntervalMs(String e, unsigned long m);
   void resetTimeEvents();
   void activateTimeEvents();
   void deactivateTimeEvents();
+  static void setTimeEventIntervalMs(String e, unsigned long m);
 };
 
 #endif // STATEENT_VIRTUAL_BASE_BASE_H_

@@ -17,7 +17,7 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include <Arduino.h>
+#include "stateEnt/virtual/base/event/event.h"
 
 #ifndef STATEENT_BASE_TIMEEVENT_H_
 #define STATEENT_BASE_TIMEEVENT_H_
@@ -51,16 +51,13 @@ enum TimeEventMode
     TE_MODE_INACTIVE
 };
 
-class TimeEvent
+class TimeEvent : public Event
 {
     unsigned long startMs;
-    unsigned long intervalMs;
     time_event_cb cb;
     unsigned long maxCbCnt;
     bool temporary;
     uint8_t mode = TE_MODE_ACTIVE;
-    unsigned long cbCnt;
-    String name;
 
 public:
     TimeEvent();
@@ -72,18 +69,12 @@ public:
     TimeEvent(String n, unsigned long s, time_event_cb c, unsigned long i, unsigned long m, bool t, unsigned long c2, uint8_t m2);
     unsigned long getStartMs();
     void setStartMs(unsigned long m);
-    unsigned long getIntervalMs();
-    void setIntervalMs(unsigned long m);
     unsigned long getMaxCbCnt();
     void setMaxCbCnt(unsigned long m);
     bool getTemporary();
     void setTemporary(bool t);
     time_event_cb getCb();
     void setCb(time_event_cb c);
-    unsigned long getCbCnt();
-    void setCbCnt(unsigned long c);
-    void setName(String s);
-    String getName();
 
     unsigned long getLastCbMs();
     unsigned long getNextCbMs();

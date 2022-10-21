@@ -51,22 +51,70 @@ String TECBArg::getName()
   return name;
 }
 
-TimeEvent::TimeEvent() : name(""), startMs(0), intervalMs(0), maxCbCnt(0), cbCnt(0) {}
-
-TimeEvent::TimeEvent(String n, unsigned long s, time_event_cb c) : name(n), startMs(s), intervalMs(0), cb(c), maxCbCnt(1), cbCnt(0) {}
-
-TimeEvent::TimeEvent(String n, unsigned long s, time_event_cb c, unsigned long i) : name(n), startMs(s), intervalMs(i), cb(c), cbCnt(0)
+TimeEvent::TimeEvent()
 {
+  startMs = 0;
+  maxCbCnt = 0;
+}
+
+TimeEvent::TimeEvent(String n, unsigned long s, time_event_cb c)
+{
+  name = n;
+  startMs = s;
+  cb = c;
+  maxCbCnt = 1;
+}
+
+TimeEvent::TimeEvent(String n, unsigned long s, time_event_cb c, unsigned long i)
+{
+  name = n;
+  startMs = s;
+  intervalMs = i;
+  cb = c;
   maxCbCnt = MAX_CB_CNT_INF;
 }
 
-TimeEvent::TimeEvent(String n, unsigned long s, time_event_cb c, unsigned long i, unsigned long m) : name(n), startMs(s), intervalMs(i), cb(c), maxCbCnt(m), cbCnt(0) {}
+TimeEvent::TimeEvent(String n, unsigned long s, time_event_cb c, unsigned long i, unsigned long m)
+{
+  name = n;
+  startMs = s;
+  intervalMs = i;
+  cb = c;
+  maxCbCnt = m;
+}
 
-TimeEvent::TimeEvent(String n, unsigned long s, time_event_cb c, unsigned long i, unsigned long m, bool t) : name(n), startMs(s), intervalMs(i), cb(c), maxCbCnt(m), cbCnt(0), temporary(t) {}
+TimeEvent::TimeEvent(String n, unsigned long s, time_event_cb c, unsigned long i, unsigned long m, bool t)
+{
+  name = n;
+  startMs = s;
+  intervalMs = i;
+  cb = c;
+  maxCbCnt = m;
+  temporary = t;
+}
 
-TimeEvent::TimeEvent(String n, unsigned long s, time_event_cb c, unsigned long i, unsigned long m, bool t, unsigned long c2) : name(n), startMs(s), intervalMs(i), cb(c), maxCbCnt(m), cbCnt(c2), temporary(t) {}
+TimeEvent::TimeEvent(String n, unsigned long s, time_event_cb c, unsigned long i, unsigned long m, bool t, unsigned long c2)
+{
+  name = n;
+  startMs = s;
+  intervalMs = i;
+  cb = c;
+  maxCbCnt = m;
+  temporary = t;
+  cbCnt = c2;
+}
 
-TimeEvent::TimeEvent(String n, unsigned long s, time_event_cb c, unsigned long i, unsigned long m, bool t, unsigned long c2, uint8_t m2) : name(n), startMs(s), intervalMs(i), cb(c), maxCbCnt(m), cbCnt(c2), temporary(t), mode(m2) {}
+TimeEvent::TimeEvent(String n, unsigned long s, time_event_cb c, unsigned long i, unsigned long m, bool t, unsigned long c2, uint8_t m2)
+{
+  name = n;
+  startMs = s;
+  intervalMs = i;
+  cb = c;
+  maxCbCnt = m;
+  temporary = t;
+  cbCnt = c2;
+  mode = m2;
+}
 
 unsigned long TimeEvent::getStartMs()
 {
@@ -76,16 +124,6 @@ unsigned long TimeEvent::getStartMs()
 void TimeEvent::setStartMs(unsigned long s)
 {
   startMs = s;
-}
-
-unsigned long TimeEvent::getIntervalMs()
-{
-  return intervalMs;
-}
-
-void TimeEvent::setIntervalMs(unsigned long i)
-{
-  intervalMs = i;
 }
 
 time_event_cb TimeEvent::getCb()
@@ -106,26 +144,6 @@ unsigned long TimeEvent::getMaxCbCnt()
 void TimeEvent::setMaxCbCnt(unsigned long m)
 {
   maxCbCnt = m;
-}
-
-unsigned long TimeEvent::getCbCnt()
-{
-  return cbCnt;
-}
-
-void TimeEvent::setCbCnt(unsigned long c)
-{
-  cbCnt = c;
-}
-
-String TimeEvent::getName()
-{
-  return name;
-}
-
-void TimeEvent::setName(String n)
-{
-  name = n;
 }
 
 bool TimeEvent::getTemporary()

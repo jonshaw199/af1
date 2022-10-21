@@ -20,7 +20,7 @@
 #ifndef STATEENT_BASE_INTERVALEVENT_H_
 #define STATEENT_BASE_INTERVALEVENT_H_
 
-#include <Arduino.h>
+#include "stateEnt/virtual/base/event/event.h"
 
 #define MAX_CB_CNT_INF -1;
 
@@ -47,15 +47,12 @@ enum IntervalEventMode
   IE_MODE_INACTIVE
 };
 
-class IntervalEvent
+class IntervalEvent : public Event
 {
-  unsigned long intervalMs;
   interval_event_cb cb;
   unsigned long maxCbCnt = MAX_CB_CNT_INF;
   bool temporary = false;
   uint8_t mode = IE_MODE_ACTIVE;
-  unsigned long cbCnt = 0;
-  String name = "";
 
 public:
   IntervalEvent();
@@ -64,17 +61,10 @@ public:
   IntervalEvent(String n, unsigned long i, interval_event_cb c, unsigned long m, bool t);
   IntervalEvent(String n, unsigned long i, interval_event_cb c, unsigned long m, bool t, unsigned long c2);
   IntervalEvent(String n, unsigned long i, interval_event_cb c, unsigned long m, bool t, unsigned long c2, uint8_t m2);
-  unsigned long getIntervalMs();
-  void setIntervalMs(unsigned long m);
-  void setIntervalMs(unsigned long m, unsigned long elapsedMs); // Updates cbCnt based on elapsedMs
   unsigned long getMaxCbCnt();
   void setMaxCbCnt(unsigned long c);
   interval_event_cb getCb();
   void setCb(interval_event_cb c);
-  unsigned long getCbCnt();
-  void setCbCnt(unsigned long c);
-  String getName();
-  void setName(String s);
 
   unsigned long getLastCbMs();
   unsigned long getNextCbMs();

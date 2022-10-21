@@ -38,7 +38,6 @@ unsigned long IECBArg::getMaxCbCnt()
 
 IntervalEvent::IntervalEvent()
 {
-  intervalMs = 0;
   maxCbCnt = 0;
 }
 
@@ -68,25 +67,24 @@ IntervalEvent::IntervalEvent(String n, unsigned long i, interval_event_cb c, uns
 }
 
 IntervalEvent::IntervalEvent(String n, unsigned long i, interval_event_cb c, unsigned long m, bool t, unsigned long c2)
-    : name(n), intervalMs(i), cb(c), maxCbCnt(m), temporary(t), cbCnt(c2) {}
+{
+  name = n;
+  intervalMs = i;
+  cb = c;
+  maxCbCnt = m;
+  temporary = t;
+  cbCnt = c2;
+}
 
 IntervalEvent::IntervalEvent(String n, unsigned long i, interval_event_cb c, unsigned long m, bool t, unsigned long c2, uint8_t m2)
-    : name(n), intervalMs(i), cb(c), maxCbCnt(m), temporary(t), cbCnt(c2), mode(m2) {}
-
-unsigned long IntervalEvent::getIntervalMs()
 {
-  return intervalMs;
-}
-
-void IntervalEvent::setIntervalMs(unsigned long m)
-{
-  intervalMs = m;
-}
-
-void IntervalEvent::setIntervalMs(unsigned long m, unsigned long elapsedMs)
-{
-  intervalMs = m;
-  cbCnt = m > 0 ? elapsedMs / m : 0;
+  name = n;
+  intervalMs = i;
+  cb = c;
+  maxCbCnt = m;
+  temporary = t;
+  cbCnt = c2;
+  mode = m2;
 }
 
 interval_event_cb IntervalEvent::getCb()
@@ -107,26 +105,6 @@ unsigned long IntervalEvent::getMaxCbCnt()
 void IntervalEvent::setMaxCbCnt(unsigned long c)
 {
   maxCbCnt = c;
-}
-
-unsigned long IntervalEvent::getCbCnt()
-{
-  return cbCnt;
-}
-
-void IntervalEvent::setCbCnt(unsigned long c)
-{
-  cbCnt = c;
-}
-
-String IntervalEvent::getName()
-{
-  return name;
-}
-
-void IntervalEvent::setName(String n)
-{
-  name = n;
 }
 
 unsigned long IntervalEvent::getLastCbMs()
