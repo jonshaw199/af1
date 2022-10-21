@@ -303,7 +303,7 @@ void Base::deactivateIntervalEvents()
   }
 }
 
-void Base::setIntervalEventIntervalMs(String e, unsigned long m)
+void Base::setIEIntervalMs(String e, unsigned long m)
 {
   if (StateManager::getCurStateEnt()->intervalEventMap.count(e))
   {
@@ -346,7 +346,7 @@ void Base::deactivateTimeEvents()
   }
 }
 
-void Base::setTimeEventIntervalMs(String e, unsigned long m)
+void Base::setTEIntervalMs(String e, unsigned long m)
 {
   if (StateManager::getCurStateEnt()->timeEventMap.count(e))
   {
