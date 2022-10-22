@@ -427,6 +427,22 @@ unsigned long StateManager::convertTime(int id, unsigned long t)
   return 0;
 }
 
+void StateManager::setIEIntervalMs(String e, unsigned long m)
+{
+  if (getCurStateEnt()->getIntervalEventMap().count(e))
+  {
+    getCurStateEnt()->getIntervalEventMap().at(e).setIntervalMs(m, getCurStateEnt()->getElapsedMs());
+  }
+}
+
+void StateManager::setTEIntervalMs(String e, unsigned long m)
+{
+  if (getCurStateEnt()->getTimeEventMap().count(e))
+  {
+    getCurStateEnt()->getTimeEventMap().at(e).setIntervalMs(m, getCurStateEnt()->getElapsedMs());
+  }
+}
+
 void StateManager::setIE(IntervalEvent i)
 {
   getCurStateEnt()->getIntervalEventMap()[i.getName()] = i;

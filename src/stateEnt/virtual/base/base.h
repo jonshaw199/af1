@@ -200,11 +200,9 @@ public:
   void resetIntervalEvents();
   void activateIntervalEvents();
   void deactivateIntervalEvents();
-  static void setIEIntervalMs(String e, unsigned long m);
   void resetTimeEvents();
   void activateTimeEvents();
   void deactivateTimeEvents();
-  static void setTEIntervalMs(String e, unsigned long m);
 };
 
 #endif // STATEENT_VIRTUAL_BASE_BASE_H_

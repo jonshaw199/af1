@@ -296,14 +296,6 @@ void Base::deactivateIntervalEvents()
   }
 }
 
-void Base::setIEIntervalMs(String e, unsigned long m)
-{
-  if (StateManager::getCurStateEnt()->intervalEventMap.count(e))
-  {
-    StateManager::getCurStateEnt()->intervalEventMap.at(e).setIntervalMs(m, StateManager::getCurStateEnt()->getElapsedMs());
-  }
-}
-
 void Base::resetTimeEvents()
 {
   for (std::map<String, TimeEvent>::iterator it = timeEventMap.begin(); it != timeEventMap.end(); it++)
@@ -336,14 +328,6 @@ void Base::deactivateTimeEvents()
     Serial.print("Deleting temporary TE ");
     Serial.println(s);
     timeEventMap.erase(s);
-  }
-}
-
-void Base::setTEIntervalMs(String e, unsigned long m)
-{
-  if (StateManager::getCurStateEnt()->timeEventMap.count(e))
-  {
-    StateManager::getCurStateEnt()->timeEventMap.at(e).setIntervalMs(m, StateManager::getCurStateEnt()->getElapsedMs());
   }
 }
 

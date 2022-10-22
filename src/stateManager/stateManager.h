@@ -97,6 +97,8 @@ public:
   static WiFiUDP ntpUDP;
   static NTPClient timeClient;
   static unsigned long convertTime(int id, unsigned long t);
+  static void setIEIntervalMs(String e, unsigned long m);
+  static void setTEIntervalMs(String e, unsigned long m);
   static void setIE(IntervalEvent i);
   static void setTE(TimeEvent t);
 
