@@ -107,3 +107,8 @@ String OTA::getName()
 {
   return "STATE_OTA";
 }
+
+bool OTA::doScanForPeersESPNow()
+{
+  return false;
+}

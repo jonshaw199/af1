@@ -29,6 +29,7 @@ public:
   void loop();
   void preStateChange(int s);
   String getName();
+  bool doScanForPeersESPNow();
 };
 
 #endif // STATEENT_OTA_OTA_H_
