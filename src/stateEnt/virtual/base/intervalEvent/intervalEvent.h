@@ -39,7 +39,7 @@ public:
   unsigned long getMaxCbCnt();
 };
 
-typedef bool (*interval_event_cb)(IECBArg a);
+typedef void (*interval_event_cb)(IECBArg a);
 
 enum IntervalEventMode
 {

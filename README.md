@@ -101,7 +101,6 @@ public:
   {
     intervalEventMap["Demo2_1"] = IntervalEvent("Demo2_1", 3000, [](IECBArg a) {
       // Do something here every 3 seconds indefinitely
-      return true;
     } /*, maxCbCnt */ ))); // Or assign maxCbCnt for 1-time or x-time events
   }
 }

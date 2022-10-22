@@ -129,8 +129,9 @@ bool IntervalEvent::isTime(unsigned long elapsedMs)
 
 bool IntervalEvent::cbIfTimeAndActive(unsigned long elapsedMs)
 {
-  if (mode == IE_MODE_ACTIVE && isTime(elapsedMs) && cb(IECBArg(name, elapsedMs, cbCnt, maxCbCnt)))
+  if (mode == IE_MODE_ACTIVE && isTime(elapsedMs))
   {
+    cb(IECBArg(name, elapsedMs, cbCnt, maxCbCnt));
     cbCnt = intervalMs > 0 ? elapsedMs / intervalMs : 0; // Setting cbCnt to expected value rather than just incrementing
     return true;
   }

@@ -174,8 +174,9 @@ bool TimeEvent::isTime(unsigned long curMs)
 
 bool TimeEvent::cbIfTimeAndActive(unsigned long curMs)
 {
-  if (mode == TE_MODE_ACTIVE && isTime(curMs) && startMs && cb(TECBArg(name, curMs, startMs, intervalMs, cbCnt, maxCbCnt))) // Checking intervalMs here since default constructor doesnt even define cb; might need stub there to be safe
+  if (mode == TE_MODE_ACTIVE && isTime(curMs) && startMs)
   {
+    cb(TECBArg(name, curMs, startMs, intervalMs, cbCnt, maxCbCnt));
     unsigned long elapsedMs = curMs - startMs;
     cbCnt = intervalMs ? elapsedMs / intervalMs : cbCnt + 1; // Setting cbCnt to expected value rather than just incrementing (unless intervalMs is 0)
     return true;

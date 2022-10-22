@@ -43,7 +43,7 @@ public:
     unsigned long getMaxCbCnt();
 };
 
-typedef bool (*time_event_cb)(TECBArg a);
+typedef void (*time_event_cb)(TECBArg a);
 
 enum TimeEventMode
 {
