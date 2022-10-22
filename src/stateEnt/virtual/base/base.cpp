@@ -1162,22 +1162,22 @@ void Base::scheduleSyncStart()
   unsigned long dif = s - millis();
   unsigned long intervalMs = dif + StateManager::getCurStateEnt()->getElapsedMs();
 
-  StateManager::getCurStateEnt()->getIntervalEventMap()["Sync_ScheduleSyncStart"] = IntervalEvent(
+  StateManager::setIE(IntervalEvent(
       "Sync_ScheduleSyncStart",
       intervalMs, [](IECBArg a)
       {
     Serial.println("Starting");
     StateManager::getCurStateEnt()->doSynced(); },
-      1, true);
+      1, true));
 }
 
 void Base::doSynced()
 {
-  StateManager::getCurStateEnt()->getIntervalEventMap()["Base_SyncStart"] = IntervalEvent(
+  StateManager::setIE(IntervalEvent(
       "Base_SyncStart",
       300, [](IECBArg a)
       { setBuiltinLED(a.getCbCnt() % 2); },
-      -1, true, StateManager::getCurStateEnt()->getElapsedMs() / 300);
+      -1, true, StateManager::getCurStateEnt()->getElapsedMs() / 300));
 }
 
 void Base::setSyncStartTime(unsigned long s)
