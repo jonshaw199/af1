@@ -41,20 +41,14 @@ Base::Base()
 {
   intervalEventMap["Base_ESPHandshake"] = IntervalEvent("Base_ESPHandshake", MS_HANDSHAKE_LOOP, [](IECBArg a)
                                                         {
-    if (StateManager::getStateEntMap().at(StateManager::getCurState())->doScanForPeersESPNow()) {
-      handleHandshakes();
-    } else {
-      Serial.println("ESPNow peer scan denied in current state");
-    }
-
-    // StateManager::getCurStateEnt()->getIntervalEventMap().at("Base_ESPHandshake").setIntervalMs(MS_HANDSHAKE_LOOP);
-
-    return true; });
-
-  /*intervalEventMap["Base_TimeSync"] = IntervalEvent("Base_TimeSync", MS_TIME_SYNC, [](IECBArg a)
-                                                    {
-    sendAllTimeSyncMessages();
-    return true; });*/
+                                                          if (StateManager::getStateEntMap().at(StateManager::getCurState())->doScanForPeersESPNow())
+                                                          {
+                                                            handleHandshakes();
+                                                          }
+                                                          else
+                                                          {
+                                                            Serial.println("ESPNow peer scan denied in current state");
+                                                          } });
 
   syncStartTime = 0;
 
@@ -73,8 +67,7 @@ Base::Base()
           msg.setData((uint8_t *)&d);
           pushOutbox(msg);
           scheduleSyncStart();
-        }
-        return true; },
+        } },
       1);
 #endif
 }
@@ -1174,8 +1167,7 @@ void Base::scheduleSyncStart()
       intervalMs, [](IECBArg a)
       {
     Serial.println("Starting");
-    StateManager::getCurStateEnt()->doSynced();
-    return true; },
+    StateManager::getCurStateEnt()->doSynced(); },
       1, true);
 }
 
@@ -1184,9 +1176,7 @@ void Base::doSynced()
   StateManager::getCurStateEnt()->getIntervalEventMap()["Base_SyncStart"] = IntervalEvent(
       "Base_SyncStart",
       300, [](IECBArg a)
-      {
-      setBuiltinLED(a.getCbCnt() % 2);
-      return true; },
+      { setBuiltinLED(a.getCbCnt() % 2); },
       -1, true, StateManager::getCurStateEnt()->getElapsedMs() / 300);
 }
 

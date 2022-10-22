@@ -116,7 +116,6 @@ public:
   {
     timeEventMap["Demo3_1"] = TimeEvent("Demo3_1", 1830354651000, [](TECBArg a) {
       // Do something here every 3 seconds starting on Saturday, January 1, 2028 7:50:51 AM GMT-08:00
-      return true;
     }, /*intervalMs*/3000 /*, maxCbCnt */)));
   }
 }
