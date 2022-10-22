@@ -99,9 +99,9 @@ class Demo2 : public Base
 public:
   Demo2()
   {
-    intervalEventMap["Demo2_1"] = IntervalEvent("Demo2_1", 3000, [](IECBArg a) {
+    AF1::setIE(IntervalEvent("Demo2_1", 3000, [](IECBArg a) {
       // Do something here every 3 seconds indefinitely
-    } /*, maxCbCnt */ ))); // Or assign maxCbCnt for 1-time or x-time events
+    } /*, maxCbCnt */ )))); // Or assign maxCbCnt for 1-time or x-time events
   }
 }
 ```
@@ -114,9 +114,9 @@ class Demo3 : public Base
 public:
   Demo3()
   {
-    timeEventMap["Demo3_1"] = TimeEvent("Demo3_1", 1830354651000, [](TECBArg a) {
+    AF1::setTE(TimeEvent("Demo3_1", 1830354651000, [](TECBArg a) {
       // Do something here every 3 seconds starting on Saturday, January 1, 2028 7:50:51 AM GMT-08:00
-    }, /*intervalMs*/3000 /*, maxCbCnt */)));
+    }, /*intervalMs*/3000 /*, maxCbCnt */))));
   }
 }
 ```
