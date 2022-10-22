@@ -1,6 +1,6 @@
 {
   "name": "AF1",
-  "version": "1.0.64",
+  "version": "1.0.65",
   "description": "Arduino/ESP32 Framework ✔ Websocket Client ✔ HTTP Client ✔ ESP-Now P2P (Auto-Connect; Self-Healing) ✔ Time Sync Devices/Tasks (No IR/LOS Required) ✔ Event Scheduling ✔ State Management ✔ OTA Firmware Updates",
   "keywords": "arduino, esp32, iot, espnow, websocket, client, server, ota, state, management, event, scheduling, over-the-air, firmware, updates, ntp, ntpclient, time, sync, task, tasks, synchronous, asynchronous, clock, mesh, self, healing, auto, p2p",
   "authors": [
