@@ -426,3 +426,13 @@ unsigned long StateManager::convertTime(int id, unsigned long t)
   }
   return 0;
 }
+
+void StateManager::setIE(IntervalEvent i)
+{
+  getCurStateEnt()->getIntervalEventMap()[i.getName()] = i;
+}
+
+void StateManager::setTE(TimeEvent t)
+{
+  getCurStateEnt()->getTimeEventMap()[t.getName()] = t;
+}
