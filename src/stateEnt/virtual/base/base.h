@@ -151,6 +151,8 @@ protected:
   // Websocket
   static void sendMsgWS(AF1Msg msg);
   static void connectToWS();
+  // Info (currently just WS)
+  static void sendMsgInfo(std::set<int> recipients);
 
   std::map<String, IntervalEvent> intervalEventMap;
   std::map<String, TimeEvent> timeEventMap;

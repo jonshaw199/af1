@@ -1251,6 +1251,16 @@ bool Base::doConnectToWSServer()
   return !doSync();
 }
 
+void Base::sendMsgInfo(std::set<int> recipients)
+{
+  AF1Msg msg;
+  msg.setState(getCurState());
+  msg.setType(TYPE_INFO);
+  msg.getJson()["info"] = getCurStateEnt()->getInfo();
+  msg.setRecipients(recipients);
+  pushOutbox(msg);
+}
+
 std::map<String, IntervalEvent> &Base::getIntervalEventMap()
 {
   return intervalEventMap;
