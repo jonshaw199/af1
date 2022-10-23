@@ -1205,6 +1205,7 @@ void Base::connectToWS()
         if (client.connect(i.host.c_str(), i.port))
         {
           Serial.println("Connected to websocket server");
+          stateEnt->onConnectWSServer();
         }
         else
         {
@@ -1481,6 +1482,17 @@ void Base::setDefaultWSClientInfo(ws_client_info w)
 ws_client_info Base::getDefaultWSClientInfo()
 {
   return defaultWSClientInfo;
+}
+
+void Base::onConnectWSServer()
+{
+}
+
+DynamicJsonDocument Base::getInfo()
+{
+  DynamicJsonDocument info(1024);
+  // info["id"] =
+  return info;
 }
 
 std::set<int> Base::getPeerIDs()

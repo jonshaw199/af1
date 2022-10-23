@@ -182,6 +182,8 @@ public:
   virtual bool doConnectToWSServer();
   virtual void doSynced();
   virtual bool doSync();
+  virtual void onConnectWSServer();
+  static DynamicJsonDocument getInfo();
   // Wifi
   static String macToString(const uint8_t *m);
   static void printMac(const uint8_t *m);
