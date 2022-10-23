@@ -1205,7 +1205,6 @@ void Base::connectToWS()
         if (client.connect(i.host.c_str(), i.port))
         {
           Serial.println("Connected to websocket server");
-          stateEnt->onConnectWSServer();
         }
         else
         {
@@ -1232,6 +1231,7 @@ void Base::connectToWS()
         {
           Serial.println("Handshake successful");
           curWSClientInfo = i;
+          stateEnt->onConnectWSServer();
         }
         else
         {
