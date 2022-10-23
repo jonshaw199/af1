@@ -22,7 +22,7 @@
 #include "base.h"
 #include "pre.h"
 
-// StateManager - BEGIN
+// StateManager - BEGIN (END kinda got lost down a ways)
 
 // #include <set>
 
@@ -62,21 +62,21 @@ static std::map<String, int> macToIDMap;
 WiFiUDP Base::ntpUDP;
 NTPClient Base::timeClient(ntpUDP);
 
-// StateManager - END
+unsigned long startMs;
+
+static Box inbox;
+static Box outbox;
+
+static HTTPClient httpClient;
+static WiFiMulti wifiMulti;
+
+unsigned long syncStartTime;
 
 uint8_t Base::macAP[6];
 uint8_t Base::macSTA[6];
 
-Box Base::inbox;
-Box Base::outbox;
-
-HTTPClient Base::httpClient;
-
-WiFiMulti Base::wifiMulti;
-
-WebSocketClient Base::webSocketClient;
-// Use WiFiClient class to create TCP connections
-WiFiClient Base::client;
+static WebSocketClient webSocketClient;
+static WiFiClient client; // Use WiFiClient class to create TCP connections
 
 Base::Base()
 {
@@ -135,7 +135,7 @@ void Base::begin(uint8_t id)
   registerStringHandler("synctest", [](SHArg a)
                         { setRequestedState(STATE_SYNC_TEST); });
   registerStringHandler("hs", [](SHArg a)
-                        { getCurStateEnt()->handleHandshakes(true); });
+                        { stateEnt->handleHandshakes(true); });
 
   initialState = STATE_IDLE_BASE;
   defaultWSClientInfo = {"", "", 0, ""};
@@ -1601,28 +1601,28 @@ unsigned long Base::convertTime(int id, unsigned long t)
 
 void Base::setIEIntervalMs(String e, unsigned long m)
 {
-  if (getCurStateEnt()->getIntervalEventMap().count(e))
+  if (stateEnt->getIntervalEventMap().count(e))
   {
-    getCurStateEnt()->getIntervalEventMap().at(e).setIntervalMs(m, getCurStateEnt()->getElapsedMs());
+    stateEnt->getIntervalEventMap().at(e).setIntervalMs(m, stateEnt->getElapsedMs());
   }
 }
 
 void Base::setTEIntervalMs(String e, unsigned long m)
 {
-  if (getCurStateEnt()->getTimeEventMap().count(e))
+  if (stateEnt->getTimeEventMap().count(e))
   {
-    getCurStateEnt()->getTimeEventMap().at(e).setIntervalMs(m, getCurStateEnt()->getElapsedMs());
+    stateEnt->getTimeEventMap().at(e).setIntervalMs(m, stateEnt->getElapsedMs());
   }
 }
 
 void Base::setIE(IntervalEvent i)
 {
-  getCurStateEnt()->getIntervalEventMap()[i.getName()] = i;
+  stateEnt->getIntervalEventMap()[i.getName()] = i;
 }
 
 void Base::setTE(TimeEvent t)
 {
-  getCurStateEnt()->getTimeEventMap()[t.getName()] = t;
+  stateEnt->getTimeEventMap()[t.getName()] = t;
 }
 
 // StateManager - END

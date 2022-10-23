@@ -123,21 +123,12 @@ class Base
 
   ws_client_info wsClientInfo;
 
-  unsigned long syncStartTime;
-
 protected:
-  unsigned long startMs;
   static void handleInboxMsg(AF1Msg m);
   static void handleOutboxMsg(AF1Msg m);
 
   static uint8_t macAP[6];
   static uint8_t macSTA[6];
-
-  static Box inbox;
-  static Box outbox;
-
-  static HTTPClient httpClient;
-  static WiFiMulti wifiMulti;
 
   // Wifi
   static bool broadcastAP();
@@ -183,7 +174,7 @@ public:
   virtual void doSynced();
   virtual bool doSync();
   virtual void onConnectWSServer();
-  static DynamicJsonDocument getInfo();
+  virtual DynamicJsonDocument getInfo();
   // Wifi
   static String macToString(const uint8_t *m);
   static void printMac(const uint8_t *m);
@@ -197,8 +188,6 @@ public:
   static void pushOutbox(AF1Msg m);
   static void pushInbox(AF1Msg m);
   // Websocket
-  static WebSocketClient webSocketClient;
-  static WiFiClient client; // Use WiFiClient class to create TCP connections
   void setWSClientInfo(ws_client_info w);
   ws_client_info getWSClientInfo();
   // HTTP
