@@ -65,7 +65,7 @@ public:
 void setup()
 {
   Serial.begin(115200);
-  AF1::setup(DEVICE_ID); // Required
+  AF1::begin(DEVICE_ID); // Required
 
   /*
     static void registerStateEnt(int i, Base *s);
@@ -81,7 +81,7 @@ void setup()
 
 void loop()
 {
-  AF1::loop(); // Required
+  AF1::update(); // Required
 }
 ```
 
