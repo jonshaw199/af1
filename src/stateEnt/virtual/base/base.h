@@ -38,6 +38,19 @@
 #include "box/box.h"
 #include "event/event.h"
 
+// #include <queue>
+// #include <map>
+#include <vector>
+// #include <Arduino.h>
+// #include <esp_now.h>
+#include <mutex>
+#include <NTPClient.h>
+#include <WiFiUdp.h>
+// #include "state/state.h"
+// #include "message/message.h"
+// #include "stateEnt/virtual/base/base.h"
+#include "modeEnt/virtual/base/base.h"
+
 class SHArg
 {
   String string;
@@ -114,8 +127,6 @@ class Base
 
 protected:
   unsigned long startMs;
-  std::map<String, IntervalEvent> intervalEventMap;
-  std::map<String, TimeEvent> timeEventMap;
   static void handleInboxMsg(AF1Msg m);
   static void handleOutboxMsg(AF1Msg m);
 
@@ -150,8 +161,13 @@ protected:
   static void sendMsgWS(AF1Msg msg);
   static void connectToWS();
 
+  std::map<String, IntervalEvent> intervalEventMap;
+  std::map<String, TimeEvent> timeEventMap;
+
 public:
   Base();
+  static void begin(uint8_t id);
+  static void update();
   // Virtual
   virtual void setup();
   virtual void loop();
@@ -203,6 +219,51 @@ public:
   void resetTimeEvents();
   void activateTimeEvents();
   void deactivateTimeEvents();
+
+  // StateManager
+  // static void setup(int id);
+  // static void loop();
+  static int getCurState();
+  static int getPrevState();
+  static void setRequestedState(int s);
+  static int getRequestedState();
+  static int getCurMode();
+  static int getPrevMode();
+  static void setRequestedMode(int m);
+  static int getRequestedMode();
+  static void setInitialMode(int m);
+  static int getInitialMode();
+  static bool handleModeChange(int m);
+  static String modeToString(int s);
+  static void handleUserInput(String s);
+  static String stateToString(int s);
+  static bool handleStateChange(int s);
+  static const std::vector<wifi_ap_info> getWifiAPs();
+  static void setInitialState(int s);
+  static int getInitialState();
+  static void setPurgNext(int p, int n);
+  static const std::map<int, Base *> &getStateEntMap();
+  static Base *getCurStateEnt();
+  static int getDeviceID();
+  static void setDefaultWSClientInfo(ws_client_info w);
+  static ws_client_info getDefaultWSClientInfo();
+  static std::map<int, af1_peer_info> &getPeerInfoMap();
+  static std::map<String, int> &getMacToIDMap();
+  static std::set<int> getPeerIDs();
+  static void setCurWSClientInfo(ws_client_info i);
+  static ws_client_info getCurWSClientInfo();
+  static WiFiUDP ntpUDP;
+  static NTPClient timeClient;
+  static unsigned long convertTime(int id, unsigned long t);
+  static void setIEIntervalMs(String e, unsigned long m);
+  static void setTEIntervalMs(String e, unsigned long m);
+  static void setIE(IntervalEvent i);
+  static void setTE(TimeEvent t);
+
+  static void registerStateEnt(int i, Base *s);
+  static void registerStringHandler(String s, string_input_handler h);
+  static void registerWifiAP(String s, String p);
+  static void registerWifiAP(String s, String p, int a, int b, int c, int d, int ga, int gb, int gc, int gd, int sa, int sb, int sc, int sd);
 };
 
 #endif // STATEENT_VIRTUAL_BASE_BASE_H_

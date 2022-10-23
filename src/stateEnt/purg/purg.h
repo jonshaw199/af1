@@ -21,7 +21,6 @@
 #define STATEENT_PURG_PURG_H_
 
 #include <Arduino.h>
-#include "stateManager/stateManager.h"
 #include "state/state.h"
 #include "pre.h"
 
@@ -51,7 +50,7 @@ public:
     if (T::getElapsedMs() > purgMs)
     {
       Serial.println("Purgatory over");
-      StateManager::setRequestedState(next);
+      Base::setRequestedState(next);
     }
   }
 

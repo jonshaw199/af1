@@ -20,7 +20,6 @@
 #include <WiFi.h>
 
 #include "init.h"
-#include "stateManager/stateManager.h"
 #include "pre.h"
 
 void Init::setup()
@@ -28,7 +27,7 @@ void Init::setup()
   Serial.println();
   Serial.println("*********");
   Serial.print("JS ID: ");
-  Serial.println(StateManager::getDeviceID());
+  Serial.println(getDeviceID());
 
   // WifiHandler init
   WiFi.mode(WIFI_MODE_APSTA);
@@ -55,7 +54,7 @@ void Init::setup()
 
 void Init::loop()
 {
-  StateManager::setRequestedState(StateManager::getInitialState());
+  setRequestedState(getInitialState());
 }
 
 String Init::getName()

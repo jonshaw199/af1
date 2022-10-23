@@ -17,7 +17,7 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#define AF1 StateManager
+#define AF1 Base
 
 #ifndef DEVICE_PREFIX
 #define DEVICE_PREFIX "ESP32-AF1-"

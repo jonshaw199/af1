@@ -18,13 +18,13 @@
 */
 
 #include "message.h"
-#include "stateManager/stateManager.h"
+#include "stateEnt/virtual/base/base.h"
 
 AF1Msg::AF1Msg() : json(1024)
 {
   msg = {};
   msg.state = STATE_IDLE_BASE;
-  msg.senderID = StateManager::getDeviceID();
+  msg.senderID = Base::getDeviceID();
   msg.type = TYPE_NONE;
   msg.transportType = TRANSPORT_NONE;
 
@@ -179,9 +179,9 @@ af1_msg AF1Msg::getInnerMsg()
 
 void AF1Msg::deserializeInnerMsgESPNow()
 {
-  if (StateManager::getStateEntMap().count(msg.state))
+  if (Base::getStateEntMap().count(msg.state))
   {
-    StateManager::getStateEntMap().at(msg.state)->deserializeESPNow(*this);
+    Base::getStateEntMap().at(msg.state)->deserializeESPNow(*this);
   }
   else
   {
@@ -193,9 +193,9 @@ void AF1Msg::deserializeInnerMsgESPNow()
 
 void AF1Msg::serializeInnerMsgESPNow()
 {
-  if (StateManager::getStateEntMap().count(msg.state))
+  if (Base::getStateEntMap().count(msg.state))
   {
-    StateManager::getStateEntMap().at(msg.state)->serializeESPNow(*this);
+    Base::getStateEntMap().at(msg.state)->serializeESPNow(*this);
   }
   else
   {

@@ -20,8 +20,49 @@
 #include <vector>
 
 #include "base.h"
-#include "stateManager/stateManager.h"
 #include "pre.h"
+
+// StateManager - BEGIN
+
+// #include <set>
+
+// #include "stateManager.h"
+#include "modeEnt/basic/basic.h"
+#include "stateEnt/ota/ota.h"
+#include "stateEnt/restart/restart.h"
+#include "stateEnt/init/init.h"
+#include "stateEnt/purg/purg.h"
+#include "stateEnt/synctest/syncTest.h"
+
+static int curState;
+static int prevState;
+static int requestedState;
+static int initialState;
+static int deviceID;
+static Base *stateEnt;
+static std::map<int, Base *> stateEntMap;
+
+static int curMode;
+static int prevMode;
+static int requestedMode;
+static int initialMode;
+static ModeBase *modeEnt;
+static std::map<int, ModeBase *> modeEntMap;
+
+static std::map<String, string_input_handler> stringHandlerMap;
+static std::vector<wifi_ap_info> wifiAPs;
+
+static ws_client_info curWSClientInfo;
+static ws_client_info defaultWSClientInfo;
+
+// From espnowHandler
+static std::map<int, af1_peer_info> peerInfoMap;
+static std::map<String, int> macToIDMap;
+
+WiFiUDP Base::ntpUDP;
+NTPClient Base::timeClient(ntpUDP);
+
+// StateManager - END
 
 uint8_t Base::macAP[6];
 uint8_t Base::macSTA[6];
@@ -41,7 +82,7 @@ Base::Base()
 {
   intervalEventMap["Base_ESPHandshake"] = IntervalEvent("Base_ESPHandshake", MS_HANDSHAKE_LOOP, [](IECBArg a)
                                                         {
-                                                          if (StateManager::getStateEntMap().at(StateManager::getCurState())->doScanForPeersESPNow())
+                                                          if (stateEnt->doScanForPeersESPNow())
                                                           {
                                                             handleHandshakes();
                                                           }
@@ -56,20 +97,166 @@ Base::Base()
   intervalEventMap["Base_SendSyncStartTime"] = IntervalEvent(
       "Base_SendSyncStartTime", MS_TIME_SYNC_SCHEDULE_START, [](IECBArg a)
       {
-        if (StateManager::getCurStateEnt()->doSync()) {
-          StateManager::getCurStateEnt()->setSyncStartTime(millis() + (unsigned long)MS_TIME_SYNC_START);
+        if (stateEnt->doSync()) {
+          stateEnt->setSyncStartTime(millis() + (unsigned long)MS_TIME_SYNC_START);
 
           AF1Msg msg;
-          msg.setState(StateManager::getCurState());
+          msg.setState(curState);
           msg.setType(TYPE_TIME_SYNC_START);
           sync_data d;
-          d.ms = StateManager::getCurStateEnt()->getSyncStartTime();
+          d.ms = stateEnt->getSyncStartTime();
           msg.setData((uint8_t *)&d);
           pushOutbox(msg);
           scheduleSyncStart();
         } },
       1);
 #endif
+}
+
+void Base::begin(uint8_t id)
+{
+  modeEntMap[MODE_BASIC] = new Basic();
+
+  initialMode = MODE_INITIAL;
+
+  stateEntMap[STATE_INIT] = new Init();
+  stateEntMap[STATE_OTA] = new OTA();
+  stateEntMap[STATE_RESTART] = new Restart();
+  stateEntMap[STATE_PURG] = new Purg<Base>();
+  stateEntMap[STATE_IDLE_BASE] = new Base();
+  stateEntMap[STATE_SYNC_TEST] = new SyncTest();
+
+  registerStringHandler("ota", [](SHArg a)
+                        { setRequestedState(STATE_OTA); });
+  registerStringHandler("restart", [](SHArg a)
+                        { setRequestedState(STATE_RESTART); });
+  registerStringHandler("idle", [](SHArg a)
+                        { setRequestedState(STATE_IDLE_BASE); });
+  registerStringHandler("synctest", [](SHArg a)
+                        { setRequestedState(STATE_SYNC_TEST); });
+  registerStringHandler("hs", [](SHArg a)
+                        { getCurStateEnt()->handleHandshakes(true); });
+
+  initialState = STATE_IDLE_BASE;
+  defaultWSClientInfo = {"", "", 0, ""};
+  curWSClientInfo = defaultWSClientInfo;
+
+  deviceID = id;
+
+  int m = initialMode;
+  curMode = m;
+  requestedMode = m;
+  if (handleModeChange(m))
+  {
+    int s = STATE_INIT;
+    curState = s;
+    requestedState = s;
+    handleStateChange(s); // Let Init stateEnt handle everything
+  }
+}
+
+void Base::update()
+{
+  // Check if mode change requested and proceed if modeEnt->validateStateChange() says its ok
+  int curMode = getCurMode();
+  int requestedMode = getRequestedMode();
+  if (curMode != requestedMode)
+  {
+    Serial.println("Handling mode change request: " + modeToString(requestedMode));
+    if (modeEnt->validateModeChange(requestedMode))
+    {
+      modeEnt->preModeChange(requestedMode);
+      // Requested mode may have changed between last and next function call
+      handleModeChange(requestedMode);
+      Serial.println("Mode change complete");
+    }
+    else
+    {
+      Serial.println("Mode change rejected by validateStateChange");
+    }
+  }
+
+  if (modeEnt->loop())
+  {
+    // StateManager Loop - BEGIN
+
+    if (timeClient.isTimeSet())
+    {
+      timeClient.update();
+    }
+
+    inbox.handleMessages([](AF1Msg &m)
+                         { m.deserializeInnerMsgESPNow(); });
+    outbox.handleMessages([](AF1Msg &m)
+                          { 
+                          if (m.getType() == TYPE_TIME_SYNC) {
+                            setTimeSyncMsgTime(m);
+                          }
+                          m.serializeInnerMsgESPNow(); });
+
+    // Handling user input
+    if (Serial.available() > 0)
+    {
+      String s = Serial.readString();
+      handleUserInput(s);
+    }
+
+    // Time Events
+    if (timeClient.isTimeSet())
+    {
+      for (std::map<String, TimeEvent>::iterator it = stateEnt->timeEventMap.begin(); it != stateEnt->timeEventMap.end(); it++)
+      {
+        stateEnt->timeEventMap[it->first].cbIfTimeAndActive(timeClient.getEpochTime() * 1000UL);
+      }
+    }
+
+    // Interval events
+    for (std::map<String, IntervalEvent>::iterator it = stateEnt->intervalEventMap.begin(); it != stateEnt->intervalEventMap.end(); it++)
+    {
+      stateEnt->intervalEventMap[it->first].cbIfTimeAndActive(stateEnt->getElapsedMs());
+    }
+
+    // Incoming websocket messages
+    String data;
+    if (client)
+    {
+      webSocketClient.getData(data);
+      if (data.length() > 0)
+      {
+        Serial.print(".");
+        DynamicJsonDocument doc(1024);
+        deserializeJson(doc, data);
+        pushInbox(doc);
+      }
+    }
+    else
+    {
+      // Serial.println("Client disconnected");
+    }
+
+    // StateManager Loop - END
+    // Handling this first instead of last; allows us to use init.loop() if we need it before switching to the requested state (or maybe we don't want to request a new state during init at all?)
+    stateEnt->loop();
+
+    // Check if state change requested and proceed if stateEnt->validateStateChange() says its ok
+    int curState = getCurState();
+    int requestedState = getRequestedState();
+    if (curState != requestedState)
+    {
+      Serial.println("Handling state change request: " + stateToString(requestedState));
+      if (stateEnt->validateStateChange(requestedState))
+      {
+        stateEnt->preStateChange(requestedState);
+        // Requested state may have changed between last and next function call
+        handleStateChange(requestedState);
+        Serial.println("State change complete");
+      }
+      else
+      {
+        Serial.println("State change rejected by validateStateChange");
+      }
+    }
+  }
 }
 
 void Base::setup()
@@ -86,59 +273,6 @@ void Base::setup()
 
 void Base::loop()
 {
-  if (StateManager::timeClient.isTimeSet())
-  {
-    StateManager::timeClient.update();
-  }
-
-  inbox.handleMessages([](AF1Msg &m)
-                       { m.deserializeInnerMsgESPNow(); });
-  outbox.handleMessages([](AF1Msg &m)
-                        { 
-                          if (m.getType() == TYPE_TIME_SYNC) {
-                            setTimeSyncMsgTime(m);
-                          }
-                          m.serializeInnerMsgESPNow(); });
-
-  // Handling user input
-  if (Serial.available() > 0)
-  {
-    String s = Serial.readString();
-    StateManager::handleUserInput(s);
-  }
-
-  // Time Events
-  if (StateManager::timeClient.isTimeSet())
-  {
-    for (std::map<String, TimeEvent>::iterator it = timeEventMap.begin(); it != timeEventMap.end(); it++)
-    {
-      timeEventMap[it->first].cbIfTimeAndActive(StateManager::timeClient.getEpochTime() * 1000UL);
-    }
-  }
-
-  // Interval events
-  for (std::map<String, IntervalEvent>::iterator it = intervalEventMap.begin(); it != intervalEventMap.end(); it++)
-  {
-    intervalEventMap[it->first].cbIfTimeAndActive(getElapsedMs());
-  }
-
-  // Incoming websocket messages
-  String data;
-  if (client)
-  {
-    webSocketClient.getData(data);
-    if (data.length() > 0)
-    {
-      Serial.print(".");
-      DynamicJsonDocument doc(1024);
-      deserializeJson(doc, data);
-      pushInbox(doc);
-    }
-  }
-  else
-  {
-    // Serial.println("Client disconnected");
-  }
 }
 
 bool Base::validateStateChange(int s)
@@ -149,7 +283,7 @@ bool Base::validateStateChange(int s)
 void Base::preStateChange(int s)
 {
   Serial.print("Switching to ");
-  Serial.print(StateManager::getStateEntMap().at(s)->getName());
+  Serial.print(stateEntMap.at(s)->getName());
   Serial.println(" state now.");
   deactivateIntervalEvents();
   deactivateTimeEvents();
@@ -184,7 +318,7 @@ void Base::handleInboxMsg(AF1Msg m)
   {
   case TYPE_CHANGE_STATE:
     Serial.println("State change request message in inbox");
-    StateManager::setRequestedState(m.getState());
+    requestedState = m.getState();
     break;
   case TYPE_HANDSHAKE_REQUEST:
     Serial.println("Handshake request message in inbox");
@@ -209,19 +343,19 @@ void Base::handleInboxMsg(AF1Msg m)
     memcpy(&d, m.getData(), sizeof(d));
     Serial.print("Received time: ");
     Serial.println(d.ms);
-    StateManager::getCurStateEnt()->setSyncStartTime(StateManager::convertTime(m.getSenderID(), d.ms));
+    stateEnt->setSyncStartTime(convertTime(m.getSenderID(), d.ms));
     Serial.print("Converted time: ");
-    Serial.println(StateManager::getCurStateEnt()->getSyncStartTime());
+    Serial.println(stateEnt->getSyncStartTime());
     scheduleSyncStart();
     break;
   }
 
 #if IMPLICIT_STATE_CHANGE
 #ifndef MASTER
-  if (m.getState() != StateManager::getCurState() && m.getState() != StateManager::getRequestedState())
+  if (m.getState() != curState && m.getState() != requestedState)
   {
-    Serial.println("Implicit state change to " + StateManager::stateToString(m.getState()));
-    StateManager::setRequestedState(m.getState());
+    Serial.println("Implicit state change to " + stateToString(m.getState()));
+    requestedState = m.getState();
   }
 #endif
 #endif
@@ -340,7 +474,7 @@ bool Base::broadcastAP()
 {
   Serial.println("Broadcasting soft AP");
   String Prefix = DEVICE_PREFIX;
-  String id = String(StateManager::getDeviceID());
+  String id = String(deviceID);
   String SSID = Prefix + id;
   String Password = DEVICE_AP_PASS;
   return WiFi.softAP(SSID.c_str(), Password.c_str(), ESPNOW_CHANNEL, 0);
@@ -394,7 +528,7 @@ void Base::connectToWifi()
     Currently the static IP must be the same for all APs
   */
 
-  std::vector<wifi_ap_info> v = StateManager::getWifiAPs();
+  std::vector<wifi_ap_info> v = wifiAPs;
 
   if (!v.size())
   {
@@ -435,7 +569,7 @@ void Base::connectToWifi()
     Serial.print("Local IP: ");
     Serial.println(WiFi.localIP());
     Serial.println("initializing timeClient");
-    StateManager::timeClient.begin();
+    timeClient.begin();
   }
 }
 
@@ -570,20 +704,20 @@ void Base::onESPNowDataSent(const uint8_t *mac_addr, esp_now_send_status_t statu
   else
   {
     // Serial.println("Delivery Fail");
-    int peerDeviceID = StateManager::getMacToIDMap()[macToString(mac_addr)];
+    int peerDeviceID = getMacToIDMap()[macToString(mac_addr)];
 #if PRINT_MSG_SEND
     Serial.println("Delivery failed to peer ID " + String(peerDeviceID));
 #else
     Serial.print("X");
 #endif
-    StateManager::getPeerInfoMap()[peerDeviceID].mutex.lock();
+    peerInfoMap[peerDeviceID].mutex.lock();
     // Check if there are more retries remaining and retry if so
-    if (StateManager::getPeerInfoMap()[peerDeviceID].lastMsg.getSendCnt() - 1 < StateManager::getPeerInfoMap()[peerDeviceID].lastMsg.getMaxRetries())
+    if (peerInfoMap[peerDeviceID].lastMsg.getSendCnt() - 1 < peerInfoMap[peerDeviceID].lastMsg.getMaxRetries())
     {
 #if PRINT_MSG_SEND
       Serial.println("Retrying send to device ID " + String(peerDeviceID));
 #endif
-      AF1Msg msg = StateManager::getPeerInfoMap()[peerDeviceID].lastMsg;
+      AF1Msg msg = peerInfoMap[peerDeviceID].lastMsg;
       msg.incrementSendCnt();
       msg.setRecipients({peerDeviceID}); // Only resending to 1 device!
       pushOutbox(msg);
@@ -595,7 +729,7 @@ void Base::onESPNowDataSent(const uint8_t *mac_addr, esp_now_send_status_t statu
       Serial.println("Max retries reached; not sending");
 #endif
     }
-    StateManager::getPeerInfoMap()[peerDeviceID].mutex.unlock();
+    peerInfoMap[peerDeviceID].mutex.unlock();
   }
 }
 
@@ -667,7 +801,7 @@ int8_t Base::scanForPeersESPNow()
       {
         int deviceID = SSID.substring(String(DEVICE_PREFIX).length()).toInt();
         // Check the overwrite argument and only overwrite existing entries if true
-        if (!StateManager::getPeerInfoMap().count(deviceID))
+        if (!peerInfoMap.count(deviceID))
         {
           Serial.print(i + 1);
           Serial.print(": ");
@@ -692,12 +826,12 @@ int8_t Base::scanForPeersESPNow()
             info.channel = ESPNOW_CHANNEL;
             info.encrypt = 0; // no encryption
             info.ifidx = WIFI_IF_AP;
-            StateManager::getPeerInfoMap()[deviceID].espnowPeerInfo = info;
-            StateManager::getPeerInfoMap()[deviceID].handshakeResponse = false;
-            StateManager::getPeerInfoMap()[deviceID].lastMsg = AF1Msg();
-            StateManager::getPeerInfoMap()[deviceID].otherTimeSync = 0;
-            StateManager::getPeerInfoMap()[deviceID].thisTimeSync = 0;
-            StateManager::getMacToIDMap()[macToString(info.peer_addr)] = deviceID;
+            peerInfoMap[deviceID].espnowPeerInfo = info;
+            peerInfoMap[deviceID].handshakeResponse = false;
+            peerInfoMap[deviceID].lastMsg = AF1Msg();
+            peerInfoMap[deviceID].otherTimeSync = 0;
+            peerInfoMap[deviceID].thisTimeSync = 0;
+            macToIDMap[macToString(info.peer_addr)] = deviceID;
             Serial.println("Saved peer info for device ID " + String(deviceID));
           }
         }
@@ -721,9 +855,9 @@ int8_t Base::scanForPeersESPNow()
 void Base::connectToPeers()
 {
   // Try to connect if not connected already
-  if (StateManager::getPeerInfoMap().size())
+  if (peerInfoMap.size())
   {
-    for (std::map<int, af1_peer_info>::iterator it = StateManager::getPeerInfoMap().begin(); it != StateManager::getPeerInfoMap().end(); it++)
+    for (std::map<int, af1_peer_info>::iterator it = peerInfoMap.begin(); it != peerInfoMap.end(); it++)
     {
       // Check if the peer exists
       if (esp_now_is_peer_exist(it->second.espnowPeerInfo.peer_addr))
@@ -775,7 +909,7 @@ void Base::sendMsgESPNow(AF1Msg msg)
   msg.setTransportType(TRANSPORT_ESPNOW);
 
   // If recipients set is empty then send to all
-  std::set<int> recipientIDs = msg.getRecipients().size() ? msg.getRecipients() : StateManager::getPeerIDs();
+  std::set<int> recipientIDs = msg.getRecipients().size() ? msg.getRecipients() : getPeerIDs();
 
   if (!recipientIDs.size())
   {
@@ -784,21 +918,21 @@ void Base::sendMsgESPNow(AF1Msg msg)
 #endif
   }
 
-  for (std::set<int>::iterator it = recipientIDs.begin(); it != recipientIDs.end() && StateManager::getPeerInfoMap().count(*it); it++)
+  for (std::set<int>::iterator it = recipientIDs.begin(); it != recipientIDs.end() && peerInfoMap.count(*it); it++)
   {
-    StateManager::getPeerInfoMap()[*it].mutex.lock();
+    peerInfoMap[*it].mutex.lock();
     // Update last msg sent for this peer (now doing this even if sending fails)
-    StateManager::getPeerInfoMap()[*it].lastMsg = msg;
+    peerInfoMap[*it].lastMsg = msg;
     // Serial.println("Sending message to device ID " + String(*it) + " (MAC address " + macToString(peerInfoMap[*it].espnowPeerInfo.peer_addr) + ")");
     af1_msg m = msg.getInnerMsg();
-    esp_err_t result = esp_now_send(StateManager::getPeerInfoMap()[*it].espnowPeerInfo.peer_addr, (uint8_t *)&m, sizeof(m));
+    esp_err_t result = esp_now_send(peerInfoMap[*it].espnowPeerInfo.peer_addr, (uint8_t *)&m, sizeof(m));
     // Serial.print("Send Status: ");
     if (result == ESP_OK)
     {
       // Serial.println("Success");
 
       // Update the send count of that last msg
-      StateManager::getPeerInfoMap()[*it].lastMsg.incrementSendCnt();
+      peerInfoMap[*it].lastMsg.incrementSendCnt();
     }
     else if (result == ESP_ERR_ESPNOW_NOT_INIT)
     {
@@ -829,7 +963,7 @@ void Base::sendMsgESPNow(AF1Msg msg)
     {
       Serial.println("Not sure what happened");
     }
-    StateManager::getPeerInfoMap()[*it].mutex.unlock();
+    peerInfoMap[*it].mutex.unlock();
     delay(DELAY_SEND);
   }
 }
@@ -860,7 +994,7 @@ void Base::sendStateChangeMessages(int s)
   AF1Msg msg = AF1Msg();
 
   msg.setType(TYPE_CHANGE_STATE);
-  msg.setSenderID(StateManager::getDeviceID());
+  msg.setSenderID(deviceID);
   msg.setState(s);
   msg.setMaxRetries(DEFAULT_RETRIES);
 
@@ -875,8 +1009,8 @@ void Base::sendHandshakeRequests(std::set<int> ids)
 
   // Set struct
   msg.setType(TYPE_HANDSHAKE_REQUEST);
-  msg.setSenderID(StateManager::getDeviceID());
-  msg.setState(StateManager::getCurState()); // msg.setState(STATE_HANDSHAKE);
+  msg.setSenderID(deviceID);
+  msg.setState(curState); // msg.setState(STATE_HANDSHAKE);
   msg.setData(getMacAP());
   // Set wrapper
   msg.setRecipients(ids);
@@ -885,7 +1019,7 @@ void Base::sendHandshakeRequests(std::set<int> ids)
 
   for (std::set<int>::const_iterator it = ids.begin(); it != ids.end(); it++)
   {
-    StateManager::getPeerInfoMap()[*it].handshakeRequest = true;
+    peerInfoMap[*it].handshakeRequest = true;
   }
 }
 
@@ -901,11 +1035,11 @@ void Base::receiveHandshakeRequest(AF1Msg m)
   ei.channel = ESPNOW_CHANNEL;
   ei.encrypt = 0; // No encryption
   ei.ifidx = WIFI_IF_AP;
-  StateManager::getPeerInfoMap()[m.getSenderID()].espnowPeerInfo = ei;
-  StateManager::getPeerInfoMap()[m.getSenderID()].handshakeResponse = false;
-  StateManager::getPeerInfoMap()[m.getSenderID()].lastMsg = AF1Msg();
-  StateManager::getPeerInfoMap()[m.getSenderID()].otherTimeSync = 0;
-  StateManager::getPeerInfoMap()[m.getSenderID()].thisTimeSync = 0;
+  peerInfoMap[m.getSenderID()].espnowPeerInfo = ei;
+  peerInfoMap[m.getSenderID()].handshakeResponse = false;
+  peerInfoMap[m.getSenderID()].lastMsg = AF1Msg();
+  peerInfoMap[m.getSenderID()].otherTimeSync = 0;
+  peerInfoMap[m.getSenderID()].thisTimeSync = 0;
 
   connectToPeers();
 }
@@ -918,8 +1052,8 @@ void Base::sendHandshakeResponses(std::set<int> ids)
 
   // Set struct
   msg.setType(TYPE_HANDSHAKE_RESPONSE);
-  msg.setSenderID(StateManager::getDeviceID());
-  msg.setState(StateManager::getCurState()); // msg.setState(STATE_HANDSHAKE);
+  msg.setSenderID(deviceID);
+  msg.setState(curState); // msg.setState(STATE_HANDSHAKE);
   // Set wrapper
   msg.setRecipients(ids);
 
@@ -929,12 +1063,12 @@ void Base::sendHandshakeResponses(std::set<int> ids)
 void Base::receiveHandshakeResponse(AF1Msg m)
 {
   Serial.println("Receiving handshake response from ID " + String(m.getSenderID()));
-  StateManager::getPeerInfoMap()[m.getSenderID()].handshakeResponse = true;
+  peerInfoMap[m.getSenderID()].handshakeResponse = true;
 }
 
 void Base::sendAllHandshakes(bool resend)
 {
-  for (std::map<int, af1_peer_info>::const_iterator it = StateManager::getPeerInfoMap().begin(); it != StateManager::getPeerInfoMap().end() && (!it->second.handshakeRequest || resend); it++)
+  for (std::map<int, af1_peer_info>::const_iterator it = peerInfoMap.begin(); it != peerInfoMap.end() && (!it->second.handshakeRequest || resend); it++)
   {
     sendHandshakeRequests({it->first});
   }
@@ -950,8 +1084,8 @@ void Base::sendTimeSyncMsg(std::set<int> ids, bool isResponse)
 
   // Set struct
   msg.setType(isResponse ? TYPE_TIME_SYNC_RESPONSE : TYPE_TIME_SYNC);
-  msg.setSenderID(StateManager::getDeviceID());
-  msg.setState(StateManager::getCurState());
+  msg.setSenderID(deviceID);
+  msg.setState(curState);
   setTimeSyncMsgTime(msg); // Not sure if this is really necessary; time is now set right before sending which is better
   // Set wrapper
   msg.setRecipients(ids);
@@ -967,17 +1101,17 @@ void Base::receiveTimeSyncMsg(AF1Msg m)
   Serial.print(" msg from ID ");
   Serial.println(m.getSenderID());
 
-  if (StateManager::getPeerInfoMap().count(m.getSenderID()))
+  if (peerInfoMap.count(m.getSenderID()))
   {
     af1_time_sync_data d;
     memcpy(&d, m.getData(), sizeof(d));
-    StateManager::getPeerInfoMap()[m.getSenderID()].otherTimeSync = d.ms;
+    peerInfoMap[m.getSenderID()].otherTimeSync = d.ms;
     unsigned long thisMs = millis();
-    StateManager::getPeerInfoMap()[m.getSenderID()].thisTimeSync = thisMs;
+    peerInfoMap[m.getSenderID()].thisTimeSync = thisMs;
     Serial.print("Other device time: ");
-    Serial.print(StateManager::getPeerInfoMap()[m.getSenderID()].otherTimeSync);
+    Serial.print(peerInfoMap[m.getSenderID()].otherTimeSync);
     Serial.print("; This device time: ");
-    Serial.println(StateManager::getPeerInfoMap()[m.getSenderID()].thisTimeSync);
+    Serial.println(peerInfoMap[m.getSenderID()].thisTimeSync);
 
     if (m.getType() == TYPE_TIME_SYNC)
     {
@@ -992,7 +1126,7 @@ void Base::receiveTimeSyncMsg(AF1Msg m)
 
 void Base::sendAllTimeSyncMessages()
 {
-  for (std::map<int, af1_peer_info>::const_iterator it = StateManager::getPeerInfoMap().begin(); it != StateManager::getPeerInfoMap().end(); it++)
+  for (std::map<int, af1_peer_info>::const_iterator it = peerInfoMap.begin(); it != peerInfoMap.end(); it++)
   {
     sendTimeSyncMsg({it->first});
   }
@@ -1047,13 +1181,13 @@ void Base::connectToWS()
   // Only attempting to connect to websocket if wifi is connected first
   if (WiFi.status() == WL_CONNECTED)
   {
-    ws_client_info i = StateManager::getCurStateEnt()->wsClientInfo;
-    if (!i && StateManager::getDefaultWSClientInfo())
+    ws_client_info i = stateEnt->wsClientInfo;
+    if (!i && defaultWSClientInfo)
     {
-      i = StateManager::getDefaultWSClientInfo();
+      i = defaultWSClientInfo;
     }
 
-    if (!StateManager::getCurStateEnt()->doConnectToWSServer())
+    if (!stateEnt->doConnectToWSServer())
     {
       Serial.println("Websocket connections disabled in this state");
     }
@@ -1061,7 +1195,7 @@ void Base::connectToWS()
     {
       Serial.print("connectToWS(): checking WS connection: ");
       Serial.println(i.toString());
-      if (client && (i == StateManager::getCurWSClientInfo() || !StateManager::getCurWSClientInfo()) && i == StateManager::getDefaultWSClientInfo())
+      if (client && (i == curWSClientInfo || !curWSClientInfo) && i == defaultWSClientInfo)
       {
         Serial.println("Already connected to websocket");
       }
@@ -1096,7 +1230,7 @@ void Base::connectToWS()
         if (webSocketClient.handshake(client))
         {
           Serial.println("Handshake successful");
-          StateManager::setCurWSClientInfo(i);
+          curWSClientInfo = i;
         }
         else
         {
@@ -1133,7 +1267,7 @@ unsigned long Base::getStartMs()
 
 void Base::scheduleSyncStart()
 {
-  unsigned long s = StateManager::getCurStateEnt()->getSyncStartTime();
+  unsigned long s = stateEnt->getSyncStartTime();
 
   Serial.println("Scheduling");
   Serial.print("Current time: ");
@@ -1144,24 +1278,24 @@ void Base::scheduleSyncStart()
   Serial.println(s - millis());
 
   unsigned long dif = s - millis();
-  unsigned long intervalMs = dif + StateManager::getCurStateEnt()->getElapsedMs();
+  unsigned long intervalMs = dif + stateEnt->getElapsedMs();
 
-  StateManager::setIE(IntervalEvent(
+  setIE(IntervalEvent(
       "Sync_ScheduleSyncStart",
       intervalMs, [](IECBArg a)
       {
     Serial.println("Starting");
-    StateManager::getCurStateEnt()->doSynced(); },
+    stateEnt->doSynced(); },
       1, true));
 }
 
 void Base::doSynced()
 {
-  StateManager::setIE(IntervalEvent(
+  setIE(IntervalEvent(
       "Base_SyncStart",
       300, [](IECBArg a)
       { setBuiltinLED(a.getCbCnt() % 2); },
-      -1, true, StateManager::getCurStateEnt()->getElapsedMs() / 300));
+      -1, true, stateEnt->getElapsedMs() / 300));
 }
 
 void Base::setSyncStartTime(unsigned long s)
@@ -1178,3 +1312,305 @@ bool Base::doSync()
 {
   return false;
 }
+
+// StateManager - BEGIN
+
+int Base::getCurState()
+{
+  return curState;
+}
+
+int Base::getPrevState()
+{
+  return prevState;
+}
+
+void Base::setRequestedState(int s)
+{
+  if (stateEntMap.find(s) == stateEntMap.end())
+  {
+    Serial.print("Requested state ");
+    Serial.print(s);
+    Serial.println(" is not recognized, not setting.");
+  }
+  else
+  {
+    Serial.print("Setting requested state: ");
+    Serial.print(stateEntMap[s]->getName());
+    Serial.print(" (");
+    Serial.print(s);
+    Serial.println(")");
+    requestedState = s;
+  }
+}
+
+int Base::getRequestedState()
+{
+  return requestedState;
+}
+
+void Base::handleUserInput(String s)
+{
+  String s2 = s;
+  s2.toLowerCase();
+  int wildIndex = s2.indexOf("*");
+  if (wildIndex >= 0 && stringHandlerMap.count(s2.substring(0, wildIndex + 1)))
+  {
+    stringHandlerMap[s2.substring(0, wildIndex + 1)](SHArg(s2, s2.substring(wildIndex + 1)));
+  }
+  else if (stringHandlerMap.count(s2))
+  {
+    stringHandlerMap[s2](SHArg(s2));
+  }
+  else
+  {
+    Serial.print("String input not recognized: ");
+    Serial.println(s2);
+  }
+}
+
+String Base::stateToString(int s)
+{
+  if (stateEntMap.count(s))
+  {
+    return stateEntMap[s]->getName();
+  }
+  return "Unknown state name";
+}
+
+bool Base::handleStateChange(int s)
+{
+  if (stateEntMap.count(s))
+  {
+    prevState = curState;
+    curState = s;
+
+    stateEnt = stateEntMap[s];
+    stateEnt->setup();
+    stateEnt->setInboxMsgHandler(stateEnt->getInboxHandler());
+    stateEnt->setOutboxMsgHandler(stateEnt->getOutboxHandler());
+
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+}
+
+void Base::registerStateEnt(int i, Base *s)
+{
+  stateEntMap[i] = s;
+}
+
+void Base::registerStringHandler(String s, string_input_handler h)
+{
+  stringHandlerMap[s] = h;
+}
+
+void Base::registerWifiAP(String s, String p)
+{
+  wifi_ap_info i;
+  i.ssid = s;
+  i.pass = p;
+  i.staticIP[0] = -1;
+  i.staticIP[1] = -1;
+  i.staticIP[2] = -1;
+  i.staticIP[3] = -1;
+  i.gatewayIP[0] = -1;
+  i.gatewayIP[1] = -1;
+  i.gatewayIP[2] = -1;
+  i.gatewayIP[3] = -1;
+  i.subnetIP[0] = -1;
+  i.subnetIP[1] = -1;
+  i.subnetIP[2] = -1;
+  i.subnetIP[3] = -1;
+  wifiAPs.push_back(i);
+}
+
+void Base::registerWifiAP(String s, String p, int a, int b, int c, int d, int ga, int gb, int gc, int gd, int sa, int sb, int sc, int sd)
+{
+  wifi_ap_info i;
+  i.ssid = s;
+  i.pass = p;
+  i.staticIP[0] = a;
+  i.staticIP[1] = b;
+  i.staticIP[2] = c;
+  i.staticIP[3] = d;
+  i.gatewayIP[0] = ga;
+  i.gatewayIP[1] = gb;
+  i.gatewayIP[2] = gc;
+  i.gatewayIP[3] = gd;
+  i.subnetIP[0] = sa;
+  i.subnetIP[1] = sb;
+  i.subnetIP[2] = sc;
+  i.subnetIP[3] = sd;
+  wifiAPs.push_back(i);
+}
+
+const std::vector<wifi_ap_info> Base::getWifiAPs()
+{
+  return wifiAPs;
+}
+
+void Base::setInitialState(int s)
+{
+  initialState = s;
+}
+
+int Base::getInitialState()
+{
+  return initialState;
+}
+
+void Base::setPurgNext(int p, int n)
+{
+  (static_cast<Purg<Base> *>(stateEntMap[p]))->setNext(n);
+}
+
+int Base::getDeviceID()
+{
+  return deviceID;
+}
+
+void Base::setDefaultWSClientInfo(ws_client_info w)
+{
+  defaultWSClientInfo = w;
+}
+
+ws_client_info Base::getDefaultWSClientInfo()
+{
+  return defaultWSClientInfo;
+}
+
+std::set<int> Base::getPeerIDs()
+{
+  std::set<int> result;
+  for (std::map<int, af1_peer_info>::iterator it = peerInfoMap.begin(); it != peerInfoMap.end(); it++)
+  {
+    result.insert(it->first);
+  }
+  return result;
+}
+
+std::map<int, af1_peer_info> &Base::getPeerInfoMap()
+{
+  return peerInfoMap;
+}
+
+std::map<String, int> &Base::getMacToIDMap()
+{
+  return macToIDMap;
+}
+
+const std::map<int, Base *> &Base::getStateEntMap()
+{
+  return stateEntMap;
+}
+
+Base *Base::getCurStateEnt()
+{
+  return stateEntMap[curState];
+}
+
+int Base::getCurMode()
+{
+  return curMode;
+}
+
+int Base::getPrevMode()
+{
+  return prevMode;
+}
+
+void Base::setRequestedMode(int m)
+{
+  requestedMode = m;
+}
+
+int Base::getRequestedMode()
+{
+  return requestedMode;
+}
+
+void Base::setInitialMode(int m)
+{
+  initialMode = m;
+}
+
+int Base::getInitialMode()
+{
+  return initialMode;
+}
+
+bool Base::handleModeChange(int m)
+{
+  if (modeEntMap.count(m))
+  {
+    prevMode = curMode;
+    curMode = m;
+    modeEnt = modeEntMap[m];
+    return modeEnt->setup();
+  }
+  else
+  {
+    return false;
+  }
+}
+
+String Base::modeToString(int s)
+{
+  if (modeEntMap.count(s))
+  {
+    return modeEntMap[s]->getName();
+  }
+  return "Unknown mode name";
+}
+
+void Base::setCurWSClientInfo(ws_client_info i)
+{
+  curWSClientInfo = i;
+}
+
+ws_client_info Base::getCurWSClientInfo()
+{
+  return curWSClientInfo;
+}
+
+unsigned long Base::convertTime(int id, unsigned long t)
+{
+  if (peerInfoMap.count(id))
+  {
+    unsigned long dif = t - peerInfoMap[id].otherTimeSync;
+    return peerInfoMap[id].thisTimeSync + dif;
+  }
+  return 0;
+}
+
+void Base::setIEIntervalMs(String e, unsigned long m)
+{
+  if (getCurStateEnt()->getIntervalEventMap().count(e))
+  {
+    getCurStateEnt()->getIntervalEventMap().at(e).setIntervalMs(m, getCurStateEnt()->getElapsedMs());
+  }
+}
+
+void Base::setTEIntervalMs(String e, unsigned long m)
+{
+  if (getCurStateEnt()->getTimeEventMap().count(e))
+  {
+    getCurStateEnt()->getTimeEventMap().at(e).setIntervalMs(m, getCurStateEnt()->getElapsedMs());
+  }
+}
+
+void Base::setIE(IntervalEvent i)
+{
+  getCurStateEnt()->getIntervalEventMap()[i.getName()] = i;
+}
+
+void Base::setTE(TimeEvent t)
+{
+  getCurStateEnt()->getTimeEventMap()[t.getName()] = t;
+}
+
+// StateManager - END

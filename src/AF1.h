@@ -24,7 +24,6 @@
 
 #include "pre.h"
 
-#include "stateManager/stateManager.h"
 #include "stateEnt/virtual/base/base.h"
 
 #endif // FRAMEWORK_FRAMEWORK_H_
