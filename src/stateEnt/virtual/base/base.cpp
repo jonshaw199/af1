@@ -1229,13 +1229,13 @@ void Base::connectToWS()
 
         if (webSocketClient.handshake(client))
         {
-          Serial.println("Handshake successful");
+          Serial.println("WS handshake successful (WS connection complete)");
           curWSClientInfo = i;
           stateEnt->onConnectWSServer();
         }
         else
         {
-          Serial.println("Handshake failed");
+          Serial.println("WS handshake failed (WS connection failed halfway)");
         }
       }
     }
