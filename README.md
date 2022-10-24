@@ -22,40 +22,22 @@ When creating new state entities, setup, loop, serialization/deserialization, an
 This is a trivial example:
 
 ```
-#include <Arduino.h>
 #include <AF1.h>
 
 #define DEVICE_ID 1
 
 enum custom_states
 {
-  STATE_SANDBOX1
+  STATE_BLINK
 };
 
-class Sandbox1 : public Base
+class Blink : public Base
 {
 public:
-  /*
-    virtual void setup();
-    virtual void loop();
-    virtual bool validateStateChange(int s);
-    virtual void preStateChange(int s);
-    virtual msg_handler getInboxHandler();
-    virtual msg_handler getOutboxHandler();
-    virtual String getName();
-    virtual void serializeESPNow(AF1Msg &m);
-    virtual void deserializeESPNow(AF1Msg &m);
-    virtual bool doScanForPeersESPNow();
-    virtual bool doConnectToWSServer();
-    virtual void doSynced();
-    virtual bool doSync();
-    virtual void onConnectWSServer();
-    virtual DynamicJsonDocument getInfo();
-  */
-
-  String getName()
-  {
-    return "SANDBOX1";
+  Blink() {
+    setIE(IntervalEvent("Blink", 500, [](IECBArg a) {
+      setBuiltinLED(a.getCbCnt() % 2); // Blink once per sec
+    }));
   }
 };
 
@@ -63,17 +45,7 @@ void setup()
 {
   Serial.begin(115200);
   AF1::begin(DEVICE_ID); // Required
-
-  /*
-    static void registerStateEnt(int i, Base *s);
-    static void registerStringHandler(String s, string_input_handler h);
-    static void registerWifiAP(String s, String p);
-    static void registerWifiAP(String s, String p, int ipA, int ipB, int ipC, int ipD, int gatewayIpA, int gatewayIpB, int gatewayIpC, int gatewayIpD, int subnetIpA, int subnetIpB, int subnetIpC, int subnetIpD);
-    static void setInitialState(int s);
-    static void setDefaultWSClientInfo(ws_client_info w);
-  */
-
-  AF1::registerStateEnt(STATE_SANDBOX1, new Sandbox1());
+  AF1::registerStateEnt(STATE_BLINK, new Blink());
 }
 
 void loop()
