@@ -36,24 +36,21 @@ class Sandbox1 : public Base
 {
 public:
   /*
-    // Virtual methods
     virtual void setup();
     virtual void loop();
     virtual bool validateStateChange(int s);
     virtual void preStateChange(int s);
     virtual msg_handler getInboxHandler();
     virtual msg_handler getOutboxHandler();
+    virtual String getName();
     virtual void serializeESPNow(AF1Msg &m);
     virtual void deserializeESPNow(AF1Msg &m);
     virtual bool doScanForPeersESPNow();
     virtual bool doConnectToWSServer();
-    virtual bool doSync();
     virtual void doSynced();
-    virtual String getName();
-    // Other commonly used methods
-    void setWSClientInfo(ws_client_info w);
-    static DynamicJsonDocument httpFetch(String url);
-    static DynamicJsonDocument httpPost(String url, DynamicJsonDocument body);
+    virtual bool doSync();
+    virtual void onConnectWSServer();
+    virtual DynamicJsonDocument getInfo();
   */
 
   String getName()
