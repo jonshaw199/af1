@@ -15,7 +15,7 @@
 
 ### Overview
 
-The AF1 core consists of a handful of pre-built "state entities" and one "state manager". A state entity defines the behavior for a state, and new state entities can be created by extending the `Base` class.
+The AF1 core consists of a handful of pre-built "state entities". A state entity defines the behavior for a state, and new state entities can be created by extending the `Base` class.
 
 When creating new state entities, setup, loop, serialization/deserialization, and other behavior from `Base` can be overridden as necessary.
 
