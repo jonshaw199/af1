@@ -15,7 +15,7 @@
 
 ### Overview
 
-A state entity defines the behavior for a state, and new state entities can be created by extending the `Base` class. When creating new state entities, setup, loop, serialization/deserialization, and other behavior from `Base` can be overridden as necessary. This is a trivial "blink" example:
+A state entity defines the behavior for a state, and new state entities can be created by extending the `Base` class. When creating new state entities, setup, loop, serialization/deserialization, and other behavior from `Base` can be overridden as necessary. This is a trivial example:
 
 ```
 #include <AF1.h>
@@ -44,6 +44,7 @@ void setup()
   AF1::begin(DEVICE_ID); // Required
   registerStateEnt(STATE_BLINK, new Blink());
   registerStateEnt(STATE_MACARENA, new Macarena());
+  setInitialState(STATE_BLINK);
 }
 
 void loop()
