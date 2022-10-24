@@ -36,6 +36,9 @@ public:
       setBuiltinLED(a.getCbCnt() % 2); // Blink once per sec
     }));
   }
+  String getName() {
+    return "Blink";
+  }
 };
 
 void setup()
