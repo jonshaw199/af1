@@ -15,20 +15,17 @@
 
 ### Overview
 
-The AF1 core consists of a handful of pre-built "state entities". A state entity defines the behavior for a state, and new state entities can be created by extending the `Base` class.
-
-When creating new state entities, setup, loop, serialization/deserialization, and other behavior from `Base` can be overridden as necessary.
-
-This is a trivial example:
+A state entity defines the behavior for a state, and new state entities can be created by extending the `Base` class. When creating new state entities, setup, loop, serialization/deserialization, and other behavior from `Base` can be overridden as necessary. This is a trivial "blink" example:
 
 ```
 #include <AF1.h>
-
+#include "stateEnt/macarena.h" // ...
 #define DEVICE_ID 1
 
 enum custom_states
 {
-  STATE_BLINK
+  STATE_BLINK,
+  STATE_MACARENA
 };
 
 class Blink : public Base
@@ -45,7 +42,8 @@ void setup()
 {
   Serial.begin(115200);
   AF1::begin(DEVICE_ID); // Required
-  AF1::registerStateEnt(STATE_BLINK, new Blink());
+  registerStateEnt(STATE_BLINK, new Blink());
+  registerStateEnt(STATE_MACARENA, new Macarena());
 }
 
 void loop()
