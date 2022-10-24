@@ -1502,23 +1502,8 @@ DynamicJsonDocument Base::getInfo()
 {
   DynamicJsonDocument info(1024);
   info["id"] = deviceID;
-#ifdef ARDUINO_M5Stick_C
-  info["arduinoM5StickC"] = true;
-#endif
-#ifdef VS1053_CS_PIN
-  info["vs1053"] = true;
-#endif
-#ifdef IR_SENSOR_PIN
-  info["ir"] = true;
-#endif
 #ifdef ESP32
   info["esp32"] = true; // Should always be true
-#endif
-#ifdef JS_IP_A
-  info["staticIp"] = String(JS_IP_A) + "." + String(JS_IP_B) + "." + String(JS_IP_C) + "." + String(JS_IP_D);
-#endif
-#ifdef MASTER
-  info["master"] = true;
 #endif
   return info;
 }
