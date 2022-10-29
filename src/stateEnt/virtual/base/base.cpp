@@ -80,8 +80,9 @@ static WiFiClient client; // Use WiFiClient class to create TCP connections
 
 Base::Base()
 {
-  intervalEventMap["Base_ESPHandshake"] = IntervalEvent("Base_ESPHandshake", MS_HANDSHAKE_LOOP, [](IECBArg a)
-                                                        {
+  eventMap["Base_ESPHandshake"] = Event(
+      "Base_ESPHandshake", [](ECBArg a)
+      {
                                                           if (stateEnt->doScanForPeersESPNow())
                                                           {
                                                             handleHandshakes();
@@ -89,13 +90,14 @@ Base::Base()
                                                           else
                                                           {
                                                             Serial.println("ESPNow peer scan denied in current state");
-                                                          } });
+                                                          } },
+      MS_HANDSHAKE_LOOP);
 
   syncStartTime = 0;
 
 #if MASTER
-  intervalEventMap["Base_SendSyncStartTime"] = IntervalEvent(
-      "Base_SendSyncStartTime", MS_TIME_SYNC_SCHEDULE_START, [](IECBArg a)
+  eventMap["Base_SendSyncStartTime"] = Event(
+      "Base_SendSyncStartTime", [](ECBArg a)
       {
         if (stateEnt->doSync()) {
           stateEnt->setSyncStartTime(millis() + (unsigned long)MS_TIME_SYNC_START);
@@ -109,7 +111,7 @@ Base::Base()
           pushOutbox(msg);
           scheduleSyncStart();
         } },
-      1);
+      MS_TIME_SYNC_SCHEDULE_START, 1);
 #endif
 }
 
@@ -201,19 +203,14 @@ void Base::update()
       handleUserInput(s);
     }
 
-    // Time Events
-    if (timeClient.isTimeSet())
+    // Events
+    for (std::map<String, Event>::iterator it = stateEnt->eventMap.begin(); it != stateEnt->eventMap.end(); it++)
     {
-      for (std::map<String, TimeEvent>::iterator it = stateEnt->timeEventMap.begin(); it != stateEnt->timeEventMap.end(); it++)
+      if (timeClient.isTimeSet())
       {
-        stateEnt->timeEventMap[it->first].cbIfTimeAndActive(timeClient.getEpochTime() * 1000UL);
+        // ...
       }
-    }
-
-    // Interval events
-    for (std::map<String, IntervalEvent>::iterator it = stateEnt->intervalEventMap.begin(); it != stateEnt->intervalEventMap.end(); it++)
-    {
-      stateEnt->intervalEventMap[it->first].cbIfTimeAndActive(stateEnt->getElapsedMs());
+      stateEnt->eventMap[it->first].cbIfTimeAndActive(stateEnt->getElapsedMs());
     }
 
     // Incoming websocket messages
@@ -262,13 +259,11 @@ void Base::update()
 void Base::setup()
 {
   Serial.println("Base::setup()");
-  resetIntervalEvents();
-  activateIntervalEvents();
+  resetEvents();
+  activateEvents();
   startMs = millis();
   connectToWifi();
   connectToWS();
-  resetTimeEvents();
-  activateTimeEvents();
 }
 
 void Base::loop()
@@ -285,8 +280,7 @@ void Base::preStateChange(int s)
   Serial.print("Switching to ");
   Serial.print(stateEntMap.at(s)->getName());
   Serial.println(" state now.");
-  deactivateIntervalEvents();
-  deactivateTimeEvents();
+  deactivateEvents();
 
 #if MASTER
   sendStateChangeMessages(s);
@@ -395,73 +389,38 @@ String Base::getName()
   return "(unknown state name)";
 }
 
-void Base::resetIntervalEvents()
+void Base::resetEvents()
 {
-  for (std::map<String, IntervalEvent>::iterator it = intervalEventMap.begin(); it != intervalEventMap.end(); it++)
+  for (std::map<String, Event>::iterator it = eventMap.begin(); it != eventMap.end(); it++)
   {
-    intervalEventMap[it->first].reset();
+    eventMap[it->first].reset();
   }
 }
 
-void Base::activateIntervalEvents()
+void Base::activateEvents()
 {
-  for (std::map<String, IntervalEvent>::iterator it = intervalEventMap.begin(); it != intervalEventMap.end(); it++)
+  for (std::map<String, Event>::iterator it = eventMap.begin(); it != eventMap.end(); it++)
   {
-    intervalEventMap[it->first].activate();
+    eventMap[it->first].activate();
   }
 }
 
-void Base::deactivateIntervalEvents()
+void Base::deactivateEvents()
 {
   std::vector<String> delKeys;
-  for (std::map<String, IntervalEvent>::iterator it = intervalEventMap.begin(); it != intervalEventMap.end(); it++)
+  for (std::map<String, Event>::iterator it = eventMap.begin(); it != eventMap.end(); it++)
   {
-    intervalEventMap[it->first].deactivate();
-    if (intervalEventMap[it->first].getTemporary())
+    eventMap[it->first].deactivate();
+    if (eventMap[it->first].getTemporary())
     {
       delKeys.push_back(it->first);
     }
   }
   for (String s : delKeys)
   {
-    Serial.print("Deleting temporary IE ");
+    Serial.print("Deleting temporary Event ");
     Serial.println(s);
-    intervalEventMap.erase(s);
-  }
-}
-
-void Base::resetTimeEvents()
-{
-  for (std::map<String, TimeEvent>::iterator it = timeEventMap.begin(); it != timeEventMap.end(); it++)
-  {
-    timeEventMap[it->first].reset();
-  }
-}
-
-void Base::activateTimeEvents()
-{
-  for (std::map<String, TimeEvent>::iterator it = timeEventMap.begin(); it != timeEventMap.end(); it++)
-  {
-    timeEventMap[it->first].activate();
-  }
-}
-
-void Base::deactivateTimeEvents()
-{
-  std::vector<String> delKeys;
-  for (std::map<String, TimeEvent>::iterator it = timeEventMap.begin(); it != timeEventMap.end(); it++)
-  {
-    timeEventMap[it->first].deactivate();
-    if (timeEventMap[it->first].getTemporary())
-    {
-      delKeys.push_back(it->first);
-    }
-  }
-  for (String s : delKeys)
-  {
-    Serial.print("Deleting temporary TE ");
-    Serial.println(s);
-    timeEventMap.erase(s);
+    eventMap.erase(s);
   }
 }
 
@@ -1261,14 +1220,9 @@ void Base::sendMsgInfo(std::set<int> recipients)
   pushOutbox(msg);
 }
 
-std::map<String, IntervalEvent> &Base::getIntervalEventMap()
+std::map<String, Event> &Base::getEventMap()
 {
-  return intervalEventMap;
-}
-
-std::map<String, TimeEvent> &Base::getTimeEventMap()
-{
-  return timeEventMap;
+  return eventMap;
 }
 
 unsigned long Base::getStartMs()
@@ -1289,24 +1243,24 @@ void Base::scheduleSyncStart()
   Serial.println(s - millis());
 
   unsigned long dif = s - millis();
-  unsigned long intervalMs = dif + stateEnt->getElapsedMs();
+  unsigned long startMs = dif + stateEnt->getElapsedMs();
 
-  setIE(IntervalEvent(
+  set(Event(
       "Sync_ScheduleSyncStart",
-      intervalMs, [](IECBArg a)
+      [](ECBArg a)
       {
     Serial.println("Starting");
     stateEnt->doSynced(); },
-      1, true));
+      0, 1, startMs, true));
 }
 
 void Base::doSynced()
 {
-  setIE(IntervalEvent(
+  set(Event(
       "Base_SyncStart",
-      300, [](IECBArg a)
+      [](ECBArg a)
       { setBuiltinLED(a.getCbCnt() % 2); },
-      -1, true, stateEnt->getElapsedMs() / 300));
+      300, 0, 0, true));
 }
 
 void Base::setSyncStartTime(unsigned long s)
@@ -1614,28 +1568,15 @@ unsigned long Base::convertTime(int id, unsigned long t)
 
 void Base::setIEIntervalMs(String e, unsigned long m)
 {
-  if (stateEnt->getIntervalEventMap().count(e))
+  if (stateEnt->getEventMap().count(e))
   {
-    stateEnt->getIntervalEventMap().at(e).setIntervalMs(m, stateEnt->getElapsedMs());
+    stateEnt->getEventMap().at(e).setIntervalMs(m, stateEnt->getElapsedMs());
   }
 }
 
-void Base::setTEIntervalMs(String e, unsigned long m)
+void Base::set(Event e)
 {
-  if (stateEnt->getTimeEventMap().count(e))
-  {
-    stateEnt->getTimeEventMap().at(e).setIntervalMs(m, stateEnt->getElapsedMs());
-  }
-}
-
-void Base::setIE(IntervalEvent i)
-{
-  stateEnt->getIntervalEventMap()[i.getName()] = i;
-}
-
-void Base::setTE(TimeEvent t)
-{
-  stateEnt->getTimeEventMap()[t.getName()] = t;
+  stateEnt->getEventMap()[e.getName()] = e;
 }
 
 // StateManager - END

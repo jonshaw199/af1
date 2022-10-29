@@ -31,12 +31,10 @@
 #include <set>
 #include <WebSocketClient.h>
 
-#include "intervalEvent/intervalEvent.h"
-#include "timeEvent/timeEvent.h"
+#include "event/event.h"
 #include "state/state.h"
 #include "message/message.h"
 #include "box/box.h"
-#include "event/event.h"
 
 // #include <queue>
 // #include <map>
@@ -154,8 +152,7 @@ protected:
   // Info (currently just WS)
   static void sendMsgInfo(std::set<int> recipients);
 
-  std::map<String, IntervalEvent> intervalEventMap;
-  std::map<String, TimeEvent> timeEventMap;
+  std::map<String, Event> eventMap;
 
 public:
   Base();
@@ -197,8 +194,7 @@ public:
   static DynamicJsonDocument httpPost(String url, DynamicJsonDocument body);
   // Other
   static void setBuiltinLED(bool on);
-  std::map<String, IntervalEvent> &getIntervalEventMap();
-  std::map<String, TimeEvent> &getTimeEventMap();
+  std::map<String, Event> &getEventMap();
   unsigned long getStartMs();
   // Sync
   static void scheduleSyncStart();
@@ -206,16 +202,10 @@ public:
   unsigned long getSyncStartTime();
   // Interval Events
   unsigned long getElapsedMs();
-  void resetIntervalEvents();
-  void activateIntervalEvents();
-  void deactivateIntervalEvents();
-  void resetTimeEvents();
-  void activateTimeEvents();
-  void deactivateTimeEvents();
+  void resetEvents();
+  void activateEvents();
+  void deactivateEvents();
 
-  // StateManager
-  // static void setup(int id);
-  // static void loop();
   static int getCurState();
   static int getPrevState();
   static void setRequestedState(int s);
@@ -250,8 +240,7 @@ public:
   static unsigned long convertTime(int id, unsigned long t);
   static void setIEIntervalMs(String e, unsigned long m);
   static void setTEIntervalMs(String e, unsigned long m);
-  static void setIE(IntervalEvent i);
-  static void setTE(TimeEvent t);
+  static void set(Event e);
 
   static void registerStateEnt(int i, Base *s);
   static void registerStringHandler(String s, string_input_handler h);

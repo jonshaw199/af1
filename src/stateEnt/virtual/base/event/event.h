@@ -22,15 +22,48 @@
 
 #include <Arduino.h>
 
-class Event
+class ECBArg
 {
-protected:
-  unsigned long intervalMs;
-  unsigned long cbCnt;
+  const unsigned long elapsedMs;
+  const unsigned long intervalMs;
+  const unsigned long startMs;
+  const unsigned long cbCnt;
+  const unsigned long maxCbCnt;
   String name;
 
 public:
+  ECBArg(unsigned long e, unsigned long i, unsigned long s, unsigned long c, unsigned long m, String n);
+  String getName();
+  unsigned long getCbCnt();
+  unsigned long getMaxCbCnt();
+  unsigned long getStartMs();
+  unsigned long getIntervalMs();
+  unsigned long getElapsedMs();
+};
+
+enum EventMode
+{
+  MODE_INACTIVE,
+  MODE_ACTIVE
+};
+
+typedef void (*event_cb)(ECBArg a);
+
+class Event
+{
+private:
+  unsigned long intervalMs;
+  unsigned long cbCnt;
+  unsigned long startMs;
+  String name;
+  unsigned long maxCbCnt;
+  bool temporary;
+  uint8_t mode;
+  event_cb cb;
+
+public:
   Event();
+  Event(String name, event_cb cb, unsigned long intervalMs = 0, unsigned long maxCbCnt = 0, unsigned long startMs = 0, bool temporary = false, uint8_t mode = MODE_ACTIVE, unsigned long cbCnt = 0);
   unsigned long getIntervalMs();
   void setIntervalMs(unsigned long m);
   void setIntervalMs(unsigned long m, unsigned long elapsedMs); // Updates cbCnt based on elapsedMs
@@ -38,6 +71,24 @@ public:
   void setCbCnt(unsigned long c);
   String getName();
   void setName(String s);
+  unsigned long getMaxCbCnt();
+  void setMaxCbCnt(unsigned long c);
+  unsigned long getStartMs();
+  void setStartMs(unsigned long s);
+  void setCb(event_cb c);
+  event_cb getCb();
+
+  unsigned long getLastCbMs();
+  unsigned long getNextCbMs();
+  bool isTime(unsigned long elapsedMs);
+  bool cbIfTimeAndActive(unsigned long elapsedMs);
+  void setMode(uint8_t m);
+  uint8_t getMode();
+  bool getTemporary();
+
+  void reset();
+  void activate();
+  void deactivate();
 };
 
 #endif // STATEENT_BASE_EVENT_H_
