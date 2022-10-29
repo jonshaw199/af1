@@ -117,21 +117,24 @@ bool Event::cbIfTimeAndActive(unsigned long curTime)
   return false;
 }
 
-bool Event::cbIfTimeAndActive()
+unsigned long Event::getCurTime()
 {
-  unsigned long t;
   switch (startTimeType)
   {
   case START_EPOCH_SEC:
-    t = Base::timeClient.isTimeSet() ? Base::timeClient.getEpochTime() : (Base::getCurStateEnt()->getElapsedMs() / 1000UL);
-    break;
+    return Base::timeClient.isTimeSet() ? Base::timeClient.getEpochTime() : (Base::getCurStateEnt()->getElapsedMs() / 1000UL);
   case START_STATE_MS:
-    t = Base::getCurStateEnt()->getElapsedMs();
-    break;
+    return Base::getCurStateEnt()->getElapsedMs();
+  case START_DEVICE_MS:
+    return millis();
   default:
-    t = millis();
+    return 0;
   }
-  return cbIfTimeAndActive(t);
+}
+
+bool Event::cbIfTimeAndActive()
+{
+  return cbIfTimeAndActive(getCurTime());
 }
 
 bool Event::getTemporary()

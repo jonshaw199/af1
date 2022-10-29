@@ -85,6 +85,7 @@ public:
   unsigned long getNextCbTime();
   bool isTime(unsigned long curTime);
   bool cbIfTimeAndActive(unsigned long curTime);
+  unsigned long getCurTime();
   bool cbIfTimeAndActive();
   void setMode(event_mode m);
   event_mode getMode();
