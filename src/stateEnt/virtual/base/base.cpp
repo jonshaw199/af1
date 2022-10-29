@@ -91,7 +91,7 @@ Base::Base()
                                                           {
                                                             Serial.println("ESPNow peer scan denied in current state");
                                                           } },
-      MS_HANDSHAKE_LOOP);
+      false, MS_HANDSHAKE_LOOP);
 
   syncStartTime = 0;
 
@@ -111,7 +111,7 @@ Base::Base()
           pushOutbox(msg);
           scheduleSyncStart();
         } },
-      MS_TIME_SYNC_SCHEDULE_START, 1);
+      false, MS_TIME_SYNC_SCHEDULE_START, 1);
 #endif
 }
 
@@ -1246,12 +1246,11 @@ void Base::scheduleSyncStart()
   unsigned long startMs = dif + stateEnt->getElapsedMs();
 
   set(Event(
-      "Sync_ScheduleSyncStart",
-      [](ECBArg a)
+      "Sync_ScheduleSyncStart", [](ECBArg a)
       {
     Serial.println("Starting");
     stateEnt->doSynced(); },
-      0, 1, startMs, true));
+      true, 0, 1, startMs));
 }
 
 void Base::doSynced()
@@ -1259,8 +1258,8 @@ void Base::doSynced()
   set(Event(
       "Base_SyncStart",
       [](ECBArg a)
-      { setBuiltinLED(a.getCbCnt() % 2); },
-      300, 0, 0, true));
+      { setBuiltinLED(a.cbCnt % 2); },
+      true, 300));
 }
 
 void Base::setSyncStartTime(unsigned long s)

@@ -21,32 +21,8 @@
 
 #include "event.h"
 
-ECBArg::ECBArg(unsigned long e, unsigned long i, unsigned long s, unsigned long c, unsigned long m, String n) : name(n), elapsedMs(e), cbCnt(c), maxCbCnt(m), intervalMs(i), startMs(s) {}
-
-unsigned long ECBArg::getElapsedMs()
-{
-  return elapsedMs;
-}
-
-unsigned long ECBArg::getCbCnt()
-{
-  return cbCnt;
-}
-
-unsigned long ECBArg::getMaxCbCnt()
-{
-  return maxCbCnt;
-}
-
-unsigned long ECBArg::getStartMs()
-{
-  return startMs;
-}
-
-unsigned long ECBArg::getIntervalMs()
-{
-  return intervalMs;
-}
+ECBArg::ECBArg(unsigned long e, unsigned long i, unsigned long s, start_time_type s2, unsigned long c, unsigned long m, String n, bool t)
+    : name(n), elapsedMs(e), cbCnt(c), maxCbCnt(m), intervalMs(i), startTime(s), startTimeType(s2), temporary(t) {}
 
 Event::Event() : name(""), mode(MODE_INACTIVE)
 {
@@ -54,8 +30,8 @@ Event::Event() : name(""), mode(MODE_INACTIVE)
   { Serial.println("No event cb provided"); };
 }
 
-Event::Event(String n, event_cb c, unsigned long i, unsigned long m, unsigned long s, bool t, uint8_t m2, unsigned long c2)
-    : name(n), cb(c), intervalMs(i), maxCbCnt(m), startMs(s), temporary(t), mode(m2), cbCnt(c2) {}
+Event::Event(String n, event_cb c, bool t, unsigned long i, unsigned long m, unsigned long s, start_time_type s2, event_mode m2, unsigned long c2)
+    : name(n), cb(c), temporary(t), intervalMs(i), maxCbCnt(m), startTime(s), startTimeType(s2), mode(m2), cbCnt(c2) {}
 
 unsigned long Event::getIntervalMs()
 {
@@ -103,14 +79,35 @@ void Event::setMaxCbCnt(unsigned long c)
   maxCbCnt = c;
 }
 
+unsigned long Event::getStartTime()
+{
+  return startTime;
+}
+
+void Event::setStartTime(unsigned long t)
+{
+  startTime = t;
+}
+
+unsigned long Event::getStartTimeMs()
+{
+  switch (startTimeType)
+  {
+  case START_EPOCH_SEC:
+    return startTime * 1000;
+  default:
+    return startTime;
+  }
+}
+
 unsigned long Event::getLastCbMs()
 {
-  return intervalMs * cbCnt + startMs;
+  return intervalMs * cbCnt + getStartTimeMs();
 }
 
 unsigned long Event::getNextCbMs()
 {
-  return intervalMs ? getLastCbMs() + intervalMs : startMs;
+  return intervalMs ? getLastCbMs() + intervalMs : getStartTimeMs();
 }
 
 bool Event::isTime(unsigned long curMs)
@@ -118,11 +115,13 @@ bool Event::isTime(unsigned long curMs)
   return curMs >= getNextCbMs() && (!maxCbCnt || cbCnt < maxCbCnt);
 }
 
+// ECBArg(unsigned long e, unsigned long i, unsigned long s, start_time_type s2, unsigned long c, unsigned long m, String n, bool t);
+
 bool Event::cbIfTimeAndActive(unsigned long curMs)
 {
   if (mode == MODE_ACTIVE && isTime(curMs))
   {
-    cb(ECBArg(curMs, intervalMs, startMs, cbCnt, maxCbCnt, name));
+    cb(ECBArg(curMs, intervalMs, startTime, startTimeType, cbCnt, maxCbCnt, name, temporary));
     cbCnt = intervalMs > 0 ? curMs / intervalMs : 0; // Setting cbCnt to expected value rather than just incrementing; don't divide by 0
     return true;
   }

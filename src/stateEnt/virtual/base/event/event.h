@@ -22,29 +22,31 @@
 
 #include <Arduino.h>
 
-class ECBArg
+enum start_time_type
 {
-  const unsigned long elapsedMs;
-  const unsigned long intervalMs;
-  const unsigned long startMs;
-  const unsigned long cbCnt;
-  const unsigned long maxCbCnt;
-  String name;
-
-public:
-  ECBArg(unsigned long e, unsigned long i, unsigned long s, unsigned long c, unsigned long m, String n);
-  String getName();
-  unsigned long getCbCnt();
-  unsigned long getMaxCbCnt();
-  unsigned long getStartMs();
-  unsigned long getIntervalMs();
-  unsigned long getElapsedMs();
+  START_STATE_MS,
+  START_DEVICE_MS,
+  START_EPOCH_SEC
 };
 
-enum EventMode
+enum event_mode
 {
   MODE_INACTIVE,
   MODE_ACTIVE
+};
+
+class ECBArg
+{
+public:
+  const unsigned long elapsedMs;
+  const unsigned long intervalMs;
+  const unsigned long startTime;
+  const start_time_type startTimeType;
+  const unsigned long cbCnt;
+  const unsigned long maxCbCnt;
+  const bool temporary;
+  const String name;
+  ECBArg(unsigned long e, unsigned long i, unsigned long s, start_time_type s2, unsigned long c, unsigned long m, String n, bool t);
 };
 
 typedef void (*event_cb)(ECBArg a);
@@ -54,7 +56,8 @@ class Event
 private:
   unsigned long intervalMs;
   unsigned long cbCnt;
-  unsigned long startMs;
+  unsigned long startTime;
+  start_time_type startTimeType;
   String name;
   unsigned long maxCbCnt;
   bool temporary;
@@ -63,7 +66,7 @@ private:
 
 public:
   Event();
-  Event(String name, event_cb cb, unsigned long intervalMs = 0, unsigned long maxCbCnt = 0, unsigned long startMs = 0, bool temporary = false, uint8_t mode = MODE_ACTIVE, unsigned long cbCnt = 0);
+  Event(String name, event_cb cb, bool temporary = false, unsigned long intervalMs = 0, unsigned long maxCbCnt = 0, unsigned long startTime = 0, start_time_type = START_STATE_MS, event_mode mode = MODE_ACTIVE, unsigned long cbCnt = 0);
   unsigned long getIntervalMs();
   void setIntervalMs(unsigned long m);
   void setIntervalMs(unsigned long m, unsigned long elapsedMs); // Updates cbCnt based on elapsedMs
@@ -73,10 +76,11 @@ public:
   void setName(String s);
   unsigned long getMaxCbCnt();
   void setMaxCbCnt(unsigned long c);
-  unsigned long getStartMs();
-  void setStartMs(unsigned long s);
+  unsigned long getStartTime();
+  void setStartTime(unsigned long s);
   void setCb(event_cb c);
   event_cb getCb();
+  unsigned long getStartTimeMs();
 
   unsigned long getLastCbMs();
   unsigned long getNextCbMs();

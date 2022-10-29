@@ -33,8 +33,8 @@ class Blink : public Base
 public:
   Blink() {
     set(Event("Blink", [](ECBArg a) {
-      setBuiltinLED(a.getCbCnt() % 2); // Blink once per sec
-    }, 500));
+      setBuiltinLED(a.cbCnt % 2); // Blink once per sec
+    }, false, 500));
   }
   void preStateChange(int nextState) {
     setBuiltinLED(0); // Make sure LED is off before leaving state
