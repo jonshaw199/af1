@@ -1565,7 +1565,7 @@ unsigned long Base::convertTime(int id, unsigned long t)
   return 0;
 }
 
-void Base::setIEIntervalMs(String e, unsigned long m)
+void Base::setIntervalMs(String e, unsigned long m)
 {
   if (stateEnt->getEventMap().count(e))
   {
