@@ -110,7 +110,8 @@ bool Event::cbIfTimeAndActive(unsigned long curTime)
   if (mode == MODE_ACTIVE && isTime(curTime))
   {
     cb(ECBArg(curTime, intervalTime, startTime, startTimeType, cbCnt, maxCbCnt, name, temporary));
-    cbCnt = intervalTime > 0 ? curTime / intervalTime : 0; // Setting cbCnt to expected value rather than just incrementing; don't divide by 0
+    cbCnt = intervalTime > 0 ? curTime / intervalTime : startTime ? curTime / startTime
+                                                                  : 0; // Setting cbCnt to expected value rather than just incrementing; don't divide by 0
     return true;
   }
   return false;
