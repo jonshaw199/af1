@@ -206,11 +206,7 @@ void Base::update()
     // Events
     for (std::map<String, Event>::iterator it = stateEnt->eventMap.begin(); it != stateEnt->eventMap.end(); it++)
     {
-      if (timeClient.isTimeSet())
-      {
-        // ...
-      }
-      stateEnt->eventMap[it->first].cbIfTimeAndActive(stateEnt->getElapsedMs());
+      stateEnt->eventMap[it->first].cbIfTimeAndActive();
     }
 
     // Incoming websocket messages
@@ -1565,11 +1561,11 @@ unsigned long Base::convertTime(int id, unsigned long t)
   return 0;
 }
 
-void Base::setIntervalMs(String e, unsigned long m)
+void Base::setIntervalTime(String e, unsigned long t)
 {
   if (stateEnt->getEventMap().count(e))
   {
-    stateEnt->getEventMap().at(e).setIntervalMs(m, stateEnt->getElapsedMs());
+    stateEnt->getEventMap().at(e).setIntervalTime(t, stateEnt->getElapsedMs());
   }
 }
 

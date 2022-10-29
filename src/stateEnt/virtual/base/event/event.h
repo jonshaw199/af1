@@ -38,8 +38,8 @@ enum event_mode
 class ECBArg
 {
 public:
-  const unsigned long elapsedMs;
-  const unsigned long intervalMs;
+  const unsigned long curTime;
+  const unsigned long intervalTime;
   const unsigned long startTime;
   const start_time_type startTimeType;
   const unsigned long cbCnt;
@@ -54,22 +54,22 @@ typedef void (*event_cb)(ECBArg a);
 class Event
 {
 private:
-  unsigned long intervalMs;
+  unsigned long intervalTime;
   unsigned long cbCnt;
   unsigned long startTime;
   start_time_type startTimeType;
   String name;
   unsigned long maxCbCnt;
   bool temporary;
-  uint8_t mode;
+  event_mode mode;
   event_cb cb;
 
 public:
   Event();
-  Event(String name, event_cb cb, bool temporary = false, unsigned long intervalMs = 0, unsigned long maxCbCnt = 0, unsigned long startTime = 0, start_time_type = START_STATE_MS, event_mode mode = MODE_ACTIVE, unsigned long cbCnt = 0);
-  unsigned long getIntervalMs();
-  void setIntervalMs(unsigned long m);
-  void setIntervalMs(unsigned long m, unsigned long elapsedMs); // Updates cbCnt based on elapsedMs
+  Event(String name, event_cb cb, bool temporary = false, unsigned long intervalTime = 0, unsigned long maxCbCnt = 0, unsigned long startTime = 0, start_time_type = START_STATE_MS, event_mode mode = MODE_ACTIVE, unsigned long cbCnt = 0);
+  unsigned long getIntervalTime();
+  void setIntervalTime(unsigned long time);
+  void setIntervalTime(unsigned long time, unsigned long curTime); // Updates cbCnt based on curTime; for "time bending"
   unsigned long getCbCnt();
   void setCbCnt(unsigned long c);
   String getName();
@@ -80,14 +80,14 @@ public:
   void setStartTime(unsigned long s);
   void setCb(event_cb c);
   event_cb getCb();
-  unsigned long getStartTimeMs();
 
-  unsigned long getLastCbMs();
-  unsigned long getNextCbMs();
-  bool isTime(unsigned long elapsedMs);
-  bool cbIfTimeAndActive(unsigned long elapsedMs);
-  void setMode(uint8_t m);
-  uint8_t getMode();
+  unsigned long getLastCbTime();
+  unsigned long getNextCbTime();
+  bool isTime(unsigned long curTime);
+  bool cbIfTimeAndActive(unsigned long curTime);
+  bool cbIfTimeAndActive();
+  void setMode(event_mode m);
+  event_mode getMode();
   bool getTemporary();
 
   void reset();

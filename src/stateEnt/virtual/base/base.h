@@ -200,7 +200,7 @@ public:
   static void scheduleSyncStart();
   void setSyncStartTime(unsigned long s);
   unsigned long getSyncStartTime();
-  // Interval Events
+  // Events
   unsigned long getElapsedMs();
   void resetEvents();
   void activateEvents();
@@ -238,7 +238,7 @@ public:
   static WiFiUDP ntpUDP;
   static NTPClient timeClient;
   static unsigned long convertTime(int id, unsigned long t);
-  static void setIntervalMs(String e, unsigned long m);
+  static void setIntervalTime(String e, unsigned long t);
   static void set(Event e);
 
   static void registerStateEnt(int i, Base *s);
