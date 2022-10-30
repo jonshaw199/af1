@@ -47,6 +47,7 @@ void setup()
   AF1::begin(DEVICE_ID); // Required
   registerStateEnt(STATE_BLINK, new Blink());
   registerStateEnt(STATE_MACARENA, new Macarena());
+  registerStringHandler("mac", [](SHArg a) { setRequestedState(STATE_MACARENA); });
   setInitialState(STATE_BLINK);
 }
 
