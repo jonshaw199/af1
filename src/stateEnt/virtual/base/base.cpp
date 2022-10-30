@@ -225,6 +225,37 @@ void Base::update()
     }
 
     // StateManager Loop - END
+
+    // Sub State
+    if (stateEnt->subStateEnt)
+    {
+      stateEnt->subStateEnt->loop();
+      // Check if SUB state change requested and proceed if subStateEnt->validateStateChange() says its ok
+      if (stateEnt->curSubState != stateEnt->requestedSubState)
+      {
+        Serial.println("Handling sub state change request: " + String(stateEnt->requestedSubState));
+        if (stateEnt->subStateEnt->validateStateChange(stateEnt->requestedSubState))
+        {
+          stateEnt->subStateEnt->preStateChange(stateEnt->requestedSubState);
+          // Requested sub state may have changed between last and next function call
+          if (stateEnt->handleSubStateChange(stateEnt->requestedSubState))
+          {
+            Serial.println("Substate change complete");
+          }
+          else
+          {
+            Serial.println("Error handling sub state change; does it exist?");
+          }
+        }
+        else
+        {
+          Serial.println("Substate change rejected by validateStateChange");
+        }
+      }
+    }
+
+    // Main State
+
     // Handling this first instead of last; allows us to use init.loop() if we need it before switching to the requested state (or maybe we don't want to request a new state during init at all?)
     stateEnt->loop();
 
@@ -1346,7 +1377,11 @@ bool Base::handleStateChange(int s)
     stateEnt->setup();
     stateEnt->setInboxMsgHandler(stateEnt->getInboxHandler());
     stateEnt->setOutboxMsgHandler(stateEnt->getOutboxHandler());
-
+    if (!stateEnt->handleSubStateChange(stateEnt->getInitialSubState()))
+    {
+      Serial.println("No substates for this state");
+      stateEnt->subStateEnt = nullptr;
+    }
     return true;
   }
   else
@@ -1572,3 +1607,63 @@ void Base::set(Event e)
 }
 
 // StateManager - END
+
+int Base::getCurSubState()
+{
+  return curSubState;
+}
+
+int Base::getPrevSubState()
+{
+  return prevSubState;
+}
+
+int Base::getRequestedSubState()
+{
+  return requestedSubState;
+}
+
+void Base::setRequestedSubState(int s)
+{
+  requestedSubState = s;
+}
+
+int Base::getInitialSubState()
+{
+  return initialSubState;
+}
+
+void Base::setInitialSubState(int s)
+{
+  initialSubState = s;
+}
+
+bool Base::handleSubStateChange(int s)
+{
+  if (subStateEntMap.count(s))
+  {
+    prevSubState = curSubState;
+    curSubState = s;
+
+    subStateEnt = subStateEntMap[s];
+    subStateEnt->setup();
+    subStateEnt->setInboxMsgHandler(subStateEnt->getInboxHandler());
+    subStateEnt->setOutboxMsgHandler(subStateEnt->getOutboxHandler());
+
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+}
+
+const std::map<int, Base *> &Base::getSubStateEntMap()
+{
+  return subStateEntMap;
+}
+
+Base *Base::getCurSubStateEnt()
+{
+  return subStateEnt;
+}

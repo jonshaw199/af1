@@ -121,7 +121,24 @@ class Base
 
   ws_client_info wsClientInfo;
 
+  std::map<int, Base *> subStateEntMap;
+  int curSubState;
+  int prevSubState;
+  int requestedSubState;
+  int initialSubState;
+  Base *subStateEnt;
+
 protected:
+  int getCurSubState();
+  int getPrevSubState();
+  int getRequestedSubState();
+  void setRequestedSubState(int s);
+  int getInitialSubState();
+  void setInitialSubState(int s);
+  bool handleSubStateChange(int s);
+  const std::map<int, Base *> &getSubStateEntMap();
+  Base *getCurSubStateEnt();
+
   static void handleInboxMsg(AF1Msg m);
   static void handleOutboxMsg(AF1Msg m);
 
