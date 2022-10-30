@@ -171,6 +171,8 @@ protected:
 
   std::map<String, Event> eventMap;
 
+  void registerSubStateEnt(int i, Base *s);
+
 public:
   Base();
   static void begin(uint8_t id);

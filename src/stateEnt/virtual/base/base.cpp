@@ -1395,6 +1395,11 @@ void Base::registerStateEnt(int i, Base *s)
   stateEntMap[i] = s;
 }
 
+void Base::registerSubStateEnt(int i, Base *s)
+{
+  subStateEntMap[i] = s;
+}
+
 void Base::registerStringHandler(String s, string_input_handler h)
 {
   stringHandlerMap[s] = h;
