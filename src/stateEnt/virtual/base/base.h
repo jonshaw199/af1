@@ -49,6 +49,8 @@
 // #include "stateEnt/virtual/base/base.h"
 #include "modeEnt/virtual/base/base.h"
 
+#define max(a, b) ((a) >= (b) ? (a) : (b))
+
 class SHArg
 {
   String string;
