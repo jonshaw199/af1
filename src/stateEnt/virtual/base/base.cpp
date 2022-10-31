@@ -182,7 +182,10 @@ void Base::update()
   {
     // StateManager Loop - BEGIN
 
-    timeClient.update();
+    if (timeClient.isTimeSet())
+    {
+      timeClient.update();
+    }
 
     inbox.handleMessages([](AF1Msg &m)
                          { m.deserializeInnerMsgESPNow(); });
@@ -522,6 +525,7 @@ void Base::connectToWifi()
     Serial.println(WiFi.localIP());
     Serial.println("initializing timeClient");
     timeClient.begin();
+    timeClient.update();
   }
 }
 
