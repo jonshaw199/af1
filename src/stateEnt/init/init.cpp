@@ -41,19 +41,20 @@ Init::Init()
   set(Event(
       "Global_SendSyncStartTime", [](ECBArg a)
       {
-    if (getCurStateEnt()>doSync())
+    if (getCurStateEnt()->doSync())
     {
-      stateEnt->setSyncStartTime(millis() + (unsigned long)MS_TIME_SYNC_START);
+      syncStartTime = millis() + (unsigned long)MS_TIME_SYNC_START;
 
       AF1Msg msg;
-      msg.setState(curState);
+      msg.setState(getCurState());
       msg.setType(TYPE_TIME_SYNC_START);
       sync_data d;
-      d.ms = stateEnt->getSyncStartTime();
+      d.ms = syncStartTime;
       msg.setData((uint8_t *)&d);
       pushOutbox(msg);
+      Serial.println("Scheduling sync start");
       scheduleSyncStart();
-    } },
+    } else Serial.println("Sorry!"); },
       EVENT_TYPE_GLOBAL, MS_TIME_SYNC_SCHEDULE_START, 1));
 #endif
 }

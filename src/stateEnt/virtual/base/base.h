@@ -157,6 +157,8 @@ protected:
   std::map<String, Event> eventMap;
   static std::map<String, Event> globalEventMap;
 
+  static unsigned long syncStartTime;
+
 public:
   Base();
   static void begin(uint8_t id);
@@ -201,8 +203,6 @@ public:
   unsigned long getStartMs();
   // Sync
   static void scheduleSyncStart();
-  void setSyncStartTime(unsigned long s);
-  unsigned long getSyncStartTime();
   // Events
   unsigned long getElapsedMs();
   void resetEvents();

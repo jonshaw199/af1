@@ -70,7 +70,7 @@ static Box outbox;
 static HTTPClient httpClient;
 static WiFiMulti wifiMulti;
 
-unsigned long syncStartTime;
+unsigned long Base::syncStartTime;
 
 uint8_t Base::macAP[6];
 uint8_t Base::macSTA[6];
@@ -307,9 +307,9 @@ void Base::handleInboxMsg(AF1Msg m)
     memcpy(&d, m.getData(), sizeof(d));
     Serial.print("Received time: ");
     Serial.println(d.ms);
-    stateEnt->setSyncStartTime(convertTime(m.getSenderID(), d.ms));
+    syncStartTime = convertTime(m.getSenderID(), d.ms);
     Serial.print("Converted time: ");
-    Serial.println(stateEnt->getSyncStartTime());
+    Serial.println(syncStartTime);
     scheduleSyncStart();
     break;
   }
@@ -366,9 +366,12 @@ void Base::resetEvents()
     eventMap[it->first].reset();
   }
   // Global
-  for (std::map<String, Event>::iterator it = globalEventMap.begin(); it != globalEventMap.end() && globalEventMap[it->first].getStartTimeType() == START_STATE_MS; it++)
+  for (std::map<String, Event>::iterator it = globalEventMap.begin(); it != globalEventMap.end(); it++)
   {
-    globalEventMap[it->first].reset();
+    if (globalEventMap[it->first].getStartTimeType() == START_STATE_MS)
+    {
+      globalEventMap[it->first].reset();
+    }
   }
 }
 
@@ -1208,7 +1211,7 @@ unsigned long Base::getStartMs()
 
 void Base::scheduleSyncStart()
 {
-  unsigned long s = stateEnt->getSyncStartTime();
+  unsigned long s = syncStartTime;
 
   Serial.println("Scheduling");
   Serial.print("Current time: ");
@@ -1236,16 +1239,6 @@ void Base::doSynced()
       [](ECBArg a)
       { setBuiltinLED(a.cbCnt % 2); },
       EVENT_TYPE_TEMP, 300));
-}
-
-void Base::setSyncStartTime(unsigned long s)
-{
-  syncStartTime = s;
-}
-
-unsigned long Base::getSyncStartTime()
-{
-  return syncStartTime;
 }
 
 bool Base::doSync()
