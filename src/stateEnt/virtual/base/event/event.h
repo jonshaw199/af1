@@ -87,6 +87,7 @@ public:
   void setStartTime(unsigned long s);
   void setCb(event_cb c);
   event_cb getCb();
+  start_time_type getStartTimeType();
 
   unsigned long getLastCbTime();
   unsigned long getNextCbTime();

@@ -90,6 +90,11 @@ void Event::setStartTime(unsigned long t)
   startTime = t;
 }
 
+start_time_type Event::getStartTimeType()
+{
+  return startTimeType;
+}
+
 unsigned long Event::getLastCbTime()
 {
   return intervalTime * cbCnt + getStartTime();
