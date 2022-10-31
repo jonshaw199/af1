@@ -151,7 +151,7 @@ void Base::update()
   {
     // StateManager Loop - BEGIN
 
-    if (timeClient.isTimeSet())
+    if (WiFi.status() == WL_CONNECTED && timeClient.isTimeSet())
     {
       timeClient.update();
     }
@@ -560,7 +560,7 @@ DynamicJsonDocument Base::httpFetch(String url)
 {
   DynamicJsonDocument result(1024);
   connectToWifi();
-  if ((WiFi.status() == WL_CONNECTED))
+  if (WiFi.status() == WL_CONNECTED)
   {
     httpClient.begin(url);
     Serial.println("Making HTTP GET request...");
