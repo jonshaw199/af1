@@ -25,6 +25,7 @@
 class Init : public Base
 {
 public:
+  Init();
   void setup();
   void loop();
   String getName();

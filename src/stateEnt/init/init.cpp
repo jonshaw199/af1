@@ -22,6 +22,42 @@
 #include "init.h"
 #include "pre.h"
 
+Init::Init()
+{
+  set(Event(
+      "Global_ESPHandshake", [](ECBArg a)
+      {
+    if (getCurStateEnt()->doScanForPeersESPNow())
+    {
+      handleHandshakes();
+    }
+    else
+    {
+      Serial.println("ESPNow peer scan denied in current state");
+    } },
+      EVENT_TYPE_GLOBAL, MS_HANDSHAKE_LOOP, 0, 0, START_DEVICE_MS));
+
+#if MASTER
+  set(Event(
+      "Global_SendSyncStartTime", [](ECBArg a)
+      {
+    if (getCurStateEnt()>doSync())
+    {
+      stateEnt->setSyncStartTime(millis() + (unsigned long)MS_TIME_SYNC_START);
+
+      AF1Msg msg;
+      msg.setState(curState);
+      msg.setType(TYPE_TIME_SYNC_START);
+      sync_data d;
+      d.ms = stateEnt->getSyncStartTime();
+      msg.setData((uint8_t *)&d);
+      pushOutbox(msg);
+      scheduleSyncStart();
+    } },
+      EVENT_TYPE_GLOBAL, MS_TIME_SYNC_SCHEDULE_START, 1));
+#endif
+}
+
 void Init::setup()
 {
   Serial.println();
