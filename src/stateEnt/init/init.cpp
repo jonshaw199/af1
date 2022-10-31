@@ -54,7 +54,7 @@ Init::Init()
       pushOutbox(msg);
       Serial.println("Scheduling sync start");
       scheduleSyncStart();
-    } else Serial.println("Sorry!"); },
+    } },
       EVENT_TYPE_GLOBAL, MS_TIME_SYNC_SCHEDULE_START, 1));
 #endif
 }
