@@ -8,7 +8,7 @@
 - :globe_with_meridians: HTTP Client
 - :handshake: ESP-Now P2P (Auto-Connect; Self-Healing)
 - :arrows_counterclockwise: AP/STA Mode (Use websocket, HTTP, and ESP-Now concurrently)
-- :stopwatch: Time Sync Devices/Tasks (no IR or line of sight required)
+- :stopwatch: Time Sync Devices/Tasks (without IR)
 - :calendar: Event Scheduling
 - :trident: State Management
 - :radio: Over the air (ArduinoOTA) firmware updates
