@@ -22,17 +22,17 @@
 #include "event.h"
 #include "stateEnt/virtual/base/base.h"
 
-ECBArg::ECBArg(unsigned long e, unsigned long i, unsigned long s, start_time_type s2, unsigned long c, unsigned long m, String n, bool t)
-    : name(n), curTime(e), cbCnt(c), maxCbCnt(m), intervalTime(i), startTime(s), startTimeType(s2), temporary(t) {}
+ECBArg::ECBArg(unsigned long e, unsigned long i, unsigned long s, start_time_type s2, unsigned long c, unsigned long m, String n, event_type t)
+    : name(n), curTime(e), cbCnt(c), maxCbCnt(m), intervalTime(i), startTime(s), startTimeType(s2), type(t) {}
 
-Event::Event() : name(""), mode(MODE_INACTIVE)
+Event::Event() : name(""), mode(MODE_INACTIVE), type(EVENT_TYPE_TEMP)
 {
   cb = [](ECBArg a)
   { Serial.println("No event cb provided"); };
 }
 
-Event::Event(String n, event_cb c, bool t, unsigned long i, unsigned long m, unsigned long s, start_time_type s2, event_mode m2, unsigned long c2)
-    : name(n), cb(c), temporary(t), intervalTime(i), maxCbCnt(m), startTime(s), startTimeType(s2), mode(m2), cbCnt(c2) {}
+Event::Event(String n, event_cb c, event_type t, unsigned long i, unsigned long m, unsigned long s, start_time_type s2, event_mode m2, unsigned long c2)
+    : name(n), cb(c), type(t), intervalTime(i), maxCbCnt(m), startTime(s), startTimeType(s2), mode(m2), cbCnt(c2) {}
 
 unsigned long Event::getIntervalTime()
 {
@@ -109,7 +109,7 @@ bool Event::cbIfTimeAndActive(unsigned long curTime)
 {
   if (mode == MODE_ACTIVE && isTime(curTime))
   {
-    cb(ECBArg(curTime, intervalTime, startTime, startTimeType, cbCnt, maxCbCnt, name, temporary));
+    cb(ECBArg(curTime, intervalTime, startTime, startTimeType, cbCnt, maxCbCnt, name, type));
     cbCnt = intervalTime > 0 ? curTime / intervalTime : startTime ? curTime / startTime
                                                                   : 0; // Setting cbCnt to expected value rather than just incrementing; don't divide by 0
     return true;
@@ -137,9 +137,9 @@ bool Event::cbIfTimeAndActive()
   return cbIfTimeAndActive(getCurTime());
 }
 
-bool Event::getTemporary()
+event_type Event::getType()
 {
-  return temporary;
+  return type;
 }
 
 void Event::setMode(event_mode m)

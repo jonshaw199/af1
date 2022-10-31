@@ -82,7 +82,7 @@ std::map<String, Event> Base::globalEventMap;
 
 Base::Base()
 {
-  setGlobal(Event(
+  set(Event(
       "Base_ESPHandshake", [](ECBArg a)
       {
     if (stateEnt->doScanForPeersESPNow())
@@ -93,12 +93,12 @@ Base::Base()
     {
       Serial.println("ESPNow peer scan denied in current state");
     } },
-      false, MS_HANDSHAKE_LOOP, 0, 0, START_DEVICE_MS));
+      EVENT_TYPE_GLOBAL, MS_HANDSHAKE_LOOP, 0, 0, START_DEVICE_MS));
 
   syncStartTime = 0;
 
 #if MASTER
-  setGlobal(Event(
+  set(Event(
       "Base_SendSyncStartTime", [](ECBArg a)
       {
     if (stateEnt->doSync())
@@ -114,7 +114,7 @@ Base::Base()
       pushOutbox(msg);
       scheduleSyncStart();
     } },
-      false, MS_TIME_SYNC_SCHEDULE_START, 1));
+      EVENT_TYPE_GLOBAL, MS_TIME_SYNC_SCHEDULE_START, 1));
 #endif
 }
 
@@ -415,7 +415,7 @@ void Base::deactivateEvents()
   for (std::map<String, Event>::iterator it = eventMap.begin(); it != eventMap.end(); it++)
   {
     eventMap[it->first].deactivate();
-    if (eventMap[it->first].getTemporary())
+    if (eventMap[it->first].getType() == EVENT_TYPE_TEMP)
     {
       delKeys.push_back(it->first);
     }
@@ -1255,7 +1255,7 @@ void Base::scheduleSyncStart()
       {
     Serial.println("Starting");
     stateEnt->doSynced(); },
-      true, 0, 1, startMs));
+      EVENT_TYPE_TEMP, 0, 1, startMs));
 }
 
 void Base::doSynced()
@@ -1264,7 +1264,7 @@ void Base::doSynced()
       "Base_SyncStart",
       [](ECBArg a)
       { setBuiltinLED(a.cbCnt % 2); },
-      true, 300));
+      EVENT_TYPE_TEMP, 300));
 }
 
 void Base::setSyncStartTime(unsigned long s)
@@ -1580,12 +1580,14 @@ void Base::setIntervalTime(String e, unsigned long t)
 
 void Base::set(Event e)
 {
-  stateEnt->getEventMap()[e.getName()] = e;
-}
-
-void Base::setGlobal(Event e)
-{
-  globalEventMap[e.getName()] = e;
+  if (e.getType() == EVENT_TYPE_GLOBAL)
+  {
+    globalEventMap[e.getName()] = e;
+  }
+  else
+  {
+    stateEnt->getEventMap()[e.getName()] = e;
+  }
 }
 
 // StateManager - END

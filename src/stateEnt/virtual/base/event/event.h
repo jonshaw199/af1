@@ -35,6 +35,13 @@ enum event_mode
   MODE_ACTIVE
 };
 
+enum event_type
+{
+  EVENT_TYPE_PERM,
+  EVENT_TYPE_TEMP,
+  EVENT_TYPE_GLOBAL
+};
+
 class ECBArg
 {
 public:
@@ -44,9 +51,9 @@ public:
   const start_time_type startTimeType;
   const unsigned long cbCnt;
   const unsigned long maxCbCnt;
-  const bool temporary;
+  const event_type type;
   const String name;
-  ECBArg(unsigned long e, unsigned long i, unsigned long s, start_time_type s2, unsigned long c, unsigned long m, String n, bool t);
+  ECBArg(unsigned long e, unsigned long i, unsigned long s, start_time_type s2, unsigned long c, unsigned long m, String n, event_type t);
 };
 
 typedef void (*event_cb)(ECBArg a);
@@ -60,13 +67,13 @@ private:
   start_time_type startTimeType;
   String name;
   unsigned long maxCbCnt;
-  bool temporary;
+  event_type type;
   event_mode mode;
   event_cb cb;
 
 public:
   Event();
-  Event(String name, event_cb cb, bool temporary = false, unsigned long intervalTime = 0, unsigned long maxCbCnt = 0, unsigned long startTime = 0, start_time_type = START_STATE_MS, event_mode mode = MODE_ACTIVE, unsigned long cbCnt = 0);
+  Event(String name, event_cb cb, event_type = EVENT_TYPE_PERM, unsigned long intervalTime = 0, unsigned long maxCbCnt = 0, unsigned long startTime = 0, start_time_type = START_STATE_MS, event_mode mode = MODE_ACTIVE, unsigned long cbCnt = 0);
   unsigned long getIntervalTime();
   void setIntervalTime(unsigned long time);
   void setIntervalTime(unsigned long time, unsigned long curTime); // Updates cbCnt based on curTime; for "time bending"
@@ -89,7 +96,7 @@ public:
   bool cbIfTimeAndActive();
   void setMode(event_mode m);
   event_mode getMode();
-  bool getTemporary();
+  event_type getType();
 
   void reset();
   void activate();
