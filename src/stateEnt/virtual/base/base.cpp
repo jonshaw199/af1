@@ -507,7 +507,7 @@ void Base::connectToWifi()
     Serial.println(WiFi.localIP());
     Serial.println("initializing timeClient");
     timeClient.begin();
-    timeClient.update();
+    timeClient.update(); // Initial update needed before isTimeSet()?
   }
 }
 
