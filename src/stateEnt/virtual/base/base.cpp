@@ -78,40 +78,43 @@ uint8_t Base::macSTA[6];
 static WebSocketClient webSocketClient;
 static WiFiClient client; // Use WiFiClient class to create TCP connections
 
+std::map<String, Event> Base::globalEventMap;
+
 Base::Base()
 {
-  eventMap["Base_ESPHandshake"] = Event(
+  setGlobal(Event(
       "Base_ESPHandshake", [](ECBArg a)
       {
-                                                          if (stateEnt->doScanForPeersESPNow())
-                                                          {
-                                                            handleHandshakes();
-                                                          }
-                                                          else
-                                                          {
-                                                            Serial.println("ESPNow peer scan denied in current state");
-                                                          } },
-      false, MS_HANDSHAKE_LOOP);
+    if (stateEnt->doScanForPeersESPNow())
+    {
+      handleHandshakes();
+    }
+    else
+    {
+      Serial.println("ESPNow peer scan denied in current state");
+    } },
+      false, MS_HANDSHAKE_LOOP, 0, 0, START_DEVICE_MS));
 
   syncStartTime = 0;
 
 #if MASTER
-  eventMap["Base_SendSyncStartTime"] = Event(
+  setGlobal(Event(
       "Base_SendSyncStartTime", [](ECBArg a)
       {
-        if (stateEnt->doSync()) {
-          stateEnt->setSyncStartTime(millis() + (unsigned long)MS_TIME_SYNC_START);
+    if (stateEnt->doSync())
+    {
+      stateEnt->setSyncStartTime(millis() + (unsigned long)MS_TIME_SYNC_START);
 
-          AF1Msg msg;
-          msg.setState(curState);
-          msg.setType(TYPE_TIME_SYNC_START);
-          sync_data d;
-          d.ms = stateEnt->getSyncStartTime();
-          msg.setData((uint8_t *)&d);
-          pushOutbox(msg);
-          scheduleSyncStart();
-        } },
-      false, MS_TIME_SYNC_SCHEDULE_START, 1);
+      AF1Msg msg;
+      msg.setState(curState);
+      msg.setType(TYPE_TIME_SYNC_START);
+      sync_data d;
+      d.ms = stateEnt->getSyncStartTime();
+      msg.setData((uint8_t *)&d);
+      pushOutbox(msg);
+      scheduleSyncStart();
+    } },
+      false, MS_TIME_SYNC_SCHEDULE_START, 1));
 #endif
 }
 
@@ -203,10 +206,15 @@ void Base::update()
       handleUserInput(s);
     }
 
-    // Events
+    // State Events
     for (std::map<String, Event>::iterator it = stateEnt->eventMap.begin(); it != stateEnt->eventMap.end(); it++)
     {
       stateEnt->eventMap[it->first].cbIfTimeAndActive();
+    }
+    // Global Events
+    for (std::map<String, Event>::iterator it = globalEventMap.begin(); it != globalEventMap.end(); it++)
+    {
+      globalEventMap[it->first].cbIfTimeAndActive();
     }
 
     // Incoming websocket messages
@@ -1573,6 +1581,11 @@ void Base::setIntervalTime(String e, unsigned long t)
 void Base::set(Event e)
 {
   stateEnt->getEventMap()[e.getName()] = e;
+}
+
+void Base::setGlobal(Event e)
+{
+  globalEventMap[e.getName()] = e;
 }
 
 // StateManager - END

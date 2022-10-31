@@ -155,6 +155,7 @@ protected:
   static void sendMsgInfo(std::set<int> recipients);
 
   std::map<String, Event> eventMap;
+  static std::map<String, Event> globalEventMap;
 
 public:
   Base();
@@ -242,6 +243,7 @@ public:
   static unsigned long convertTime(int id, unsigned long t);
   static void setIntervalTime(String e, unsigned long t);
   static void set(Event e);
+  static void setGlobal(Event e);
 
   static void registerStateEnt(int i, Base *s);
   static void registerStringHandler(String s, string_input_handler h);
