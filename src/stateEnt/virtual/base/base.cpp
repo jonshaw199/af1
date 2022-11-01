@@ -1194,7 +1194,7 @@ void Base::sendMsgInfo(std::set<int> recipients)
   AF1Msg msg;
   msg.setState(getCurState());
   msg.setType(TYPE_INFO);
-  msg.getJson()["info"] = getCurStateEnt()->getInfo();
+  msg.getJson()["info"] = stateEnt->getInfo();
   msg.setRecipients(recipients);
   pushOutbox(msg);
 }
