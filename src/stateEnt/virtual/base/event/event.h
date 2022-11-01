@@ -73,7 +73,7 @@ private:
 
 public:
   Event();
-  Event(String name, event_cb cb, event_type = EVENT_TYPE_PERM, unsigned long intervalTime = 0, unsigned long maxCbCnt = 0, unsigned long startTime = 0, start_time_type = START_STATE_MS, event_mode mode = MODE_ACTIVE, unsigned long cbCnt = 0);
+  Event(String name, event_cb cb, event_type = EVENT_TYPE_TEMP, unsigned long intervalTime = 0, unsigned long maxCbCnt = 0, unsigned long startTime = 0, start_time_type = START_STATE_MS, event_mode mode = MODE_ACTIVE, unsigned long cbCnt = 0);
   unsigned long getIntervalTime();
   void setIntervalTime(unsigned long time);
   void setIntervalTime(unsigned long time, unsigned long curTime); // Updates cbCnt based on curTime; for "time bending"
