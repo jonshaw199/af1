@@ -36,6 +36,7 @@ public:
       setBuiltinLED(a.cbCnt % 2); // Blink once per sec
     }, EVENT_TYPE_PERM, 500));
   }
+
   void preStateChange(int nextState) {
     setBuiltinLED(0); // Make sure LED is off before leaving state
   }
@@ -45,10 +46,10 @@ void setup()
 {
   Serial.begin(115200);
   AF1::begin(DEVICE_ID); // Required
-  registerStateEnt(STATE_BLINK, new Blink());
-  registerStateEnt(STATE_MACARENA, new Macarena());
-  registerStringHandler("mac", [](SHArg a) { setRequestedState(STATE_MACARENA); });
-  setInitialState(STATE_BLINK);
+  AF1::registerStateEnt(STATE_BLINK, new Blink());
+  AF1::registerStateEnt(STATE_MACARENA, new Macarena());
+  AF1::registerStringHandler("mac", [](SHArg a) { AF1::setRequestedState(STATE_MACARENA); });
+  AF1::setInitialState(STATE_BLINK);
 }
 
 void loop()
