@@ -58,7 +58,7 @@ void loop()
 }
 ```
 
-Until the dust settles, other examples can be found in [AF1 Light Show](https://github.com/jonshaw199/af1-light-show/blob/main/src/main.cpp).
+Until the dust settles, other examples can be found in the [AF1-1](https://github.com/jonshaw199/af1-1/blob/main/firmware/src/main.cpp) project.
 
 ## API Docs
 
