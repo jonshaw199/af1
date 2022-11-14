@@ -37,6 +37,25 @@ public:
     }, EVENT_TYPE_PERM, 500));
   }
 
+  /*
+    // Can be overridden/extended
+    virtual void setup();
+    virtual void loop();
+    virtual bool validateStateChange(int s);
+    virtual void preStateChange(int s);
+    virtual msg_handler getInboxHandler();
+    virtual msg_handler getOutboxHandler();
+    virtual String getName();
+    virtual void serializeESPNow(AF1Msg &m);
+    virtual void deserializeESPNow(AF1Msg &m);
+    virtual bool doScanForPeersESPNow();
+    virtual bool doConnectToWSServer();
+    virtual void doSynced();
+    virtual bool doSync();
+    virtual void onConnectWSServer();
+    virtual DynamicJsonDocument getInfo();
+  */
+
   void preStateChange(int nextState) {
     Base::preStateChange(nextState); // Usually need to call super methods; easy to forget
     setBuiltinLED(0); // Make sure LED is off before leaving state
