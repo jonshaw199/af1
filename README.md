@@ -38,7 +38,7 @@ public:
   }
 
   /*
-    // Can be overridden/extended
+    // Can be overridden
     virtual void setup();
     virtual void loop();
     virtual bool validateStateChange(int s);
