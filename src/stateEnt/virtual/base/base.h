@@ -120,6 +120,11 @@ class Base
 {
   static void onESPNowDataSent(const uint8_t *mac_addr, esp_now_send_status_t status);
   static void onESPNowDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len);
+  static void setInboxMsgHandler(msg_handler h);
+  static void setOutboxMsgHandler(msg_handler h);
+  static bool handleStateChange(int s);
+  static bool handleModeChange(int m);
+  static void handleUserInput(String s);
 
   ws_client_info wsClientInfo;
 
@@ -154,6 +159,8 @@ protected:
   // Info (currently just WS)
   static void sendMsgInfo(std::set<int> recipients);
 
+    std::map<String, Event> &getEventMap();
+
   std::map<String, Event> eventMap;
   static std::map<String, Event> globalEventMap;
 
@@ -187,8 +194,6 @@ public:
   // ESP-Now
   static void handleHandshakes(bool resend = false);
   // Inbox/Outbox
-  static void setInboxMsgHandler(msg_handler h);
-  static void setOutboxMsgHandler(msg_handler h);
   static void pushOutbox(AF1Msg m);
   static void pushInbox(AF1Msg m);
   // Websocket
@@ -199,7 +204,6 @@ public:
   static DynamicJsonDocument httpPost(String url, DynamicJsonDocument body);
   // Other
   static void setBuiltinLED(bool on);
-  std::map<String, Event> &getEventMap();
   unsigned long getStartMs();
   // Sync
   static void scheduleSyncStart();
@@ -219,11 +223,8 @@ public:
   static int getRequestedMode();
   static void setInitialMode(int m);
   static int getInitialMode();
-  static bool handleModeChange(int m);
   static String modeToString(int s);
-  static void handleUserInput(String s);
   static String stateToString(int s);
-  static bool handleStateChange(int s);
   static const std::vector<wifi_ap_info> getWifiAPs();
   static void setInitialState(int s);
   static int getInitialState();
@@ -233,8 +234,6 @@ public:
   static int getDeviceID();
   static void setDefaultWSClientInfo(ws_client_info w);
   static ws_client_info getDefaultWSClientInfo();
-  static std::map<int, af1_peer_info> &getPeerInfoMap();
-  static std::map<String, int> &getMacToIDMap();
   static std::set<int> getPeerIDs();
   static void setCurWSClientInfo(ws_client_info i);
   static ws_client_info getCurWSClientInfo();

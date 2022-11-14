@@ -642,7 +642,7 @@ void Base::onESPNowDataSent(const uint8_t *mac_addr, esp_now_send_status_t statu
   else
   {
     // Serial.println("Delivery Fail");
-    int peerDeviceID = getMacToIDMap()[macToString(mac_addr)];
+    int peerDeviceID = macToIDMap[macToString(mac_addr)];
 #if PRINT_MSG_SEND
     Serial.println("Delivery failed to peer ID " + String(peerDeviceID));
 #else
@@ -1438,16 +1438,6 @@ std::set<int> Base::getPeerIDs()
     result.insert(it->first);
   }
   return result;
-}
-
-std::map<int, af1_peer_info> &Base::getPeerInfoMap()
-{
-  return peerInfoMap;
-}
-
-std::map<String, int> &Base::getMacToIDMap()
-{
-  return macToIDMap;
 }
 
 const std::map<int, Base *> &Base::getStateEntMap()
