@@ -1420,7 +1420,6 @@ void Base::onConnectWSServer()
 DynamicJsonDocument Base::getInfo()
 {
   DynamicJsonDocument info(1024);
-  info["id"] = deviceID;
 #ifdef ESP32
   info["esp32"] = true; // Should always be true
 #endif
