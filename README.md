@@ -84,4 +84,6 @@ Until the dust settles, other examples can be found in the [AF1-1](https://githu
 
 ### Event Scheduling
 
+One-time events can be scheduled as well as recurring ones. Events can be state-specific or global (always active). Start/end times can be set; NTP is an option.
+
 ...
