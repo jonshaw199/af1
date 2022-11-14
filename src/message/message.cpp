@@ -26,7 +26,6 @@ AF1Msg::AF1Msg() : json(1024)
   msg.state = STATE_IDLE_BASE;
   msg.senderID = Base::getDeviceID();
   msg.type = TYPE_NONE;
-  msg.transportType = TRANSPORT_NONE;
 
   recipients = {};
   sendCnt = 0;
@@ -36,7 +35,6 @@ AF1Msg::AF1Msg() : json(1024)
   json["state"] = msg.state;
   json["type"] = msg.type;
   json["senderID"] = msg.senderID;
-  json["transportType"] = msg.transportType;
 }
 
 AF1Msg::AF1Msg(af1_msg m) : json(1024)
@@ -51,7 +49,6 @@ AF1Msg::AF1Msg(af1_msg m) : json(1024)
   json["state"] = msg.state;
   json["type"] = msg.type;
   json["senderID"] = msg.senderID;
-  json["transportType"] = msg.transportType;
 }
 
 AF1Msg::AF1Msg(DynamicJsonDocument d) : json(1024)
@@ -60,7 +57,6 @@ AF1Msg::AF1Msg(DynamicJsonDocument d) : json(1024)
   msg.state = d["state"];
   msg.senderID = d["senderID"];
   msg.type = d["type"];
-  msg.transportType = d["transportType"];
 
   recipients = {};
   sendCnt = 0;
@@ -131,17 +127,6 @@ void AF1Msg::setMaxRetries(int m)
 int AF1Msg::getMaxRetries()
 {
   return maxRetries;
-}
-
-void AF1Msg::setTransportType(uint8_t t)
-{
-  msg.transportType = t;
-  json["transportType"] = t;
-}
-
-uint8_t AF1Msg::getTransportType()
-{
-  return msg.transportType;
 }
 
 void AF1Msg::setData(uint8_t *d)

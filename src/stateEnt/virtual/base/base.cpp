@@ -844,8 +844,6 @@ void Base::connectToPeers()
 
 void Base::sendMsgESPNow(AF1Msg msg)
 {
-  msg.setTransportType(TRANSPORT_ESPNOW);
-
   // If recipients set is empty then send to all
   std::set<int> recipientIDs = msg.getRecipients().size() ? msg.getRecipients() : getPeerIDs();
 
@@ -1096,7 +1094,6 @@ ws_client_info Base::getWSClientInfo()
 
 void Base::sendMsgWS(AF1Msg m)
 {
-  m.setTransportType(TRANSPORT_WEBSOCKET);
   if (client)
   {
     String s;
