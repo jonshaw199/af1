@@ -38,6 +38,7 @@ public:
   }
 
   void preStateChange(int nextState) {
+    Base::preStateChange(nextState); // Usually need to call super methods; easy to forget
     setBuiltinLED(0); // Make sure LED is off before leaving state
   }
 };
