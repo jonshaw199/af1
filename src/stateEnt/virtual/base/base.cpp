@@ -850,7 +850,7 @@ void Base::sendMsgESPNow(AF1Msg msg)
     */
     String s;
     serializeJson(msg.getData(), s);
-    esp_err_t result = esp_now_send(peerInfoMap[*it].espnowPeerInfo.peer_addr, (uint8_t *) s.c_str(), sizeof(s));
+    esp_err_t result = esp_now_send(peerInfoMap[*it].espnowPeerInfo.peer_addr, (uint8_t *) s.c_str(), AF1_MSG_SIZE);
 
     // Serial.print("Send Status: ");
     if (result == ESP_OK)

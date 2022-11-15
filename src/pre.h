@@ -100,7 +100,8 @@
 #define SAFETY_CHECK_INBOX_OVERFLOW true
 #endif
 
-#define AF1JsonDoc StaticJsonDocument<225>
+#define AF1_MSG_SIZE 225
+#define AF1JsonDoc StaticJsonDocument<AF1_MSG_SIZE>
 
 #define STRINGIFY(s) STRINGIFY1(s)
 #define STRINGIFY1(s) #s
