@@ -15,7 +15,7 @@
 
 ### Overview
 
-A state entity defines the behavior for a state, and new state entities can be created by extending the `Base` class. When creating new state entities, setup, loop, serialization/deserialization, and other behavior from `Base` can be overridden as necessary. This is a trivial example:
+A state entity defines the behavior for a state, and new state entities can be created by extending the `Base` class. When creating new state entities, setup, loop, message handling, and other behavior from `Base` can be overridden as necessary. This is a trivial example:
 
 ```
 #include <AF1.h>
@@ -51,7 +51,7 @@ public:
     virtual void doSynced();
     virtual bool doSync();
     virtual void onConnectWSServer();
-    virtual StaticJsonDocument<SIZE> getInfo();
+    virtual AF1JsonDoc getInfo();
   */
 
   void preStateChange(int nextState) {
