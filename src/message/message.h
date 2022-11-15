@@ -53,19 +53,18 @@ public:
   AF1Msg();
   AF1Msg(uint8_t type);
   AF1Msg(AF1JsonDoc d);
+
+  AF1JsonDoc &json();
+  uint8_t getType();
+  uint8_t getState();
+  uint8_t getSenderId();
+
   void setRecipients(std::set<int> r);
   std::set<int> getRecipients();
   int incrementSendCnt();
   int getSendCnt();
-  void setType(uint8_t t);
-  uint8_t getType();
-  void setState(uint8_t s);
-  uint8_t getState();
-  void setSenderId(uint8_t id);
-  uint8_t getSenderId();
   void setMaxRetries(int m);
   int getMaxRetries();
-  AF1JsonDoc &json();
   void print();
 };
 

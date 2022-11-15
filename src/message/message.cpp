@@ -40,6 +40,26 @@ AF1Msg::AF1Msg(AF1JsonDoc d) : AF1Msg() {
   data = d;
 }
 
+AF1JsonDoc &AF1Msg::json()
+{
+  return data;
+}
+
+uint8_t AF1Msg::getType()
+{
+  return data["type"];
+}
+
+uint8_t AF1Msg::getState()
+{
+  return data["state"];
+}
+
+uint8_t AF1Msg::getSenderId()
+{
+  return data["senderId"];
+}
+
 std::set<int> AF1Msg::getRecipients()
 {
   return recipients;
@@ -60,36 +80,6 @@ int AF1Msg::getSendCnt()
   return sendCnt;
 }
 
-void AF1Msg::setType(uint8_t t)
-{
-  data["type"] = t;
-}
-
-uint8_t AF1Msg::getType()
-{
-  return data["type"];
-}
-
-void AF1Msg::setState(uint8_t s)
-{
-  data["state"] = s;
-}
-
-uint8_t AF1Msg::getState()
-{
-  return data["state"];
-}
-
-void AF1Msg::setSenderId(uint8_t id)
-{
-  data["senderId"] = id;
-}
-
-uint8_t AF1Msg::getSenderId()
-{
-  return data["senderId"];
-}
-
 void AF1Msg::setMaxRetries(int m)
 {
   maxRetries = m;
@@ -98,11 +88,6 @@ void AF1Msg::setMaxRetries(int m)
 int AF1Msg::getMaxRetries()
 {
   return maxRetries;
-}
-
-AF1JsonDoc &AF1Msg::json()
-{
-  return data;
 }
 
 void AF1Msg::print()

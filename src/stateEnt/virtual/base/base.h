@@ -159,7 +159,7 @@ protected:
   // Info (currently just WS)
   static void sendMsgInfo(std::set<int> recipients);
 
-    std::map<String, Event> &getEventMap();
+  std::map<String, Event> &getEventMap();
 
   std::map<String, Event> eventMap;
   static std::map<String, Event> globalEventMap;
