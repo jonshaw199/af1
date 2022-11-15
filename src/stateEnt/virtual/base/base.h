@@ -188,8 +188,6 @@ public:
   // Wifi
   static String macToString(const uint8_t *m);
   static void printMac(const uint8_t *m);
-  static uint8_t *getMacSTA();
-  static uint8_t *getMacAP();
   // ESP-Now
   static void handleHandshakes(bool resend = false);
   // Inbox/Outbox

@@ -437,16 +437,6 @@ void Base::printMac(const uint8_t *m)
   Serial.println("}");
 }
 
-uint8_t *Base::getMacSTA()
-{
-  return macSTA;
-}
-
-uint8_t *Base::getMacAP()
-{
-  return macAP;
-}
-
 void Base::connectToWifi()
 {
   if (WiFi.status() == WL_CONNECTED)
@@ -943,9 +933,8 @@ void Base::sendHandshakeRequests(std::set<int> ids)
 
   AF1Msg msg = AF1Msg(TYPE_HANDSHAKE_REQUEST);
 
-  // msg.getData()["mac"] = getMacAP();
-  JsonArray mac = msg.getData().createNestedArray("mac");
-  copyArray(getMacAP(), mac);
+  JsonArray macJson = msg.getData().createNestedArray("mac");
+  copyArray(macAP, macJson);
   msg.setRecipients(ids);
   pushOutbox(msg);
 
