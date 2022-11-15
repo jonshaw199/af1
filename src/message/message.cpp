@@ -110,7 +110,7 @@ void AF1Msg::setData(AF1JsonDoc d)
   data = d;
 }
 
-AF1JsonDoc &AF1Msg::getData()
+AF1JsonDoc &AF1Msg::json()
 {
   return data;
 }

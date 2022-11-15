@@ -67,7 +67,7 @@ public:
   void setMaxRetries(int m);
   int getMaxRetries();
   void setData(AF1JsonDoc d);
-  AF1JsonDoc &getData();
+  AF1JsonDoc &json();
   void print();
 };
 

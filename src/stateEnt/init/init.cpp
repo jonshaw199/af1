@@ -45,7 +45,7 @@ Init::Init()
     {
       syncStartTime = millis() + (unsigned long)MS_TIME_SYNC_START;
       AF1Msg msg(TYPE_TIME_SYNC_START);
-      msg.getData()["timeSyncStart"] = syncStartTime;
+      msg.json()["timeSyncStart"] = syncStartTime;
       pushOutbox(msg);
       Serial.println("Scheduling sync start");
       scheduleSyncStart();
