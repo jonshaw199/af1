@@ -270,8 +270,10 @@ void Base::handleInboxMsg(AF1Msg m)
 {
   Serial.print("<");
 
-#if PRINT_MSG_SEND
-  m.print();
+#if PRINT_MSG_RECV
+  String s;
+  serializeJsonPretty(m.getData(), s);
+  Serial.println(s);
 #endif
 
   switch (m.getType())
@@ -325,7 +327,6 @@ void Base::handleOutboxMsg(AF1Msg m)
   Serial.print(">");
 
 #if PRINT_MSG_SEND
-  // m.print();
   String s;
   serializeJsonPretty(m.getData(), s);
   Serial.println(s);
@@ -666,11 +667,6 @@ void Base::onESPNowDataRecv(const uint8_t *mac, const uint8_t *incomingData, int
   Serial.print("Last Packet Recv from: ");
   Serial.println(macStr);
 #endif
-  /*
-  af1_msg msg;
-  memcpy(&msg, incomingData, sizeof(msg));
-  AF1Msg msgWrapper = msg;
-  */
   StaticJsonDocument<225> data;
   deserializeJson(data, incomingData);
   AF1Msg msg(data);
@@ -897,20 +893,6 @@ void Base::sendMsgESPNow(AF1Msg msg)
     peerInfoMap[*it].mutex.unlock();
     delay(DELAY_SEND);
   }
-}
-
-void Base::serializeESPNow(AF1Msg &m)
-{
-#if PRINT_MSG_SEND
-  Serial.println("Base::serializeESPNow()");
-#endif
-}
-
-void Base::deserializeESPNow(AF1Msg &m)
-{
-#if PRINT_MSG_RECEIVE
-  Serial.println("Base::deserializeESPNow()");
-#endif
 }
 
 bool Base::doScanForPeersESPNow()

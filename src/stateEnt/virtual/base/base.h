@@ -177,8 +177,6 @@ public:
   virtual msg_handler getInboxHandler();
   virtual msg_handler getOutboxHandler();
   virtual String getName();
-  virtual void serializeESPNow(AF1Msg &m);
-  virtual void deserializeESPNow(AF1Msg &m);
   virtual bool doScanForPeersESPNow();
   virtual bool doConnectToWSServer();
   virtual void doSynced();
