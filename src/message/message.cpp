@@ -32,16 +32,16 @@ AF1Msg::AF1Msg()
   data["senderId"] = Base::getDeviceID();
 }
 
-AF1Msg::AF1Msg(uint8_t t) {
+AF1Msg::AF1Msg(uint8_t t) : AF1Msg() {
   data["type"] = t;
 }
 
-AF1Msg::AF1Msg(uint8_t t, uint8_t s) {
+AF1Msg::AF1Msg(uint8_t t, uint8_t s) : AF1Msg() {
   data["type"] = t;
   data["state"] = s;
 }
 
-AF1Msg::AF1Msg(StaticJsonDocument<225> d) : data(d) {}
+AF1Msg::AF1Msg(StaticJsonDocument<225> d) : AF1Msg() data(d) {}
 
 std::set<int> AF1Msg::getRecipients()
 {
