@@ -52,7 +52,6 @@ class AF1Msg
 public:
   AF1Msg();
   AF1Msg(uint8_t type);
-  AF1Msg(uint8_t type, uint8_t state);
   AF1Msg(AF1JsonDoc d);
   void setRecipients(std::set<int> r);
   std::set<int> getRecipients();

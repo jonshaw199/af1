@@ -36,11 +36,6 @@ AF1Msg::AF1Msg(uint8_t t) : AF1Msg() {
   data["type"] = t;
 }
 
-AF1Msg::AF1Msg(uint8_t t, uint8_t s) : AF1Msg() {
-  data["type"] = t;
-  data["state"] = s;
-}
-
 AF1Msg::AF1Msg(AF1JsonDoc d) : AF1Msg() {
   data = d;
 }
