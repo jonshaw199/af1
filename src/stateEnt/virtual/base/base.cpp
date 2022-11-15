@@ -899,7 +899,8 @@ void Base::sendStateChangeMessages(int s)
 {
   Serial.println("Pushing state change messages to the outbox");
 
-  AF1Msg msg = AF1Msg(TYPE_CHANGE_STATE, s);
+  AF1Msg msg = AF1Msg(TYPE_CHANGE_STATE);
+  msg.setState(s);
   msg.setMaxRetries(DEFAULT_RETRIES);
   pushOutbox(msg);
 }
