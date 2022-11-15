@@ -184,7 +184,7 @@ void Base::update()
     String data;
     if (client)
     {
-      webSocketClient.json(data);
+      webSocketClient.getData(data);
       if (data.length() > 0)
       {
         Serial.print(".");
