@@ -44,13 +44,8 @@ Init::Init()
     if (getCurStateEnt()->doSync())
     {
       syncStartTime = millis() + (unsigned long)MS_TIME_SYNC_START;
-      /* To Do! */
-      AF1Msg msg;
-      msg.setState(getCurState());
-      msg.setType(TYPE_TIME_SYNC_START);
-      sync_data d;
-      d.ms = syncStartTime;
-      msg.setData((uint8_t *)&d);
+      AF1Msg msg(TYPE_TIME_SYNC_START);
+      msg.getData()["timeSyncStart"] = syncStartTime;
       pushOutbox(msg);
       Serial.println("Scheduling sync start");
       scheduleSyncStart();

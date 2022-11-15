@@ -301,7 +301,7 @@ void Base::handleInboxMsg(AF1Msg m)
     break;
   case TYPE_TIME_SYNC_START:
     Serial.print("Received time: ");
-    unsigned long t = m.getData()["timeSyncTime"];
+    unsigned long t = m.getData()["timeSyncStart"];
     Serial.println(t);
     syncStartTime = convertTime(m.getSenderId(), t);
     Serial.print("Converted time: ");
