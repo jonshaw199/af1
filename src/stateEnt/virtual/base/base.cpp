@@ -325,7 +325,10 @@ void Base::handleOutboxMsg(AF1Msg m)
   Serial.print(">");
 
 #if PRINT_MSG_SEND
-  m.print();
+  // m.print();
+  String s;
+  serializeJsonPretty(m.getData(), s);
+  Serial.println(s);
 #endif
 
   // ESPNow
@@ -940,7 +943,6 @@ void Base::sendHandshakeRequests(std::set<int> ids)
 
   AF1Msg msg = AF1Msg(TYPE_HANDSHAKE_REQUEST);
 
-  msg.setType(TYPE_HANDSHAKE_REQUEST);
   // msg.getData()["mac"] = getMacAP();
   JsonArray mac = msg.getData().createNestedArray("mac");
   copyArray(getMacAP(), mac);
