@@ -270,9 +270,7 @@ void Base::handleInboxMsg(AF1Msg m)
   Serial.print("<");
 
 #if PRINT_MSG_RECV
-  String s;
-  serializeJsonPretty(m.json(), s);
-  Serial.println(s);
+  m.print();
 #endif
 
   switch (m.getType())
@@ -326,9 +324,7 @@ void Base::handleOutboxMsg(AF1Msg m)
   Serial.print(">");
 
 #if PRINT_MSG_SEND
-  String s;
-  serializeJsonPretty(m.json(), s);
-  Serial.println(s);
+  m.print();
 #endif
 
   // ESPNow
