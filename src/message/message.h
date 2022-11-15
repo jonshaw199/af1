@@ -66,7 +66,6 @@ public:
   uint8_t getSenderId();
   void setMaxRetries(int m);
   int getMaxRetries();
-  void setData(AF1JsonDoc d);
   AF1JsonDoc &json();
   void print();
 };

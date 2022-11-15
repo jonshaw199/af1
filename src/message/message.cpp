@@ -105,11 +105,6 @@ int AF1Msg::getMaxRetries()
   return maxRetries;
 }
 
-void AF1Msg::setData(AF1JsonDoc d)
-{
-  data = d;
-}
-
 AF1JsonDoc &AF1Msg::json()
 {
   return data;
