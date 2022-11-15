@@ -41,7 +41,9 @@ AF1Msg::AF1Msg(uint8_t t, uint8_t s) : AF1Msg() {
   data["state"] = s;
 }
 
-AF1Msg::AF1Msg(StaticJsonDocument<225> d) : AF1Msg() data(d) {}
+AF1Msg::AF1Msg(AF1JsonDoc d) : AF1Msg() {
+  data = d;
+}
 
 std::set<int> AF1Msg::getRecipients()
 {
@@ -103,12 +105,12 @@ int AF1Msg::getMaxRetries()
   return maxRetries;
 }
 
-void AF1Msg::setData(StaticJsonDocument<225> d)
+void AF1Msg::setData(AF1JsonDoc d)
 {
   data = d;
 }
 
-StaticJsonDocument<225> &AF1Msg::getData()
+AF1JsonDoc &AF1Msg::getData()
 {
   return data;
 }

@@ -25,6 +25,7 @@
 #include <ArduinoJson.h>
 
 #include "state/state.h"
+#include <pre.h>
 
 enum MessageType
 {
@@ -42,7 +43,7 @@ enum MessageType
 
 class AF1Msg
 {
-  StaticJsonDocument<225> data;
+  AF1JsonDoc data;
   std::set<int> recipients;
   int sendCnt;
   int retries;
@@ -52,7 +53,7 @@ public:
   AF1Msg();
   AF1Msg(uint8_t type);
   AF1Msg(uint8_t type, uint8_t state);
-  AF1Msg(StaticJsonDocument<225> d);
+  AF1Msg(AF1JsonDoc d);
   void setRecipients(std::set<int> r);
   std::set<int> getRecipients();
   int incrementSendCnt();
@@ -65,8 +66,8 @@ public:
   uint8_t getSenderId();
   void setMaxRetries(int m);
   int getMaxRetries();
-  void setData(StaticJsonDocument<225> d);
-  StaticJsonDocument<225> &getData();
+  void setData(AF1JsonDoc d);
+  AF1JsonDoc &getData();
   void print();
 };
 

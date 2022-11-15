@@ -20,7 +20,6 @@
 #include <vector>
 
 #include "base.h"
-#include "pre.h"
 
 // StateManager - BEGIN (END kinda got lost down a ways)
 
@@ -189,7 +188,7 @@ void Base::update()
       if (data.length() > 0)
       {
         Serial.print(".");
-        StaticJsonDocument<225> doc;
+        AF1JsonDoc doc;
         deserializeJson(doc, data);
         pushInbox(doc);
       }
@@ -542,9 +541,9 @@ void Base::pushInbox(AF1Msg m)
   New
 */
 
-StaticJsonDocument<225> Base::httpFetch(String url)
+AF1JsonDoc Base::httpFetch(String url)
 {
-  StaticJsonDocument<225> result;
+  AF1JsonDoc result;
   connectToWifi();
   if (WiFi.status() == WL_CONNECTED)
   {
@@ -568,9 +567,9 @@ StaticJsonDocument<225> Base::httpFetch(String url)
   return result;
 }
 
-StaticJsonDocument<225> Base::httpPost(String url, StaticJsonDocument<225> body)
+AF1JsonDoc Base::httpPost(String url, AF1JsonDoc body)
 {
-  StaticJsonDocument<225> result;
+  AF1JsonDoc result;
   connectToWifi();
   if ((WiFi.status() == WL_CONNECTED))
   {
@@ -667,7 +666,7 @@ void Base::onESPNowDataRecv(const uint8_t *mac, const uint8_t *incomingData, int
   Serial.print("Last Packet Recv from: ");
   Serial.println(macStr);
 #endif
-  StaticJsonDocument<225> data;
+  AF1JsonDoc data;
   deserializeJson(data, incomingData);
   AF1Msg msg(data);
   pushInbox(msg);
@@ -851,7 +850,7 @@ void Base::sendMsgESPNow(AF1Msg msg)
     */
     String s;
     serializeJson(msg.getData(), s);
-    esp_err_t result = esp_now_send(peerInfoMap[*it].espnowPeerInfo.peer_addr, (uint8_t *) s.c_str(), MESSAGE_JSON_SIZE);
+    esp_err_t result = esp_now_send(peerInfoMap[*it].espnowPeerInfo.peer_addr, (uint8_t *) s.c_str(), sizeof(s));
 
     // Serial.print("Send Status: ");
     if (result == ESP_OK)
@@ -1358,9 +1357,9 @@ void Base::onConnectWSServer()
 {
 }
 
-StaticJsonDocument<225> Base::getInfo()
+AF1JsonDoc Base::getInfo()
 {
-  StaticJsonDocument<225> info;
+  AF1JsonDoc info;
 #ifdef ESP32
   info["esp32"] = true; // Should always be true
 #endif

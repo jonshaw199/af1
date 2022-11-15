@@ -35,6 +35,7 @@
 #include "state/state.h"
 #include "message/message.h"
 #include "box/box.h"
+#include "pre.h"
 
 // #include <queue>
 // #include <map>
@@ -182,7 +183,7 @@ public:
   virtual void doSynced();
   virtual bool doSync();
   virtual void onConnectWSServer();
-  virtual StaticJsonDocument<225> getInfo();
+  virtual AF1JsonDoc getInfo();
   // Wifi
   static String macToString(const uint8_t *m);
   static void printMac(const uint8_t *m);
@@ -195,8 +196,8 @@ public:
   void setWSClientInfo(ws_client_info w);
   ws_client_info getWSClientInfo();
   // HTTP
-  static StaticJsonDocument<225> httpFetch(String url);
-  static StaticJsonDocument<225> httpPost(String url, StaticJsonDocument<225> body);
+  static AF1JsonDoc httpFetch(String url);
+  static AF1JsonDoc httpPost(String url, AF1JsonDoc body);
   // Other
   static void setBuiltinLED(bool on);
   unsigned long getStartMs();
