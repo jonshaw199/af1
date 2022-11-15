@@ -41,12 +41,8 @@ AF1Msg::AF1Msg(uint8_t t, uint8_t s) : AF1Msg() {
   data["state"] = s;
 }
 
-AF1Msg::AF1Msg(AF1JsonDoc d) {
+AF1Msg::AF1Msg(AF1JsonDoc d) : AF1Msg() {
   data = d;
-  data["state"] = Base::getCurState();
-  data["type"] = TYPE_NONE;
-  data["senderId"] = Base::getDeviceID();
-  recipients = {};
 }
 
 std::set<int> AF1Msg::getRecipients()
