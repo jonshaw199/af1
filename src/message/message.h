@@ -40,29 +40,9 @@ enum MessageType
   TYPE_INFO
 };
 
-typedef struct af1_msg
-{
-  // Calculated
-  // int msgID;
-  // Required, even for WS (single source of truth)
-  uint8_t type;
-  uint8_t senderID;
-  uint8_t state;
-  // State dependent and only used for espnow
-  uint8_t data[225];
-} af1_msg;
-
-typedef struct af1_time_sync_data
-{
-  unsigned long ms;
-} af1_time_sync_data;
-
-// This class is a wrapper around the af1_msg struct that actually gets sent using ESPNOW
-// ... now also wraps json that gets sent using WS
 class AF1Msg
 {
-  af1_msg msg;
-  DynamicJsonDocument json;
+  StaticJsonDocument<225> data;
   std::set<int> recipients;
   int sendCnt;
   int retries;
@@ -70,8 +50,9 @@ class AF1Msg
 
 public:
   AF1Msg();
-  AF1Msg(af1_msg m);
-  AF1Msg(DynamicJsonDocument d);
+  AF1Msg(uint8_t type);
+  AF1Msg(uint8_t type, uint8_t state);
+  AF1Msg(StaticJsonDocument<225> d);
   void setRecipients(std::set<int> r);
   std::set<int> getRecipients();
   int incrementSendCnt();
@@ -80,20 +61,12 @@ public:
   uint8_t getType();
   void setState(uint8_t s);
   uint8_t getState();
-  void setSenderID(uint8_t id);
-  uint8_t getSenderID();
+  void setSenderId(uint8_t id);
+  uint8_t getSenderId();
   void setMaxRetries(int m);
   int getMaxRetries();
-  void setData(uint8_t *d);
-  const uint8_t *getData();
-
-  void setJson(DynamicJsonDocument d);
-  DynamicJsonDocument &getJson();
-
-  af1_msg getInnerMsg();
-  void deserializeInnerMsgESPNow();
-  void serializeInnerMsgESPNow();
-
+  void setData(StaticJsonDocument<225> d);
+  StaticJsonDocument<225> &getData();
   void print();
 };
 

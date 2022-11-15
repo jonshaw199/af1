@@ -44,7 +44,7 @@ Init::Init()
     if (getCurStateEnt()->doSync())
     {
       syncStartTime = millis() + (unsigned long)MS_TIME_SYNC_START;
-
+      /* To Do! */
       AF1Msg msg;
       msg.setState(getCurState());
       msg.setType(TYPE_TIME_SYNC_START);

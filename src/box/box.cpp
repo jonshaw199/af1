@@ -25,7 +25,7 @@ void dummyHandler(AF1Msg m)
 {
 }
 
-void dummyModifier(AF1Msg &m)
+void Box::dummyModifier(AF1Msg &m)
 {
 }
 
@@ -34,7 +34,7 @@ Box::Box()
   msgHandler = dummyHandler;
 }
 
-void Box::handleMessages(msg_modifier mod = dummyModifier)
+void Box::handleMessages(msg_modifier mod)
 {
   m.lock();
   if (!q.empty())

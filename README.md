@@ -46,14 +46,12 @@ public:
     virtual msg_handler getInboxHandler();
     virtual msg_handler getOutboxHandler();
     virtual String getName();
-    virtual void serializeESPNow(AF1Msg &m);
-    virtual void deserializeESPNow(AF1Msg &m);
     virtual bool doScanForPeersESPNow();
     virtual bool doConnectToWSServer();
     virtual void doSynced();
     virtual bool doSync();
     virtual void onConnectWSServer();
-    virtual DynamicJsonDocument getInfo();
+    virtual StaticJsonDocument<SIZE> getInfo();
   */
 
   void preStateChange(int nextState) {

@@ -100,5 +100,9 @@
 #define SAFETY_CHECK_INBOX_OVERFLOW true
 #endif
 
+#ifndef MESSAGE_JSON_SIZE
+#define MESSAGE_JSON_SIZE 225
+#endif
+
 #define STRINGIFY(s) STRINGIFY1(s)
 #define STRINGIFY1(s) #s

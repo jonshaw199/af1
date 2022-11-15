@@ -156,14 +156,12 @@ void Base::update()
       timeClient.update();
     }
 
-    inbox.handleMessages([](AF1Msg &m)
-                         { m.deserializeInnerMsgESPNow(); });
+    inbox.handleMessages();
     outbox.handleMessages([](AF1Msg &m)
                           { 
-                          if (m.getType() == TYPE_TIME_SYNC) {
-                            setTimeSyncMsgTime(m);
-                          }
-                          m.serializeInnerMsgESPNow(); });
+                            if (m.getType() == TYPE_TIME_SYNC) {
+                              m.getData()["timeSyncTime"] = millis();
+                            } });
 
     // Handling user input
     if (Serial.available() > 0)
@@ -191,7 +189,7 @@ void Base::update()
       if (data.length() > 0)
       {
         Serial.print(".");
-        DynamicJsonDocument doc(1024);
+        StaticJsonDocument<225> doc;
         deserializeJson(doc, data);
         pushInbox(doc);
       }
@@ -272,8 +270,6 @@ void Base::handleInboxMsg(AF1Msg m)
 {
   Serial.print("<");
 
-  m.deserializeInnerMsgESPNow();
-
 #if PRINT_MSG_SEND
   m.print();
 #endif
@@ -287,12 +283,12 @@ void Base::handleInboxMsg(AF1Msg m)
   case TYPE_HANDSHAKE_REQUEST:
     Serial.println("Handshake request message in inbox");
     receiveHandshakeRequest(m);
-    sendHandshakeResponses({m.getSenderID()});
+    sendHandshakeResponses({m.getSenderId()});
     break;
   case TYPE_HANDSHAKE_RESPONSE:
     Serial.println("Handshake response message in inbox");
     receiveHandshakeResponse(m);
-    sendTimeSyncMsg({m.getSenderID()});
+    sendTimeSyncMsg({m.getSenderId()});
     break;
   case TYPE_TIME_SYNC:
     Serial.println("Time sync message in inbox");
@@ -303,11 +299,10 @@ void Base::handleInboxMsg(AF1Msg m)
     receiveTimeSyncMsg(m);
     break;
   case TYPE_TIME_SYNC_START:
-    sync_data d;
-    memcpy(&d, m.getData(), sizeof(d));
     Serial.print("Received time: ");
-    Serial.println(d.ms);
-    syncStartTime = convertTime(m.getSenderID(), d.ms);
+    unsigned long t = m.getData()["timeSyncTime"];
+    Serial.println(t);
+    syncStartTime = convertTime(m.getSenderId(), t);
     Serial.print("Converted time: ");
     Serial.println(syncStartTime);
     scheduleSyncStart();
@@ -328,9 +323,6 @@ void Base::handleInboxMsg(AF1Msg m)
 void Base::handleOutboxMsg(AF1Msg m)
 {
   Serial.print(">");
-
-  // Prepare msg for send
-  m.serializeInnerMsgESPNow();
 
 #if PRINT_MSG_SEND
   m.print();
@@ -556,9 +548,9 @@ void Base::pushInbox(AF1Msg m)
   New
 */
 
-DynamicJsonDocument Base::httpFetch(String url)
+StaticJsonDocument<225> Base::httpFetch(String url)
 {
-  DynamicJsonDocument result(1024);
+  StaticJsonDocument<225> result;
   connectToWifi();
   if (WiFi.status() == WL_CONNECTED)
   {
@@ -582,9 +574,9 @@ DynamicJsonDocument Base::httpFetch(String url)
   return result;
 }
 
-DynamicJsonDocument Base::httpPost(String url, DynamicJsonDocument body)
+StaticJsonDocument<225> Base::httpPost(String url, StaticJsonDocument<225> body)
 {
-  DynamicJsonDocument result(1024);
+  StaticJsonDocument<225> result;
   connectToWifi();
   if ((WiFi.status() == WL_CONNECTED))
   {
@@ -681,11 +673,15 @@ void Base::onESPNowDataRecv(const uint8_t *mac, const uint8_t *incomingData, int
   Serial.print("Last Packet Recv from: ");
   Serial.println(macStr);
 #endif
+  /*
   af1_msg msg;
   memcpy(&msg, incomingData, sizeof(msg));
   AF1Msg msgWrapper = msg;
+  */
+  StaticJsonDocument<225> data;
+  deserializeJson(data, incomingData);
+  AF1Msg msg(data);
   pushInbox(msg);
-  // inbox.enqueue(msgWrapper);
 }
 
 void Base::initEspNow()
@@ -860,8 +856,14 @@ void Base::sendMsgESPNow(AF1Msg msg)
     // Update last msg sent for this peer (now doing this even if sending fails)
     peerInfoMap[*it].lastMsg = msg;
     // Serial.println("Sending message to device ID " + String(*it) + " (MAC address " + macToString(peerInfoMap[*it].espnowPeerInfo.peer_addr) + ")");
+    /*
     af1_msg m = msg.getInnerMsg();
     esp_err_t result = esp_now_send(peerInfoMap[*it].espnowPeerInfo.peer_addr, (uint8_t *)&m, sizeof(m));
+    */
+    String s;
+    serializeJson(msg.getData(), s);
+    esp_err_t result = esp_now_send(peerInfoMap[*it].espnowPeerInfo.peer_addr, (uint8_t *) s.c_str(), MESSAGE_JSON_SIZE);
+
     // Serial.print("Send Status: ");
     if (result == ESP_OK)
     {
@@ -927,13 +929,8 @@ void Base::sendStateChangeMessages(int s)
 {
   Serial.println("Pushing state change messages to the outbox");
 
-  AF1Msg msg = AF1Msg();
-
-  msg.setType(TYPE_CHANGE_STATE);
-  msg.setSenderID(deviceID);
-  msg.setState(s);
+  AF1Msg msg = AF1Msg(TYPE_CHANGE_STATE, s);
   msg.setMaxRetries(DEFAULT_RETRIES);
-
   pushOutbox(msg);
 }
 
@@ -941,16 +938,13 @@ void Base::sendHandshakeRequests(std::set<int> ids)
 {
   Serial.println("Pushing handshake requests to outbox");
 
-  AF1Msg msg = AF1Msg();
+  AF1Msg msg = AF1Msg(TYPE_HANDSHAKE_REQUEST);
 
-  // Set struct
   msg.setType(TYPE_HANDSHAKE_REQUEST);
-  msg.setSenderID(deviceID);
-  msg.setState(curState); // msg.setState(STATE_HANDSHAKE);
-  msg.setData(getMacAP());
-  // Set wrapper
+  // msg.getData()["mac"] = getMacAP();
+  JsonArray mac = msg.getData().createNestedArray("mac");
+  copyArray(getMacAP(), mac);
   msg.setRecipients(ids);
-
   pushOutbox(msg);
 
   for (std::set<int>::const_iterator it = ids.begin(); it != ids.end(); it++)
@@ -961,21 +955,20 @@ void Base::sendHandshakeRequests(std::set<int> ids)
 
 void Base::receiveHandshakeRequest(AF1Msg m)
 {
-  Serial.println("Receiving handshake request from ID " + String(m.getSenderID()));
-  Serial.print("Mac: ");
-  printMac(m.getData());
+  Serial.println("Receiving handshake request from ID " + String(m.getSenderId()));
 
   esp_now_peer_info_t ei;
   memset(&ei, 0, sizeof(ei));
-  memcpy(&ei.peer_addr, m.getData(), 6);
+  copyArray(m.getData()["mac"], ei.peer_addr);
+  // memcpy(&ei.peer_addr, (uint8_t *) m.getData()["mac"], 6);
   ei.channel = ESPNOW_CHANNEL;
   ei.encrypt = 0; // No encryption
   ei.ifidx = WIFI_IF_AP;
-  peerInfoMap[m.getSenderID()].espnowPeerInfo = ei;
-  peerInfoMap[m.getSenderID()].handshakeResponse = false;
-  peerInfoMap[m.getSenderID()].lastMsg = AF1Msg();
-  peerInfoMap[m.getSenderID()].otherTimeSync = 0;
-  peerInfoMap[m.getSenderID()].thisTimeSync = 0;
+  peerInfoMap[m.getSenderId()].espnowPeerInfo = ei;
+  peerInfoMap[m.getSenderId()].handshakeResponse = false;
+  peerInfoMap[m.getSenderId()].lastMsg = AF1Msg();
+  peerInfoMap[m.getSenderId()].otherTimeSync = 0;
+  peerInfoMap[m.getSenderId()].thisTimeSync = 0;
 
   connectToPeers();
 }
@@ -983,23 +976,15 @@ void Base::receiveHandshakeRequest(AF1Msg m)
 void Base::sendHandshakeResponses(std::set<int> ids)
 {
   Serial.println("Pushing handshake responses to outbox");
-
-  AF1Msg msg = AF1Msg();
-
-  // Set struct
-  msg.setType(TYPE_HANDSHAKE_RESPONSE);
-  msg.setSenderID(deviceID);
-  msg.setState(curState); // msg.setState(STATE_HANDSHAKE);
-  // Set wrapper
+  AF1Msg msg = AF1Msg(TYPE_HANDSHAKE_RESPONSE);
   msg.setRecipients(ids);
-
   pushOutbox(msg);
 }
 
 void Base::receiveHandshakeResponse(AF1Msg m)
 {
-  Serial.println("Receiving handshake response from ID " + String(m.getSenderID()));
-  peerInfoMap[m.getSenderID()].handshakeResponse = true;
+  Serial.println("Receiving handshake response from ID " + String(m.getSenderId()));
+  peerInfoMap[m.getSenderId()].handshakeResponse = true;
 }
 
 void Base::sendAllHandshakes(bool resend)
@@ -1016,14 +1001,8 @@ void Base::sendTimeSyncMsg(std::set<int> ids, bool isResponse)
   Serial.print(isResponse ? "response " : "");
   Serial.println("messages to outbox");
 
-  AF1Msg msg = AF1Msg();
-
-  // Set struct
-  msg.setType(isResponse ? TYPE_TIME_SYNC_RESPONSE : TYPE_TIME_SYNC);
-  msg.setSenderID(deviceID);
-  msg.setState(curState);
-  setTimeSyncMsgTime(msg); // Not sure if this is really necessary; time is now set right before sending which is better
-  // Set wrapper
+  AF1Msg msg = AF1Msg(isResponse ? TYPE_TIME_SYNC_RESPONSE : TYPE_TIME_SYNC);
+  msg.getData()["timeSyncTime"] = millis(); // Not sure if this is really necessary; time is now set right before sending which is better
   msg.setRecipients(ids);
   msg.setMaxRetries(DEFAULT_RETRIES);
 
@@ -1035,23 +1014,21 @@ void Base::receiveTimeSyncMsg(AF1Msg m)
   Serial.print("Receiving time sync ");
   Serial.print(m.getType() == TYPE_TIME_SYNC_RESPONSE ? "response" : "");
   Serial.print(" msg from ID ");
-  Serial.println(m.getSenderID());
+  Serial.println(m.getSenderId());
 
-  if (peerInfoMap.count(m.getSenderID()))
+  if (peerInfoMap.count(m.getSenderId()))
   {
-    af1_time_sync_data d;
-    memcpy(&d, m.getData(), sizeof(d));
-    peerInfoMap[m.getSenderID()].otherTimeSync = d.ms;
+    peerInfoMap[m.getSenderId()].otherTimeSync = m.getData()["timeSyncTime"];
     unsigned long thisMs = millis();
-    peerInfoMap[m.getSenderID()].thisTimeSync = thisMs;
+    peerInfoMap[m.getSenderId()].thisTimeSync = thisMs;
     Serial.print("Other device time: ");
-    Serial.print(peerInfoMap[m.getSenderID()].otherTimeSync);
+    Serial.print(peerInfoMap[m.getSenderId()].otherTimeSync);
     Serial.print("; This device time: ");
-    Serial.println(peerInfoMap[m.getSenderID()].thisTimeSync);
+    Serial.println(peerInfoMap[m.getSenderId()].thisTimeSync);
 
     if (m.getType() == TYPE_TIME_SYNC)
     {
-      sendTimeSyncMsg({m.getSenderID()}, true);
+      sendTimeSyncMsg({m.getSenderId()}, true);
     }
   }
   else
@@ -1066,13 +1043,6 @@ void Base::sendAllTimeSyncMessages()
   {
     sendTimeSyncMsg({it->first});
   }
-}
-
-void Base::setTimeSyncMsgTime(AF1Msg &m)
-{
-  af1_time_sync_data d;
-  d.ms = millis();
-  m.setData((uint8_t *)&d);
 }
 
 // From WSEnt
@@ -1097,7 +1067,7 @@ void Base::sendMsgWS(AF1Msg m)
   if (client)
   {
     String s;
-    serializeJson(m.getJson(), s);
+    serializeJson(m.getData(), s);
 #if PRINT_MSG_SEND
     Serial.println("Sending websocket message");
 #endif
@@ -1188,10 +1158,8 @@ bool Base::doConnectToWSServer()
 
 void Base::sendMsgInfo(std::set<int> recipients)
 {
-  AF1Msg msg;
-  msg.setState(getCurState());
-  msg.setType(TYPE_INFO);
-  msg.getJson()["info"] = stateEnt->getInfo();
+  AF1Msg msg(TYPE_INFO);
+  msg.getData()["info"] = stateEnt->getInfo();
   msg.setRecipients(recipients);
   pushOutbox(msg);
 }
@@ -1417,9 +1385,9 @@ void Base::onConnectWSServer()
 {
 }
 
-DynamicJsonDocument Base::getInfo()
+StaticJsonDocument<225> Base::getInfo()
 {
-  DynamicJsonDocument info(1024);
+  StaticJsonDocument<225> info;
 #ifdef ESP32
   info["esp32"] = true; // Should always be true
 #endif

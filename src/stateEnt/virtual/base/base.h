@@ -152,7 +152,6 @@ protected:
   static void sendTimeSyncMsg(std::set<int> ids, bool isResponse = false);
   static void receiveTimeSyncMsg(AF1Msg m);
   static void sendAllTimeSyncMessages();
-  static void setTimeSyncMsgTime(AF1Msg &m);
   // Websocket
   static void sendMsgWS(AF1Msg msg);
   static void connectToWS();
@@ -185,7 +184,7 @@ public:
   virtual void doSynced();
   virtual bool doSync();
   virtual void onConnectWSServer();
-  virtual DynamicJsonDocument getInfo();
+  virtual StaticJsonDocument<225> getInfo();
   // Wifi
   static String macToString(const uint8_t *m);
   static void printMac(const uint8_t *m);
@@ -200,8 +199,8 @@ public:
   void setWSClientInfo(ws_client_info w);
   ws_client_info getWSClientInfo();
   // HTTP
-  static DynamicJsonDocument httpFetch(String url);
-  static DynamicJsonDocument httpPost(String url, DynamicJsonDocument body);
+  static StaticJsonDocument<225> httpFetch(String url);
+  static StaticJsonDocument<225> httpPost(String url, StaticJsonDocument<225> body);
   // Other
   static void setBuiltinLED(bool on);
   unsigned long getStartMs();

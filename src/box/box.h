@@ -30,10 +30,11 @@ typedef void (*msg_modifier)(AF1Msg &m);
 class Box : public TSQueue<AF1Msg>
 {
   msg_handler msgHandler;
+  static void dummyModifier(AF1Msg &m);
 
 public:
   Box();
-  void handleMessages(msg_modifier m);
+  void handleMessages(msg_modifier m = dummyModifier);
   void setMsgHandler(msg_handler h);
 };
 
