@@ -57,9 +57,9 @@ public:
   AF1JsonDoc &json();
   uint8_t getType();
   uint8_t getState();
-  uint8_t getSenderId();
+  String getSenderId();
 
-  void setRecipients(std::set<int> r);
+  void setRecipients(std::set<String> r);
   std::set<int> getRecipients();
   int incrementSendCnt();
   int getSendCnt();

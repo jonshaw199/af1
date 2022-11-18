@@ -112,11 +112,6 @@ public:
   }
 };
 
-typedef struct sync_data
-{
-  unsigned long ms;
-} sync_data;
-
 class Base
 {
   static void onESPNowDataSent(const uint8_t *mac_addr, esp_now_send_status_t status);
@@ -157,7 +152,7 @@ protected:
   static void sendMsgWS(AF1Msg msg);
   static void connectToWS();
   // Info (currently just WS)
-  static void sendMsgInfo(std::set<int> recipients);
+  static void sendMsgInfo(std::set<String> recipients);
 
   std::map<String, Event> &getEventMap();
 
@@ -168,7 +163,7 @@ protected:
 
 public:
   Base();
-  static void begin(uint8_t id);
+  static void begin(String id);
   static void update();
   // Virtual
   virtual void setup();
@@ -227,10 +222,10 @@ public:
   static void setPurgNext(int p, int n);
   static const std::map<int, Base *> &getStateEntMap();
   static Base *getCurStateEnt();
-  static int getDeviceID();
+  static String getDeviceID();
   static void setDefaultWSClientInfo(ws_client_info w);
   static ws_client_info getDefaultWSClientInfo();
-  static std::set<int> getPeerIDs();
+  static std::set<String> getPeerIDs();
   static void setCurWSClientInfo(ws_client_info i);
   static ws_client_info getCurWSClientInfo();
   static WiFiUDP ntpUDP;

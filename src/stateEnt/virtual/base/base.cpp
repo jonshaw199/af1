@@ -37,7 +37,7 @@ static int curState;
 static int prevState;
 static int requestedState;
 static int initialState;
-static int deviceID;
+static String deviceID;
 static Base *stateEnt;
 static std::map<int, Base *> stateEntMap;
 
@@ -55,8 +55,8 @@ static ws_client_info curWSClientInfo;
 static ws_client_info defaultWSClientInfo;
 
 // From espnowHandler
-static std::map<int, af1_peer_info> peerInfoMap;
-static std::map<String, int> macToIDMap;
+static std::map<String, af1_peer_info> peerInfoMap;
+static std::map<String, String> macToIDMap;
 
 WiFiUDP Base::ntpUDP;
 NTPClient Base::timeClient(ntpUDP);
@@ -83,7 +83,7 @@ Base::Base()
 {
 }
 
-void Base::begin(uint8_t id)
+void Base::begin(String id)
 {
   modeEntMap[MODE_BASIC] = new Basic();
 
@@ -402,7 +402,7 @@ bool Base::broadcastAP()
 {
   Serial.println("Broadcasting soft AP");
   String Prefix = DEVICE_PREFIX;
-  String id = String(deviceID);
+  String id = deviceID;
   String SSID = Prefix + id;
   String Password = DEVICE_AP_PASS;
   return WiFi.softAP(SSID.c_str(), Password.c_str(), ESPNOW_CHANNEL, 0);
@@ -623,9 +623,9 @@ void Base::onESPNowDataSent(const uint8_t *mac_addr, esp_now_send_status_t statu
   else
   {
     // Serial.println("Delivery Fail");
-    int peerDeviceID = macToIDMap[macToString(mac_addr)];
+    String peerDeviceID = macToIDMap[macToString(mac_addr)];
 #if PRINT_MSG_SEND
-    Serial.println("Delivery failed to peer ID " + String(peerDeviceID));
+    Serial.println("Delivery failed to peer ID " + deviceID);
 #else
     Serial.print("X");
 #endif
@@ -634,7 +634,7 @@ void Base::onESPNowDataSent(const uint8_t *mac_addr, esp_now_send_status_t statu
     if (peerInfoMap[peerDeviceID].lastMsg.getSendCnt() - 1 < peerInfoMap[peerDeviceID].lastMsg.getMaxRetries())
     {
 #if PRINT_MSG_SEND
-      Serial.println("Retrying send to device ID " + String(peerDeviceID));
+      Serial.println("Retrying send to device ID " + peerDeviceID);
 #endif
       AF1Msg msg = peerInfoMap[peerDeviceID].lastMsg;
       msg.incrementSendCnt();
@@ -717,7 +717,7 @@ int8_t Base::scanForPeersESPNow()
       // Check if the current network is one of our peers
       if (SSID.indexOf(DEVICE_PREFIX) == 0) // Technically must start with a prefix
       {
-        int deviceID = SSID.substring(String(DEVICE_PREFIX).length()).toInt();
+        String deviceID = SSID.substring(String(DEVICE_PREFIX).length());
         // Check the overwrite argument and only overwrite existing entries if true
         if (!peerInfoMap.count(deviceID))
         {
@@ -750,12 +750,12 @@ int8_t Base::scanForPeersESPNow()
             peerInfoMap[deviceID].otherTimeSync = 0;
             peerInfoMap[deviceID].thisTimeSync = 0;
             macToIDMap[macToString(info.peer_addr)] = deviceID;
-            Serial.println("Saved peer info for device ID " + String(deviceID));
+            Serial.println("Saved peer info for device ID " + deviceID);
           }
         }
         else
         {
-          Serial.println("Peer info already collected for device ID " + String(deviceID));
+          Serial.println("Peer info already collected for device ID " + deviceID);
         }
       }
     }
@@ -825,7 +825,7 @@ void Base::connectToPeers()
 void Base::sendMsgESPNow(AF1Msg msg)
 {
   // If recipients set is empty then send to all
-  std::set<int> recipientIDs = msg.getRecipients().size() ? msg.getRecipients() : getPeerIDs();
+  std::set<String> recipientIDs = msg.getRecipients().size() ? msg.getRecipients() : getPeerIDs();
 
   if (!recipientIDs.size())
   {
@@ -834,7 +834,7 @@ void Base::sendMsgESPNow(AF1Msg msg)
 #endif
   }
 
-  for (std::set<int>::iterator it = recipientIDs.begin(); it != recipientIDs.end() && peerInfoMap.count(*it); it++)
+  for (std::set<String>::iterator it = recipientIDs.begin(); it != recipientIDs.end() && peerInfoMap.count(*it); it++)
   {
     peerInfoMap[*it].mutex.lock();
     // Update last msg sent for this peer (now doing this even if sending fails)
@@ -916,7 +916,7 @@ void Base::sendHandshakeRequests(std::set<int> ids)
   msg.setRecipients(ids);
   pushOutbox(msg);
 
-  for (std::set<int>::const_iterator it = ids.begin(); it != ids.end(); it++)
+  for (std::set<String>::const_iterator it = ids.begin(); it != ids.end(); it++)
   {
     peerInfoMap[*it].handshakeRequest = true;
   }
@@ -952,13 +952,13 @@ void Base::sendHandshakeResponses(std::set<int> ids)
 
 void Base::receiveHandshakeResponse(AF1Msg m)
 {
-  Serial.println("Receiving handshake response from ID " + String(m.getSenderId()));
+  Serial.println("Receiving handshake response from ID " + m.getSenderId());
   peerInfoMap[m.getSenderId()].handshakeResponse = true;
 }
 
 void Base::sendAllHandshakes(bool resend)
 {
-  for (std::map<int, af1_peer_info>::const_iterator it = peerInfoMap.begin(); it != peerInfoMap.end() && (!it->second.handshakeRequest || resend); it++)
+  for (std::map<String, af1_peer_info>::const_iterator it = peerInfoMap.begin(); it != peerInfoMap.end() && (!it->second.handshakeRequest || resend); it++)
   {
     sendHandshakeRequests({it->first});
   }
@@ -1008,7 +1008,7 @@ void Base::receiveTimeSyncMsg(AF1Msg m)
 
 void Base::sendAllTimeSyncMessages()
 {
-  for (std::map<int, af1_peer_info>::const_iterator it = peerInfoMap.begin(); it != peerInfoMap.end(); it++)
+  for (std::map<String, af1_peer_info>::const_iterator it = peerInfoMap.begin(); it != peerInfoMap.end(); it++)
   {
     sendTimeSyncMsg({it->first});
   }
@@ -1125,7 +1125,7 @@ bool Base::doConnectToWSServer()
   return !doSync();
 }
 
-void Base::sendMsgInfo(std::set<int> recipients)
+void Base::sendMsgInfo(std::set<String> recipients)
 {
   AF1Msg msg(TYPE_INFO);
   msg.json()["info"] = stateEnt->getInfo();
@@ -1335,7 +1335,7 @@ void Base::setPurgNext(int p, int n)
   (static_cast<Purg<Base> *>(stateEntMap[p]))->setNext(n);
 }
 
-int Base::getDeviceID()
+String Base::getDeviceID()
 {
   return deviceID;
 }
@@ -1363,10 +1363,10 @@ AF1JsonDoc Base::getInfo()
   return info;
 }
 
-std::set<int> Base::getPeerIDs()
+std::set<String> Base::getPeerIDs()
 {
   std::set<int> result;
-  for (std::map<int, af1_peer_info>::iterator it = peerInfoMap.begin(); it != peerInfoMap.end(); it++)
+  for (std::map<String, af1_peer_info>::iterator it = peerInfoMap.begin(); it != peerInfoMap.end(); it++)
   {
     result.insert(it->first);
   }
@@ -1447,7 +1447,7 @@ ws_client_info Base::getCurWSClientInfo()
   return curWSClientInfo;
 }
 
-unsigned long Base::convertTime(int id, unsigned long t)
+unsigned long Base::convertTime(String id, unsigned long t)
 {
   if (peerInfoMap.count(id))
   {
