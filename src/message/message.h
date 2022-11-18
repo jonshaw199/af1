@@ -44,7 +44,7 @@ enum MessageType
 class AF1Msg
 {
   AF1JsonDoc data;
-  std::set<int> recipients;
+  std::set<String> recipients;
   int sendCnt;
   int retries;
   int maxRetries;
@@ -60,7 +60,7 @@ public:
   String getSenderId();
 
   void setRecipients(std::set<String> r);
-  std::set<int> getRecipients();
+  std::set<String> getRecipients();
   int incrementSendCnt();
   int getSendCnt();
   void setMaxRetries(int m);

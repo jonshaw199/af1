@@ -775,7 +775,7 @@ void Base::connectToPeers()
   // Try to connect if not connected already
   if (peerInfoMap.size())
   {
-    for (std::map<int, af1_peer_info>::iterator it = peerInfoMap.begin(); it != peerInfoMap.end(); it++)
+    for (std::map<String, af1_peer_info>::iterator it = peerInfoMap.begin(); it != peerInfoMap.end(); it++)
     {
       // Check if the peer exists
       if (esp_now_is_peer_exist(it->second.espnowPeerInfo.peer_addr))
@@ -905,7 +905,7 @@ void Base::sendStateChangeMessages(int s)
   pushOutbox(msg);
 }
 
-void Base::sendHandshakeRequests(std::set<int> ids)
+void Base::sendHandshakeRequests(std::set<String> ids)
 {
   Serial.println("Pushing handshake requests to outbox");
 
@@ -942,7 +942,7 @@ void Base::receiveHandshakeRequest(AF1Msg m)
   connectToPeers();
 }
 
-void Base::sendHandshakeResponses(std::set<int> ids)
+void Base::sendHandshakeResponses(std::set<String> ids)
 {
   Serial.println("Pushing handshake responses to outbox");
   AF1Msg msg = AF1Msg(TYPE_HANDSHAKE_RESPONSE);
@@ -964,7 +964,7 @@ void Base::sendAllHandshakes(bool resend)
   }
 }
 
-void Base::sendTimeSyncMsg(std::set<int> ids, bool isResponse)
+void Base::sendTimeSyncMsg(std::set<String> ids, bool isResponse)
 {
   Serial.print("Pushing time sync ");
   Serial.print(isResponse ? "response " : "");
@@ -1365,7 +1365,7 @@ AF1JsonDoc Base::getInfo()
 
 std::set<String> Base::getPeerIDs()
 {
-  std::set<int> result;
+  std::set<String> result;
   for (std::map<String, af1_peer_info>::iterator it = peerInfoMap.begin(); it != peerInfoMap.end(); it++)
   {
     result.insert(it->first);
