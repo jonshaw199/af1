@@ -79,6 +79,8 @@ static WiFiClient client; // Use WiFiClient class to create TCP connections
 
 std::map<String, Event> Base::globalEventMap;
 
+static bool detached;
+
 Base::Base()
 {
 }
@@ -106,6 +108,8 @@ void Base::begin(String id)
                         { setRequestedState(STATE_SYNC_TEST); });
   registerStringHandler("hs", [](SHArg a)
                         { stateEnt->handleHandshakes(true); });
+  registerStringHandler("detach*", [](SHArg a)
+                        { detached = a.getValue().toInt(); });
 
   initialState = STATE_IDLE_BASE;
   defaultWSClientInfo = {"", "", 0, ""};
@@ -116,6 +120,7 @@ void Base::begin(String id)
   int m = initialMode;
   curMode = m;
   requestedMode = m;
+  detached = false;
   if (handleModeChange(m))
   {
     int s = STATE_INIT;
@@ -250,7 +255,10 @@ void Base::preStateChange(int s)
   deactivateEvents();
 
 #if MASTER
-  sendStateChangeMessages(s);
+  if (!detached)
+  {
+    sendStateChangeMessages(s);
+  }
 #endif
 
   if (doSync())
@@ -277,7 +285,14 @@ void Base::handleInboxMsg(AF1Msg m)
   {
   case TYPE_CHANGE_STATE:
     Serial.println("State change request message in inbox");
-    requestedState = m.getState();
+    if (detached)
+    {
+      Serial.println("Detached; ignoring state change request message");
+    }
+    else
+    {
+      requestedState = m.getState();
+    }
     break;
   case TYPE_HANDSHAKE_REQUEST:
     Serial.println("Handshake request message in inbox");
@@ -310,7 +325,7 @@ void Base::handleInboxMsg(AF1Msg m)
 
 #if IMPLICIT_STATE_CHANGE
 #ifndef MASTER
-  if (m.getState() != curState && m.getState() != requestedState)
+  if (m.getState() != curState && m.getState() != requestedState && !detached)
   {
     Serial.println("Implicit state change to " + stateToString(m.getState()));
     requestedState = m.getState();
@@ -847,7 +862,7 @@ void Base::sendMsgESPNow(AF1Msg msg)
     */
     String s;
     serializeJson(msg.json(), s);
-    esp_err_t result = esp_now_send(peerInfoMap[*it].espnowPeerInfo.peer_addr, (uint8_t *) s.c_str(), AF1_MSG_SIZE);
+    esp_err_t result = esp_now_send(peerInfoMap[*it].espnowPeerInfo.peer_addr, (uint8_t *)s.c_str(), AF1_MSG_SIZE);
 
     // Serial.print("Send Status: ");
     if (result == ESP_OK)
@@ -1478,4 +1493,7 @@ void Base::set(Event e)
   }
 }
 
-// StateManager - END
+void Base::detach(bool d)
+{
+  detached = d;
+}
