@@ -55,19 +55,22 @@ uint8_t AF1Msg::getState()
   return data["state"];
 }
 
-uint8_t AF1Msg::getSenderId()
+String AF1Msg::getSenderId()
 {
   return data["senderId"];
 }
 
-std::set<int> AF1Msg::getRecipients()
+std::set<String> AF1Msg::getRecipients()
 {
   return recipients;
 }
 
-void AF1Msg::setRecipients(std::set<int> r)
+void AF1Msg::setRecipients(std::set<String> r)
 {
   recipients = r;
+  for (std::set<String>::iterator it = r.begin(); it != r.end(); it++) {
+    recipients.insert(*it);
+  }
 }
 
 int AF1Msg::incrementSendCnt()
