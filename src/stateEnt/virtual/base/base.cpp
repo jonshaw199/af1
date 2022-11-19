@@ -1495,5 +1495,7 @@ void Base::set(Event e)
 
 void Base::detach(bool d)
 {
+  Serial.print("Detaching: ");
+  Serial.println(d);
   detached = d;
 }
