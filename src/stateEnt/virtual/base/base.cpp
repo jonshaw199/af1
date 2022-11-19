@@ -109,7 +109,7 @@ void Base::begin(String id)
   registerStringHandler("hs", [](SHArg a)
                         { stateEnt->handleHandshakes(true); });
   registerStringHandler("detach*", [](SHArg a)
-                        { detached = a.getValue().toInt(); });
+                        { detach(a.getValue().toInt()); });
 
   initialState = STATE_IDLE_BASE;
   defaultWSClientInfo = {"", "", 0, ""};
