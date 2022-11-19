@@ -76,7 +76,7 @@ void Init::setup()
 
   Base::setup();
 
-  initEspNow();
+  initEspNow(); // To do: is this too early? Is more setup needed before turning on esp now?
 
 #ifdef LED_BUILTIN
   pinMode(LED_BUILTIN, OUTPUT);
