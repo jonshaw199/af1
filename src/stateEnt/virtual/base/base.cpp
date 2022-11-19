@@ -788,6 +788,7 @@ void Base::connectToPeers()
       {
         // Peer not connected; attempt to connect
         esp_err_t connectStatus = esp_now_add_peer(&it->second.espnowPeerInfo);
+        // IMPORTANT: Should the peer/peerInfo be removed from the map if pairing failed? TO DO
         if (connectStatus == ESP_OK)
         {
           Serial.println("Pair success");
