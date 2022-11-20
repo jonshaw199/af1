@@ -20,7 +20,7 @@
 #define AF1 Base
 
 #ifndef DEVICE_PREFIX
-#define DEVICE_PREFIX "ESP32-AF1-"
+#define DEVICE_PREFIX "AF1-"
 #endif
 
 #ifndef DEVICE_AP_PASS
