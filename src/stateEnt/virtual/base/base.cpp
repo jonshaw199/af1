@@ -261,10 +261,7 @@ void Base::preStateChange(int s)
   }
 #endif
 
-  if (doSync())
-  {
-    setBuiltinLED(0);
-  }
+  setBuiltinLED(0); // to do
 }
 
 unsigned long Base::getElapsedMs()
