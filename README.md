@@ -51,7 +51,6 @@ public:
     virtual void doSynced();
     virtual bool doSync();
     virtual void onConnectWSServer();
-    virtual AF1JsonDoc getInfo();
   */
 
   void preStateChange(int nextState) {

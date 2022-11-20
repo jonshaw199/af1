@@ -38,7 +38,6 @@ enum MessageType
   TYPE_TIME_SYNC,
   TYPE_TIME_SYNC_RESPONSE,
   TYPE_TIME_SYNC_START,
-  TYPE_INFO
 };
 
 class AF1Msg

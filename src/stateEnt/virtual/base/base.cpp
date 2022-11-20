@@ -1138,14 +1138,6 @@ bool Base::doConnectToWSServer()
   return !doSync();
 }
 
-void Base::sendMsgInfo(std::set<String> recipients)
-{
-  AF1Msg msg(TYPE_INFO);
-  msg.json()["info"] = stateEnt->getInfo();
-  msg.setRecipients(recipients);
-  pushOutbox(msg);
-}
-
 std::map<String, Event> &Base::getEventMap()
 {
   return eventMap;
@@ -1365,15 +1357,6 @@ ws_client_info Base::getDefaultWSClientInfo()
 
 void Base::onConnectWSServer()
 {
-}
-
-AF1JsonDoc Base::getInfo()
-{
-  AF1JsonDoc info;
-#ifdef ESP32
-  info["esp32"] = true; // Should always be true
-#endif
-  return info;
 }
 
 std::set<String> Base::getPeerIDs()

@@ -151,8 +151,6 @@ protected:
   // Websocket
   static void sendMsgWS(AF1Msg msg);
   static void connectToWS();
-  // Info (currently just WS)
-  static void sendMsgInfo(std::set<String> recipients);
 
   std::map<String, Event> &getEventMap();
 
@@ -178,7 +176,6 @@ public:
   virtual void doSynced();
   virtual bool doSync();
   virtual void onConnectWSServer();
-  virtual AF1JsonDoc getInfo();
   // Wifi
   static String macToString(const uint8_t *m);
   static void printMac(const uint8_t *m);
