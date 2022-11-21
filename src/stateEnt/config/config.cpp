@@ -11,8 +11,6 @@ void Config::setup()
 {
   // No base setup here
 
-  overrideAutoProceed = false;
-
   // If config requred then do it now
   // Otherwise move on to init state
   if (preferences.begin(PREFS_NAMESPACE))
@@ -24,11 +22,11 @@ void Config::setup()
       // Config not necessary but should still be optional somehow
       printConfig(c);
       set(Event(
-          "Config_AutoProceed", [](ECBArg a)
+          EVENTKEY_CONFIG_AUTOPROCEED, [](ECBArg a)
           { setRequestedState(STATE_INIT); },
           EVENT_TYPE_TEMP, 3000));
       registerStringHandler(SHKEY_CONFIG_START, [](SHArg a)
-                            { overrideAutoProceed = true; });
+                            { unset(EVENTKEY_CONFIG_AUTOPROCEED); });
     }
     else
     {
@@ -47,8 +45,6 @@ void Config::setup()
 void Config::loop()
 {
   // No base loop here
-
-  // Check if user opted for config
 }
 
 void Config::preStateChange(int s)
@@ -67,6 +63,7 @@ DynamicJsonDocument Config::loadConfig()
   c[PREFS_WIFI_SSID_3_KEY] = preferences.getString(PREFS_WIFI_SSID_3_KEY);
   c[PREFS_WIFI_PASS_3_KEY] = preferences.getString(PREFS_WIFI_PASS_3_KEY);
   c[PREFS_IP_KEY] = preferences.getString(PREFS_IP_KEY);
+  return c;
 }
 
 void Config::printConfig(DynamicJsonDocument c)
