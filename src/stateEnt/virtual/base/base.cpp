@@ -99,17 +99,17 @@ void Base::begin(String id)
   stateEntMap[STATE_IDLE_BASE] = new Base();
   stateEntMap[STATE_SYNC_TEST] = new SyncTest();
 
-  registerStringHandler("ota", [](SHArg a)
+  registerStringHandler(SHKEY_OTA, [](SHArg a)
                         { setRequestedState(STATE_OTA); });
-  registerStringHandler("restart", [](SHArg a)
+  registerStringHandler(SHKEY_RESTART, [](SHArg a)
                         { setRequestedState(STATE_RESTART); });
-  registerStringHandler("idle", [](SHArg a)
+  registerStringHandler(SHKEY_IDLE, [](SHArg a)
                         { setRequestedState(STATE_IDLE_BASE); });
-  registerStringHandler("synctest", [](SHArg a)
+  registerStringHandler(SHKEY_SYNCTEST, [](SHArg a)
                         { setRequestedState(STATE_SYNC_TEST); });
-  registerStringHandler("hs", [](SHArg a)
+  registerStringHandler(SHKEY_HANDSHAKE, [](SHArg a)
                         { stateEnt->handleHandshakes(true); });
-  registerStringHandler("detach*", [](SHArg a)
+  registerStringHandler(SHKEY_DETACH, [](SHArg a)
                         { detach(a.getValue().toInt()); });
 
   initialState = STATE_IDLE_BASE;
@@ -1279,6 +1279,10 @@ void Base::registerStateEnt(int i, Base *s)
 void Base::registerStringHandler(String s, string_input_handler h)
 {
   stringHandlerMap[s] = h;
+}
+
+void Base::unregisterStringHandler(String s) {
+  stringHandlerMap.erase(s);
 }
 
 void Base::registerWifiAP(String s, String p)

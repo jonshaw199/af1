@@ -5,16 +5,21 @@
 
 static Preferences preferences;
 
+bool overrideAutoProceed;
+
 void Config::setup()
 {
+  // No base setup here
+
+  overrideAutoProceed = false;
+
   // If config requred then do it now
   // Otherwise move on to init state
   if (preferences.begin(PREFS_NAMESPACE))
   {
     Serial.println("Loading config");
     DynamicJsonDocument c = loadConfig();
-    String id = c[PREFS_ID_KEY];
-    if (id.length())
+    if (hasRequiredConfigs(c))
     {
       // Config not necessary but should still be optional somehow
       printConfig(c);
@@ -22,10 +27,12 @@ void Config::setup()
           "Config_AutoProceed", [](ECBArg a)
           { setRequestedState(STATE_INIT); },
           EVENT_TYPE_TEMP, 3000));
+      registerStringHandler(SHKEY_CONFIG_START, [](SHArg a)
+                            { overrideAutoProceed = true; });
     }
     else
     {
-      // Commence initial config
+      // Commence config
       Serial.println("Initial config needed");
     }
   }
@@ -35,6 +42,18 @@ void Config::setup()
     while (1)
       delay(1000); // Halt
   }
+}
+
+void Config::loop()
+{
+  // No base loop here
+
+  // Check if user opted for config
+}
+
+void Config::preStateChange(int s)
+{
+  unregisterStringHandler(SHKEY_CONFIG_START);
 }
 
 DynamicJsonDocument Config::loadConfig()
@@ -57,4 +76,10 @@ void Config::printConfig(DynamicJsonDocument c)
   Serial.print("Config: ");
   Serial.println(pretty);
   Serial.println();
+}
+
+bool Config::hasRequiredConfigs(DynamicJsonDocument c)
+{
+  String id = c["id"];
+  return id.length();
 }
