@@ -1271,7 +1271,7 @@ bool Base::handleStateChange(int s)
   }
 }
 
-void Base::registerStateEnt(int i, Base *s)
+void Base::addStateEnt(int i, Base *s)
 {
   stateEntMap[i] = s;
 }

@@ -63,8 +63,8 @@ void setup()
 {
   Serial.begin(115200);
   AF1::begin(DEVICE_ID); // Required
-  AF1::registerStateEnt(STATE_BLINK, new Blink());
-  AF1::registerStateEnt(STATE_MACARENA, new Macarena());
+  AF1::addStateEnt(STATE_BLINK, new Blink());
+  AF1::addStateEnt(STATE_MACARENA, new Macarena());
   AF1::addStringHandler("mac", [](SHArg a) { AF1::setRequestedState(STATE_MACARENA); });
   AF1::setInitialState(STATE_BLINK);
 }

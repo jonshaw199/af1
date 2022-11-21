@@ -233,7 +233,7 @@ public:
   static void unset(String eventName);
   static void detach(bool detach);
 
-  static void registerStateEnt(int i, Base *s);
+  static void addStateEnt(int i, Base *s);
   static void addStringHandler(String s, string_input_handler h);
   static void removeStringHandler(String s);
   static void addWifiAP(String s, String p);
