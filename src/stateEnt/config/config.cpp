@@ -25,7 +25,7 @@ void Config::setup()
           EVENTKEY_CONFIG_AUTOPROCEED, [](ECBArg a)
           { setRequestedState(STATE_INIT); },
           EVENT_TYPE_TEMP, 3000));
-      registerStringHandler(SHKEY_CONFIG_START, [](SHArg a)
+      setStringHandler(SHKEY_CONFIG_START, [](SHArg a)
                             { unset(EVENTKEY_CONFIG_AUTOPROCEED); });
     }
     else
@@ -49,7 +49,7 @@ void Config::loop()
 
 void Config::preStateChange(int s)
 {
-  unregisterStringHandler(SHKEY_CONFIG_START);
+  unsetStringHandler(SHKEY_CONFIG_START);
 }
 
 DynamicJsonDocument Config::loadConfig()

@@ -99,17 +99,17 @@ void Base::begin(String id)
   stateEntMap[STATE_IDLE_BASE] = new Base();
   stateEntMap[STATE_SYNC_TEST] = new SyncTest();
 
-  registerStringHandler(SHKEY_OTA, [](SHArg a)
+  setStringHandler(SHKEY_OTA, [](SHArg a)
                         { setRequestedState(STATE_OTA); });
-  registerStringHandler(SHKEY_RESTART, [](SHArg a)
+  setStringHandler(SHKEY_RESTART, [](SHArg a)
                         { setRequestedState(STATE_RESTART); });
-  registerStringHandler(SHKEY_IDLE, [](SHArg a)
+  setStringHandler(SHKEY_IDLE, [](SHArg a)
                         { setRequestedState(STATE_IDLE_BASE); });
-  registerStringHandler(SHKEY_SYNCTEST, [](SHArg a)
+  setStringHandler(SHKEY_SYNCTEST, [](SHArg a)
                         { setRequestedState(STATE_SYNC_TEST); });
-  registerStringHandler(SHKEY_HANDSHAKE, [](SHArg a)
+  setStringHandler(SHKEY_HANDSHAKE, [](SHArg a)
                         { stateEnt->handleHandshakes(true); });
-  registerStringHandler(SHKEY_DETACH, [](SHArg a)
+  setStringHandler(SHKEY_DETACH, [](SHArg a)
                         { detach(a.getValue().toInt()); });
 
   initialState = STATE_IDLE_BASE;
@@ -1276,16 +1276,16 @@ void Base::registerStateEnt(int i, Base *s)
   stateEntMap[i] = s;
 }
 
-void Base::registerStringHandler(String s, string_input_handler h)
+void Base::setStringHandler(String s, string_input_handler h)
 {
   stringHandlerMap[s] = h;
 }
 
-void Base::unregisterStringHandler(String s) {
+void Base::unsetStringHandler(String s) {
   stringHandlerMap.erase(s);
 }
 
-void Base::registerWifiAP(String s, String p)
+void Base::addWifiAP(String s, String p)
 {
   wifi_ap_info i;
   i.ssid = s;
@@ -1305,7 +1305,7 @@ void Base::registerWifiAP(String s, String p)
   wifiAPs.push_back(i);
 }
 
-void Base::registerWifiAP(String s, String p, int a, int b, int c, int d, int ga, int gb, int gc, int gd, int sa, int sb, int sc, int sd)
+void Base::addWifiAP(String s, String p, int a, int b, int c, int d, int ga, int gb, int gc, int gd, int sa, int sb, int sc, int sd)
 {
   wifi_ap_info i;
   i.ssid = s;

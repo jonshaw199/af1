@@ -234,10 +234,10 @@ public:
   static void detach(bool detach);
 
   static void registerStateEnt(int i, Base *s);
-  static void registerStringHandler(String s, string_input_handler h);
-  static void unregisterStringHandler(String s);
-  static void registerWifiAP(String s, String p);
-  static void registerWifiAP(String s, String p, int a, int b, int c, int d, int ga, int gb, int gc, int gd, int sa, int sb, int sc, int sd);
+  static void setStringHandler(String s, string_input_handler h);
+  static void unsetStringHandler(String s);
+  static void addWifiAP(String s, String p);
+  static void addWifiAP(String s, String p, int a, int b, int c, int d, int ga, int gb, int gc, int gd, int sa, int sb, int sc, int sd);
 };
 
 #endif // STATEENT_VIRTUAL_BASE_BASE_H_
