@@ -230,7 +230,7 @@ public:
   static unsigned long convertTime(String id, unsigned long t);
   static void setIntervalTime(String e, unsigned long t);
   static void set(Event e);
-  static void unset(String eventName);
+  static void removeEvent(String eventName);
   static void detach(bool detach);
 
   static void addStateEnt(int i, Base *s);

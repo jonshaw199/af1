@@ -24,7 +24,7 @@
 
 Init::Init()
 {
-  set(Event(
+  addEvent(Event(
       EVENTKEY_ESP_HANDSHAKE, [](ECBArg a)
       {
     if (getCurStateEnt()->doScanForPeersESPNow())
@@ -38,7 +38,7 @@ Init::Init()
       EVENT_TYPE_GLOBAL, MS_HANDSHAKE_LOOP, 0, 0, START_DEVICE_MS));
 
 #if MASTER
-  set(Event(
+  addEvent(Event(
       EVENTKEY_SYNC_START_TIME, [](ECBArg a)
       {
     if (getCurStateEnt()->doSync())

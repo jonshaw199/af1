@@ -21,12 +21,12 @@ void Config::setup()
     {
       // Config not necessary but should still be optional somehow
       printConfig(c);
-      set(Event(
+      addEvent(Event(
           EVENTKEY_CONFIG_AUTOPROCEED, [](ECBArg a)
           { setRequestedState(STATE_INIT); },
           EVENT_TYPE_TEMP, 3000));
       addStringHandler(SHKEY_CONFIG_START, [](SHArg a)
-                            { unset(EVENTKEY_CONFIG_AUTOPROCEED); });
+                            { removeEvent(EVENTKEY_CONFIG_AUTOPROCEED); });
     }
     else
     {

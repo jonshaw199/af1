@@ -1164,7 +1164,7 @@ void Base::scheduleSyncStart()
   unsigned long dif = s - millis();
   unsigned long startMs = dif + stateEnt->getElapsedMs();
 
-  set(Event(
+  addEvent(Event(
       EVENTKEY_SCHEDULE_SYNC_START, [](ECBArg a)
       {
     Serial.println("Starting");
@@ -1174,7 +1174,7 @@ void Base::scheduleSyncStart()
 
 void Base::doSynced()
 {
-  set(Event(
+  addEvent(Event(
       EVENTKEY_SYNC_START,
       [](ECBArg a)
       { setBuiltinLED(a.cbCnt % 2); },
@@ -1478,7 +1478,7 @@ void Base::set(Event e)
   }
 }
 
-void Base::unset(String e) {
+void Base::removeEvent(String e) {
   globalEventMap.erase(e);
   stateEnt->getEventMap().erase(e);
 }

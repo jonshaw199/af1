@@ -32,7 +32,7 @@ class Blink : public Base
 {
 public:
   Blink() {
-    set(Event("Blink", [](ECBArg a) {
+    addEvent(Event("Blink", [](ECBArg a) {
       setBuiltinLED(a.cbCnt % 2); // Blink once per sec
     }, EVENT_TYPE_PERM, 500));
   }
