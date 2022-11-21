@@ -105,3 +105,14 @@
 
 #define STRINGIFY(s) STRINGIFY1(s)
 #define STRINGIFY1(s) #s
+
+#define PREFS_NAMESPACE "af1"
+#define PREFS_ID_KEY "id"
+#define PREFS_WIFI_SSID_1_KEY "ssid1"
+#define PREFS_WIFI_PASS_1_KEY "pass1"
+#define PREFS_WIFI_SSID_2_KEY "ssid2"
+#define PREFS_WIFI_PASS_2_KEY "pass2"
+#define PREFS_WIFI_SSID_3_KEY "ssid3"
+#define PREFS_WIFI_PASS_3_KEY "pass3"
+#define PREFS_IP_KEY "ip"
+

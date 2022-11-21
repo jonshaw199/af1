@@ -32,6 +32,7 @@
 #include "stateEnt/init/init.h"
 #include "stateEnt/purg/purg.h"
 #include "stateEnt/synctest/syncTest.h"
+#include "stateEnt/config/config.h"
 
 static int curState;
 static int prevState;

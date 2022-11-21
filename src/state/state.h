@@ -27,7 +27,8 @@ enum af1_state
   STATE_OTA,
   STATE_RESTART,
   STATE_IDLE_BASE,
-  STATE_SYNC_TEST
+  STATE_SYNC_TEST,
+  STATE_CONFIG
 };
 
 enum af1_mode
