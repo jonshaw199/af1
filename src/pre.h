@@ -117,12 +117,16 @@
 #define PREFS_IP_KEY "ip"
 
 #define SHKEY_CONFIG_START "c"
-
 #define SHKEY_CONFIG "config"
 #define SHKEY_OTA "ota"
 #define SHKEY_RESTART "restart"
 #define SHKEY_IDLE "idle"
 #define SHKEY_SYNCTEST "synctest"
-
 #define SHKEY_HANDSHAKE "hs"
 #define SHKEY_DETACH "detach*"
+
+#define EVENTKEY_CONFIG_AUTOPROCEED "Config_AutoProceed"
+#define EVENTKEY_ESP_HANDSHAKE "Global_ESPHandshake"
+#define EVENTKEY_SYNC_START_TIME "Global_SendSyncStartTime"
+#define EVENTKEY_SCHEDULE_SYNC_START "Sync_ScheduleSyncStart"
+#define EVENTKEY_SYNC_START "Base_SyncStart"
