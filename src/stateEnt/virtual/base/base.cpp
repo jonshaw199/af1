@@ -1466,7 +1466,7 @@ void Base::setIntervalTime(String e, unsigned long t)
   }
 }
 
-void Base::set(Event e)
+void Base::addEvent(Event e)
 {
   if (e.getType() == EVENT_TYPE_GLOBAL)
   {

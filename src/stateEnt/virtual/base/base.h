@@ -229,7 +229,7 @@ public:
   static NTPClient timeClient;
   static unsigned long convertTime(String id, unsigned long t);
   static void setIntervalTime(String e, unsigned long t);
-  static void set(Event e);
+  static void addEvent(Event e);
   static void removeEvent(String eventName);
   static void detach(bool detach);
 
