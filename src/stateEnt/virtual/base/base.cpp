@@ -1276,6 +1276,10 @@ void Base::addStateEnt(int i, Base *s)
   stateEntMap[i] = s;
 }
 
+void Base::removeStateEnt(int i) {
+  stateEntMap.erase(i);
+}
+
 void Base::addStringHandler(String s, string_input_handler h)
 {
   stringHandlerMap[s] = h;

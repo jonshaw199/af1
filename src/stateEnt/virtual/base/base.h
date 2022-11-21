@@ -220,20 +220,21 @@ public:
   static const std::map<int, Base *> &getStateEntMap();
   static Base *getCurStateEnt();
   static String getDeviceID();
-  static void setDefaultWSClientInfo(ws_client_info w);
-  static ws_client_info getDefaultWSClientInfo();
   static std::set<String> getPeerIDs();
-  static void setCurWSClientInfo(ws_client_info i);
-  static ws_client_info getCurWSClientInfo();
   static WiFiUDP ntpUDP;
   static NTPClient timeClient;
   static unsigned long convertTime(String id, unsigned long t);
   static void setIntervalTime(String e, unsigned long t);
-  static void addEvent(Event e);
-  static void removeEvent(String eventName);
   static void detach(bool detach);
 
+  static void setDefaultWSClientInfo(ws_client_info w);
+  static ws_client_info getDefaultWSClientInfo();
+  static void setCurWSClientInfo(ws_client_info i);
+  static ws_client_info getCurWSClientInfo();
+  static void addEvent(Event e);
+  static void removeEvent(String eventName);
   static void addStateEnt(int i, Base *s);
+  static void removeStateEnt(int i);
   static void addStringHandler(String s, string_input_handler h);
   static void removeStringHandler(String s);
   static void addWifiAP(String s, String p);
