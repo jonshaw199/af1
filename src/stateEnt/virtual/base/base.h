@@ -234,8 +234,8 @@ public:
   static void detach(bool detach);
 
   static void registerStateEnt(int i, Base *s);
-  static void setStringHandler(String s, string_input_handler h);
-  static void unsetStringHandler(String s);
+  static void addStringHandler(String s, string_input_handler h);
+  static void removeStringHandler(String s);
   static void addWifiAP(String s, String p);
   static void addWifiAP(String s, String p, int a, int b, int c, int d, int ga, int gb, int gc, int gd, int sa, int sb, int sc, int sd);
 };

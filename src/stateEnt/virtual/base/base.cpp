@@ -99,17 +99,17 @@ void Base::begin(String id)
   stateEntMap[STATE_IDLE_BASE] = new Base();
   stateEntMap[STATE_SYNC_TEST] = new SyncTest();
 
-  setStringHandler(SHKEY_OTA, [](SHArg a)
+  addStringHandler(SHKEY_OTA, [](SHArg a)
                         { setRequestedState(STATE_OTA); });
-  setStringHandler(SHKEY_RESTART, [](SHArg a)
+  addStringHandler(SHKEY_RESTART, [](SHArg a)
                         { setRequestedState(STATE_RESTART); });
-  setStringHandler(SHKEY_IDLE, [](SHArg a)
+  addStringHandler(SHKEY_IDLE, [](SHArg a)
                         { setRequestedState(STATE_IDLE_BASE); });
-  setStringHandler(SHKEY_SYNCTEST, [](SHArg a)
+  addStringHandler(SHKEY_SYNCTEST, [](SHArg a)
                         { setRequestedState(STATE_SYNC_TEST); });
-  setStringHandler(SHKEY_HANDSHAKE, [](SHArg a)
+  addStringHandler(SHKEY_HANDSHAKE, [](SHArg a)
                         { stateEnt->handleHandshakes(true); });
-  setStringHandler(SHKEY_DETACH, [](SHArg a)
+  addStringHandler(SHKEY_DETACH, [](SHArg a)
                         { detach(a.getValue().toInt()); });
 
   initialState = STATE_IDLE_BASE;
@@ -1276,12 +1276,12 @@ void Base::registerStateEnt(int i, Base *s)
   stateEntMap[i] = s;
 }
 
-void Base::setStringHandler(String s, string_input_handler h)
+void Base::addStringHandler(String s, string_input_handler h)
 {
   stringHandlerMap[s] = h;
 }
 
-void Base::unsetStringHandler(String s) {
+void Base::removeStringHandler(String s) {
   stringHandlerMap.erase(s);
 }
 
