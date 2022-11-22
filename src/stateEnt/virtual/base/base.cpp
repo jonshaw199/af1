@@ -32,7 +32,6 @@
 #include "stateEnt/init/init.h"
 #include "stateEnt/purg/purg.h"
 #include "stateEnt/synctest/syncTest.h"
-#include "stateEnt/config/config.h"
 
 static int curState;
 static int prevState;
@@ -108,7 +107,7 @@ void Base::begin(String id)
   addStringHandler(SHKEY_SYNCTEST, [](SHArg a)
                         { setRequestedState(STATE_SYNC_TEST); });
   addStringHandler(SHKEY_HANDSHAKE, [](SHArg a)
-                        { stateEnt->handleHandshakes(true); });
+                        { handleHandshakes(true); });
   addStringHandler(SHKEY_DETACH, [](SHArg a)
                         { detach(a.getValue().toInt()); });
 
