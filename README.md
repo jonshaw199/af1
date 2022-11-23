@@ -69,13 +69,7 @@ void setup()
   AF1::addStateEnt(STATE_MACARENA, new Macarena());
   AF1::addStringHandler("mac", [](SHArg a) { AF1::setRequestedState(STATE_MACARENA); });
   AF1::setInitialState(STATE_BLINK);
-  /*
-    // Other commonly used
-    static void pushOutbox(AF1Msg m);
-    static AF1JsonDoc httpFetch(String url);
-    static AF1JsonDoc httpPost(String url, AF1JsonDoc body);
-    static void setDefaultWSClientInfo(ws_client_info w); // w: {String host, String path, int port, String protocol}
-  */
+  // AF1::setDefaultWSClientInfo(w); // w: {String host, String path, int port, String protocol}
 }
 
 void loop()
