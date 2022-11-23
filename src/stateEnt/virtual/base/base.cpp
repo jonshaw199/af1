@@ -531,14 +531,7 @@ void Base::pushInbox(AF1Msg m)
 #if PRINT_MSG_RECEIVE
     Serial.println("Warning: inbox overflow approaching");
 #endif
-    if (m.getType() == TYPE_RUN_DATA)
-    {
-      Serial.print("X");
-#if PRINT_MSG_RECEIVE
-      Serial.println("Skipping TYPE_RUN_DATA message in favor of higher priority messages");
-#endif
-      return;
-    }
+    // do something
   }
 #endif
 
