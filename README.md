@@ -5,17 +5,19 @@
 ### Features
 
 - :electric_plug: Websocket Client
+- :handshake: ESP-Now P2P (2-Way; Auto-Connect)
 - :globe_with_meridians: HTTP Client
-- :handshake: ESP-Now P2P (Auto-Connect)
 - :arrows_counterclockwise: AP/STA Mode (Use websocket, HTTP, and ESP-Now concurrently)
-- :stopwatch: Time Sync Devices/Tasks (without IR)
+- :stopwatch: Time Sync Devices/Tasks
 - :calendar: Event Scheduling
 - :trident: State Management
 - :radio: Over the air (ArduinoOTA) firmware updates
 
 ### Overview
 
-A state entity defines the behavior for a state, and new state entities can be created by extending the `Base` class. When creating new state entities, setup, loop, message handling, and other behavior from `Base` can be overridden as necessary. This is a trivial example:
+A state entity defines the behavior for a state, and new state entities can be created by extending the `Base` class. When creating new state entities, setup, loop, message handling, and other behavior from `Base` can be overridden as necessary.
+
+Until the dust settles, practical and up-to-date examples can be found in the [AF1-1](https://github.com/jonshaw199/af1-1/blob/main/firmware/lights/src/main.cpp) project. A more trivial example can be seen below:
 
 ```
 #include <AF1.h>
@@ -67,6 +69,13 @@ void setup()
   AF1::addStateEnt(STATE_MACARENA, new Macarena());
   AF1::addStringHandler("mac", [](SHArg a) { AF1::setRequestedState(STATE_MACARENA); });
   AF1::setInitialState(STATE_BLINK);
+  /*
+    // Other commonly used
+    static void pushOutbox(AF1Msg m);
+    static AF1JsonDoc httpFetch(String url);
+    static AF1JsonDoc httpPost(String url, AF1JsonDoc body);
+    static void setDefaultWSClientInfo(ws_client_info w); // w: {String host, String path, int port, String protocol}
+  */
 }
 
 void loop()
@@ -74,8 +83,6 @@ void loop()
   AF1::update(); // Required
 }
 ```
-
-Until the dust settles, other examples can be found in the [AF1-1](https://github.com/jonshaw199/af1-1/blob/main/firmware/lights/src/main.cpp) project.
 
 ### Messaging
 
