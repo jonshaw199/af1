@@ -90,31 +90,14 @@ pushOutbox(msg);
 Messages can be received by overriding `getInboxHandler()` (example from the [AF1-1](https://github.com/jonshaw199/af1-1/blob/main/firmware/src/main.cpp) project mentioned above):
 
 ```
-#define TYPE_MOTION 0 // Custom types can be created; really just unique, arbitrary numbers
 
 msg_handler LightShowBase::getInboxHandler()
 {
   return [](AF1Msg m)
   {
     Base::handleInboxMsg(m); // Or whatever superclass is being used
-
-    switch (m.getType())
-    {
-    case TYPE_MOTION:
-      Serial.print("Notification msg received: motion ");
-      if (m.json()["motion"] == true)
-      {
-        Serial.println(" begin...");
-#ifdef VS1053_CS_PIN
-        playFile("/track001.mp3");
-#endif
-      }
-      else
-      {
-        Serial.println(" end.");
-      }
-      break;
-    }
+    String world = m.json()["hello"];
+    Serial.print("Hello " + world);
   };
 }
 ```
