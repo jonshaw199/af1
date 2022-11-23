@@ -75,7 +75,7 @@ void loop()
 }
 ```
 
-Until the dust settles, other examples can be found in the [AF1-1](https://github.com/jonshaw199/af1-1/blob/main/firmware/src/main.cpp) project.
+Until the dust settles, other examples can be found in the [AF1-1](https://github.com/jonshaw199/af1-1/blob/main/firmware/lights/src/main.cpp) project.
 
 ### Messaging
 
