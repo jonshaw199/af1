@@ -87,11 +87,11 @@ msg.json()["hello"] = "world"; // All the power of ArduinoJSON at your fingertip
 pushOutbox(msg);
 ```
 
-Messages can be received by overriding `getInboxHandler()` (example from the [AF1-1](https://github.com/jonshaw199/af1-1/blob/main/firmware/src/main.cpp) project mentioned above):
+Messages can be received by overriding `getInboxHandler()`:
 
 ```
 
-msg_handler LightShowBase::getInboxHandler()
+msg_handler SomeSubclass::getInboxHandler()
 {
   return [](AF1Msg m)
   {
