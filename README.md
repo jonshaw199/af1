@@ -70,6 +70,7 @@ void setup()
   AF1::addStringHandler("mac", [](SHArg a) { AF1::setRequestedState(STATE_MACARENA); });
   AF1::setInitialState(STATE_BLINK);
   // AF1::setDefaultWSClientInfo(w); // w: {String host, String path, int port, String protocol}
+  // State-specific websocket connections can also be used
 }
 
 void loop()
