@@ -1022,19 +1022,14 @@ void Base::sendAllTimeSyncMessages()
 
 // From WSEnt
 
-void Base::setWSClientInfo(ws_client_info w)
+void Base::setWS(String host, String path, int port, String protocol)
 {
+  wsClientInfo.host = host;
+  wsClientInfo.path = path;
+  wsClientInfo.port = port;
+  wsClientInfo.protocol = protocol;
   Serial.print("Setting websocket client info: ");
-  Serial.println(w.toString());
-  wsClientInfo.host = w.host;
-  wsClientInfo.path = w.path;
-  wsClientInfo.port = w.port;
-  wsClientInfo.protocol = w.protocol;
-}
-
-ws_client_info Base::getWSClientInfo()
-{
-  return wsClientInfo;
+  Serial.println(wsClientInfo.toString());
 }
 
 void Base::sendMsgWS(AF1Msg m)
@@ -1346,14 +1341,12 @@ String Base::getDeviceID()
   return deviceID;
 }
 
-void Base::setDefaultWSClientInfo(ws_client_info w)
+void Base::setDefaultWS(String host, String path, int port, String protocol)
 {
-  defaultWSClientInfo = w;
-}
-
-ws_client_info Base::getDefaultWSClientInfo()
-{
-  return defaultWSClientInfo;
+  defaultWSClientInfo.host = host;
+  defaultWSClientInfo.path = path;
+  defaultWSClientInfo.port = port;
+  defaultWSClientInfo.protocol = protocol;
 }
 
 void Base::onConnectWSServer()
@@ -1432,16 +1425,6 @@ String Base::modeToString(int s)
     return modeEntMap[s]->getName();
   }
   return "Unknown mode name";
-}
-
-void Base::setCurWSClientInfo(ws_client_info i)
-{
-  curWSClientInfo = i;
-}
-
-ws_client_info Base::getCurWSClientInfo()
-{
-  return curWSClientInfo;
 }
 
 unsigned long Base::convertTime(String id, unsigned long t)

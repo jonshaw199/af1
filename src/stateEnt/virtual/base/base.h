@@ -185,8 +185,7 @@ public:
   static void pushOutbox(AF1Msg m);
   static void pushInbox(AF1Msg m);
   // Websocket
-  void setWSClientInfo(ws_client_info w);
-  ws_client_info getWSClientInfo();
+  void setWS(String host, String path, int port, String protocol = "");
   // HTTP
   static AF1JsonDoc httpFetch(String url);
   static AF1JsonDoc httpPost(String url, AF1JsonDoc body);
@@ -227,10 +226,7 @@ public:
   static void setIntervalTime(String e, unsigned long t);
   static void detach(bool detach);
 
-  static void setDefaultWSClientInfo(ws_client_info w);
-  static ws_client_info getDefaultWSClientInfo();
-  static void setCurWSClientInfo(ws_client_info i);
-  static ws_client_info getCurWSClientInfo();
+  static void setDefaultWS(String host, String path, int port, String protocol = "");
   static void addEvent(Event e);
   static void removeEvent(String eventName);
   static void addStateEnt(int i, Base *s);
