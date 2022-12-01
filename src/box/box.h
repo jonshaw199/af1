@@ -23,18 +23,15 @@
 #include "tsQueue/tsQueue.h"
 #include "message/message.h"
 
-typedef void (*msg_handler)(AF1Msg m);
-
-typedef void (*msg_modifier)(AF1Msg &m);
+typedef void (*msg_handler)(AF1Msg &m);
 
 class Box : public TSQueue<AF1Msg>
 {
   msg_handler msgHandler;
-  static void dummyModifier(AF1Msg &m);
 
 public:
   Box();
-  void handleMessages(msg_modifier m = dummyModifier);
+  void handleMessages();
   void setMsgHandler(msg_handler h);
 };
 

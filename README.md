@@ -95,7 +95,7 @@ Messages can be received by overriding `getInboxHandler()`:
 
 msg_handler SomeSubclass::getInboxHandler()
 {
-  return [](AF1Msg m)
+  return [](AF1Msg &m)
   {
     Base::handleInboxMsg(m); // Or whatever superclass is being used
     String world = m.json()["hello"];

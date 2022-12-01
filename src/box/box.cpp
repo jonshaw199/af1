@@ -21,11 +21,7 @@
 
 #include "box/box.h"
 
-void dummyHandler(AF1Msg m)
-{
-}
-
-void Box::dummyModifier(AF1Msg &m)
+void dummyHandler(AF1Msg &m)
 {
 }
 
@@ -34,7 +30,7 @@ Box::Box()
   msgHandler = dummyHandler;
 }
 
-void Box::handleMessages(msg_modifier mod)
+void Box::handleMessages()
 {
   m.lock();
   if (!q.empty())
@@ -42,9 +38,8 @@ void Box::handleMessages(msg_modifier mod)
     AF1Msg msg = q.front();
     q.pop();
     m.unlock();
-    mod(msg);
     msgHandler(msg);
-    handleMessages(mod);
+    handleMessages();
   }
   else
   {

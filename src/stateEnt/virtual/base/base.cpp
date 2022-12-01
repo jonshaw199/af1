@@ -99,17 +99,17 @@ void Base::begin(String id)
   stateEntMap[STATE_SYNC_TEST] = new SyncTest();
 
   addStringHandler(SHKEY_OTA, [](SHArg a)
-                        { setRequestedState(STATE_OTA); });
+                   { setRequestedState(STATE_OTA); });
   addStringHandler(SHKEY_RESTART, [](SHArg a)
-                        { setRequestedState(STATE_RESTART); });
+                   { setRequestedState(STATE_RESTART); });
   addStringHandler(SHKEY_IDLE, [](SHArg a)
-                        { setRequestedState(STATE_IDLE_BASE); });
+                   { setRequestedState(STATE_IDLE_BASE); });
   addStringHandler(SHKEY_SYNCTEST, [](SHArg a)
-                        { setRequestedState(STATE_SYNC_TEST); });
+                   { setRequestedState(STATE_SYNC_TEST); });
   addStringHandler(SHKEY_HANDSHAKE, [](SHArg a)
-                        { handleHandshakes(true); });
+                   { handleHandshakes(true); });
   addStringHandler(SHKEY_DETACH, [](SHArg a)
-                        { detach(a.getValue().toInt()); });
+                   { detach(a.getValue().toInt()); });
 
   initialState = STATE_IDLE_BASE;
   defaultWSClientInfo = {"", "", 0, ""};
@@ -161,11 +161,7 @@ void Base::update()
     }
 
     inbox.handleMessages();
-    outbox.handleMessages([](AF1Msg &m)
-                          { 
-                            if (m.getType() == TYPE_TIME_SYNC) {
-                              m.json()["timeSyncTime"] = millis();
-                            } });
+    outbox.handleMessages();
 
     // Handling user input
     if (Serial.available() > 0)
@@ -270,7 +266,7 @@ unsigned long Base::getElapsedMs()
   return nowMs - startMs;
 }
 
-void Base::handleInboxMsg(AF1Msg m)
+void Base::handleInboxMsg(AF1Msg &m)
 {
   Serial.print("<");
 
@@ -331,9 +327,14 @@ void Base::handleInboxMsg(AF1Msg m)
 #endif
 }
 
-void Base::handleOutboxMsg(AF1Msg m)
+void Base::handleOutboxMsg(AF1Msg &m)
 {
   Serial.print(">");
+
+  if (m.getType() == TYPE_TIME_SYNC)
+  {
+    m.json()["timeSyncTime"] = millis();
+  }
 
 #if PRINT_MSG_SEND
   m.print();
@@ -1263,7 +1264,8 @@ void Base::addStateEnt(int i, Base *s)
   stateEntMap[i] = s;
 }
 
-void Base::removeStateEnt(int i) {
+void Base::removeStateEnt(int i)
+{
   stateEntMap.erase(i);
 }
 
@@ -1272,7 +1274,8 @@ void Base::addStringHandler(String s, string_input_handler h)
   stringHandlerMap[s] = h;
 }
 
-void Base::removeStringHandler(String s) {
+void Base::removeStringHandler(String s)
+{
   stringHandlerMap.erase(s);
 }
 
@@ -1457,7 +1460,8 @@ void Base::addEvent(Event e)
   }
 }
 
-void Base::removeEvent(String e) {
+void Base::removeEvent(String e)
+{
   globalEventMap.erase(e);
   stateEnt->getEventMap().erase(e);
 }

@@ -125,8 +125,8 @@ class Base
   ws_client_info wsClientInfo;
 
 protected:
-  static void handleInboxMsg(AF1Msg m);
-  static void handleOutboxMsg(AF1Msg m);
+  static void handleInboxMsg(AF1Msg &m);
+  static void handleOutboxMsg(AF1Msg &m);
 
   static uint8_t macAP[6];
   static uint8_t macSTA[6];
