@@ -1112,6 +1112,7 @@ void Base::connectToWS()
         else
         {
           Serial.println("WS handshake failed (WS connection failed halfway)");
+          stateEnt->onConnectWSServerFailed();
         }
       }
     }
@@ -1353,6 +1354,10 @@ void Base::setDefaultWS(String host, String path, int port, String protocol)
 }
 
 void Base::onConnectWSServer()
+{
+}
+
+void Base::onConnectWSServerFailed()
 {
 }
 

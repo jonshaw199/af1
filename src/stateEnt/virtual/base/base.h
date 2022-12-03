@@ -176,6 +176,7 @@ public:
   virtual void doSynced();
   virtual bool doSync();
   virtual void onConnectWSServer();
+  virtual void onConnectWSServerFailed();
   // Wifi
   static String macToString(const uint8_t *m);
   static void printMac(const uint8_t *m);

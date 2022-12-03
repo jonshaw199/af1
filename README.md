@@ -53,6 +53,7 @@ public:
     virtual void doSynced();
     virtual bool doSync();
     virtual void onConnectWSServer();
+    virtual void onConnectWSServerFailed();
   */
 
   void preStateChange(int nextState) {
