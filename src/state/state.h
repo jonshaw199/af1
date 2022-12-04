@@ -30,9 +30,4 @@ enum af1_state
   STATE_SYNC_TEST,
 };
 
-enum af1_mode
-{
-  MODE_BASIC,
-};
-
 #endif // STATE_STATE_H

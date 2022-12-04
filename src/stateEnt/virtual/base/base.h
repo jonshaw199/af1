@@ -30,25 +30,16 @@
 #include <esp_now.h>
 #include <set>
 #include <WebSocketClient.h>
+#include <vector>
+#include <mutex>
+#include <NTPClient.h>
+#include <WiFiUdp.h>
 
 #include "event/event.h"
 #include "state/state.h"
 #include "message/message.h"
 #include "box/box.h"
 #include "pre.h"
-
-// #include <queue>
-// #include <map>
-#include <vector>
-// #include <Arduino.h>
-// #include <esp_now.h>
-#include <mutex>
-#include <NTPClient.h>
-#include <WiFiUdp.h>
-// #include "state/state.h"
-// #include "message/message.h"
-// #include "stateEnt/virtual/base/base.h"
-#include "modeEnt/virtual/base/base.h"
 
 #define max(a, b) ((a) >= (b) ? (a) : (b))
 
@@ -119,7 +110,6 @@ class Base
   static void setInboxMsgHandler(msg_handler h);
   static void setOutboxMsgHandler(msg_handler h);
   static bool handleStateChange(int s);
-  static bool handleModeChange(int m);
   static void handleUserInput(String s);
 
   ws_client_info wsClientInfo;
@@ -204,13 +194,6 @@ public:
   static int getPrevState();
   static void setRequestedState(int s);
   static int getRequestedState();
-  static int getCurMode();
-  static int getPrevMode();
-  static void setRequestedMode(int m);
-  static int getRequestedMode();
-  static void setInitialMode(int m);
-  static int getInitialMode();
-  static String modeToString(int s);
   static String stateToString(int s);
   static const std::vector<wifi_ap_info> getWifiAPs();
   static void setInitialState(int s);

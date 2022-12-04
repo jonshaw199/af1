@@ -20,13 +20,6 @@
 #include <vector>
 
 #include "base.h"
-
-// StateManager - BEGIN (END kinda got lost down a ways)
-
-// #include <set>
-
-// #include "stateManager.h"
-#include "modeEnt/basic/basic.h"
 #include "stateEnt/ota/ota.h"
 #include "stateEnt/restart/restart.h"
 #include "stateEnt/init/init.h"
@@ -40,13 +33,6 @@ static int initialState;
 static String deviceID;
 static Base *stateEnt;
 static std::map<int, Base *> stateEntMap;
-
-static int curMode;
-static int prevMode;
-static int requestedMode;
-static int initialMode;
-static ModeBase *modeEnt;
-static std::map<int, ModeBase *> modeEntMap;
 
 static std::map<String, string_input_handler> stringHandlerMap;
 static std::vector<wifi_ap_info> wifiAPs;
@@ -87,10 +73,6 @@ Base::Base()
 
 void Base::begin(String id)
 {
-  modeEntMap[MODE_BASIC] = new Basic();
-
-  initialMode = MODE_INITIAL;
-
   stateEntMap[STATE_INIT] = new Init();
   stateEntMap[STATE_OTA] = new OTA();
   stateEntMap[STATE_RESTART] = new Restart();
@@ -117,96 +99,74 @@ void Base::begin(String id)
 
   deviceID = id;
 
-  int m = initialMode;
-  curMode = m;
-  requestedMode = m;
   detached = false;
-  if (handleModeChange(m))
-  {
-    int s = STATE_INIT;
-    curState = s;
-    requestedState = s;
-    handleStateChange(s); // Let Init stateEnt handle everything
-  }
+
+  int s = STATE_INIT;
+  curState = s;
+  requestedState = s;
+  handleStateChange(s); // Let Init stateEnt handle everything
 }
 
 void Base::update()
 {
-  // Check if mode change requested
-  int curMode = getCurMode();
-  int requestedMode = getRequestedMode();
-  if (curMode != requestedMode)
+  if (WiFi.status() == WL_CONNECTED && timeClient.isTimeSet())
   {
-    Serial.println("Handling mode change request: " + modeToString(requestedMode));
-    modeEnt->preModeChange(requestedMode);
-    // Requested mode may have changed between last and next function call
-    handleModeChange(requestedMode);
-    Serial.println("Mode change complete");
+    timeClient.update();
   }
 
-  if (modeEnt->loop())
+  inbox.handleMessages();
+  outbox.handleMessages();
+
+  // Handling user input
+  if (Serial.available() > 0)
   {
-    // StateManager Loop - BEGIN
+    String s = Serial.readString();
+    handleUserInput(s);
+  }
 
-    if (WiFi.status() == WL_CONNECTED && timeClient.isTimeSet())
-    {
-      timeClient.update();
-    }
+  // State Events
+  for (std::map<String, Event>::iterator it = stateEnt->eventMap.begin(); it != stateEnt->eventMap.end(); it++)
+  {
+    stateEnt->eventMap[it->first].cbIfTimeAndActive();
+  }
+  // Global Events
+  for (std::map<String, Event>::iterator it = globalEventMap.begin(); it != globalEventMap.end(); it++)
+  {
+    globalEventMap[it->first].cbIfTimeAndActive();
+  }
 
-    inbox.handleMessages();
-    outbox.handleMessages();
+  // Incoming websocket messages
+  String data;
+  if (client)
+  {
+    webSocketClient.getData(data);
+    if (data.length() > 0)
+    {
+      Serial.print(".");
+      AF1JsonDoc doc;
+      deserializeJson(doc, data);
+      pushInbox(doc);
+    }
+  }
+  else
+  {
+    // Serial.println("Client disconnected");
+  }
 
-    // Handling user input
-    if (Serial.available() > 0)
-    {
-      String s = Serial.readString();
-      handleUserInput(s);
-    }
+  // StateManager Loop - END
+  // Handling this first instead of last; allows us to use init.loop() if we need it before switching to the requested state (or maybe we don't want to request a new state during init at all?)
+  stateEnt->loop();
 
-    // State Events
-    for (std::map<String, Event>::iterator it = stateEnt->eventMap.begin(); it != stateEnt->eventMap.end(); it++)
-    {
-      stateEnt->eventMap[it->first].cbIfTimeAndActive();
-    }
-    // Global Events
-    for (std::map<String, Event>::iterator it = globalEventMap.begin(); it != globalEventMap.end(); it++)
-    {
-      globalEventMap[it->first].cbIfTimeAndActive();
-    }
-
-    // Incoming websocket messages
-    String data;
-    if (client)
-    {
-      webSocketClient.getData(data);
-      if (data.length() > 0)
-      {
-        Serial.print(".");
-        AF1JsonDoc doc;
-        deserializeJson(doc, data);
-        pushInbox(doc);
-      }
-    }
-    else
-    {
-      // Serial.println("Client disconnected");
-    }
-
-    // StateManager Loop - END
-    // Handling this first instead of last; allows us to use init.loop() if we need it before switching to the requested state (or maybe we don't want to request a new state during init at all?)
-    stateEnt->loop();
-
-    // Check if state change requested
-    int curState = getCurState();
-    int requestedState = getRequestedState();
-    if (curState != requestedState)
-    {
-      Serial.println("Handling state change request: " + stateToString(requestedState));
-      stateEnt->preStateChange(requestedState);
-      // Requested state may have changed between last and next function call
-      handleStateChange(requestedState);
-      Serial.println("State change complete");
-    }
+  // Check if state change requested
+  int curState = getCurState();
+  int requestedState = getRequestedState();
+  if (curState != requestedState)
+  {
+    Serial.println("Handling state change request: " + stateToString(requestedState));
+    stateEnt->preStateChange(requestedState);
+    // Requested state may have changed between last and next function call
+    handleStateChange(requestedState);
+    Serial.println("State change complete");
   }
 }
 
@@ -1360,60 +1320,6 @@ const std::map<int, Base *> &Base::getStateEntMap()
 Base *Base::getCurStateEnt()
 {
   return stateEntMap[curState];
-}
-
-int Base::getCurMode()
-{
-  return curMode;
-}
-
-int Base::getPrevMode()
-{
-  return prevMode;
-}
-
-void Base::setRequestedMode(int m)
-{
-  requestedMode = m;
-}
-
-int Base::getRequestedMode()
-{
-  return requestedMode;
-}
-
-void Base::setInitialMode(int m)
-{
-  initialMode = m;
-}
-
-int Base::getInitialMode()
-{
-  return initialMode;
-}
-
-bool Base::handleModeChange(int m)
-{
-  if (modeEntMap.count(m))
-  {
-    prevMode = curMode;
-    curMode = m;
-    modeEnt = modeEntMap[m];
-    return modeEnt->setup();
-  }
-  else
-  {
-    return false;
-  }
-}
-
-String Base::modeToString(int s)
-{
-  if (modeEntMap.count(s))
-  {
-    return modeEntMap[s]->getName();
-  }
-  return "Unknown mode name";
 }
 
 unsigned long Base::convertTime(String id, unsigned long t)
