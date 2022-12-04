@@ -1072,11 +1072,6 @@ bool Base::doConnectToWSServer()
   return !doSync();
 }
 
-std::map<String, Event> &Base::getEventMap()
-{
-  return eventMap;
-}
-
 unsigned long Base::getStartMs()
 {
   return startMs;
@@ -1345,9 +1340,9 @@ unsigned long Base::convertTime(String id, unsigned long t)
 
 void Base::setIntervalTime(String e, unsigned long t)
 {
-  if (stateEnt->getEventMap().count(e))
+  if (stateEnt->eventMap.count(e))
   {
-    stateEnt->getEventMap().at(e).setIntervalTime(t, stateEnt->getElapsedMs());
+    stateEnt->eventMap.at(e).setIntervalTime(t, stateEnt->getElapsedMs());
   }
 }
 
@@ -1359,14 +1354,14 @@ void Base::addEvent(Event e)
   }
   else
   {
-    stateEnt->getEventMap()[e.getName()] = e;
+    stateEnt->eventMap[e.getName()] = e;
   }
 }
 
 void Base::removeEvent(String e)
 {
   globalEventMap.erase(e);
-  stateEnt->getEventMap().erase(e);
+  stateEnt->eventMap.erase(e);
 }
 
 void Base::detach(bool d)

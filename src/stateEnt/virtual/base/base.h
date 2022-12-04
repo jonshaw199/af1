@@ -142,8 +142,6 @@ protected:
   static void sendMsgWS(AF1Msg msg);
   static void connectToWS();
 
-  std::map<String, Event> &getEventMap();
-
   std::map<String, Event> eventMap;
   static std::map<String, Event> globalEventMap;
 
