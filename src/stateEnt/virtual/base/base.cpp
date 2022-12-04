@@ -443,7 +443,9 @@ void Base::connectToWifi()
     timeClient.begin();
     timeClient.update(); // Initial update needed before isTimeSet()?
     stateEnt->onConnectWifi();
-  } else {
+  }
+  else
+  {
     stateEnt->onConnectWifiFailed();
   }
 }
@@ -904,6 +906,7 @@ void Base::receiveHandshakeResponse(AF1Msg m)
 {
   Serial.println("Receiving handshake response from ID " + m.getSenderId());
   peerInfoMap[m.getSenderId()].handshakeResponse = true;
+  stateEnt->onConnectEspNowPeer(m.getSenderId());
 }
 
 void Base::sendAllHandshakes(bool resend)
@@ -1304,6 +1307,10 @@ void Base::onConnectWifi()
 }
 
 void Base::onConnectWifiFailed()
+{
+}
+
+void Base::onConnectEspNowPeer(String p)
 {
 }
 

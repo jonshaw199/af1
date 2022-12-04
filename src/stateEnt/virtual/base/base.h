@@ -168,6 +168,7 @@ public:
   virtual void onConnectWSServerFailed();
   virtual void onConnectWifi();
   virtual void onConnectWifiFailed();
+  virtual void onConnectEspNowPeer(String peerId);
   // Wifi
   static String macToString(const uint8_t *m);
   static void printMac(const uint8_t *m);
