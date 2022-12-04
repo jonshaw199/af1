@@ -43,7 +43,6 @@ public:
     // Can be overridden
     virtual void setup();
     virtual void loop();
-    virtual bool validateStateChange(int s);
     virtual void preStateChange(int s);
     virtual msg_handler getInboxHandler();
     virtual msg_handler getOutboxHandler();

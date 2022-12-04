@@ -132,23 +132,16 @@ void Base::begin(String id)
 
 void Base::update()
 {
-  // Check if mode change requested and proceed if modeEnt->validateStateChange() says its ok
+  // Check if mode change requested
   int curMode = getCurMode();
   int requestedMode = getRequestedMode();
   if (curMode != requestedMode)
   {
     Serial.println("Handling mode change request: " + modeToString(requestedMode));
-    if (modeEnt->validateModeChange(requestedMode))
-    {
-      modeEnt->preModeChange(requestedMode);
-      // Requested mode may have changed between last and next function call
-      handleModeChange(requestedMode);
-      Serial.println("Mode change complete");
-    }
-    else
-    {
-      Serial.println("Mode change rejected by validateStateChange");
-    }
+    modeEnt->preModeChange(requestedMode);
+    // Requested mode may have changed between last and next function call
+    handleModeChange(requestedMode);
+    Serial.println("Mode change complete");
   }
 
   if (modeEnt->loop())
@@ -203,23 +196,16 @@ void Base::update()
     // Handling this first instead of last; allows us to use init.loop() if we need it before switching to the requested state (or maybe we don't want to request a new state during init at all?)
     stateEnt->loop();
 
-    // Check if state change requested and proceed if stateEnt->validateStateChange() says its ok
+    // Check if state change requested
     int curState = getCurState();
     int requestedState = getRequestedState();
     if (curState != requestedState)
     {
       Serial.println("Handling state change request: " + stateToString(requestedState));
-      if (stateEnt->validateStateChange(requestedState))
-      {
-        stateEnt->preStateChange(requestedState);
-        // Requested state may have changed between last and next function call
-        handleStateChange(requestedState);
-        Serial.println("State change complete");
-      }
-      else
-      {
-        Serial.println("State change rejected by validateStateChange");
-      }
+      stateEnt->preStateChange(requestedState);
+      // Requested state may have changed between last and next function call
+      handleStateChange(requestedState);
+      Serial.println("State change complete");
     }
   }
 }
@@ -236,11 +222,6 @@ void Base::setup()
 
 void Base::loop()
 {
-}
-
-bool Base::validateStateChange(int s)
-{
-  return true;
 }
 
 void Base::preStateChange(int s)
