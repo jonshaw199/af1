@@ -443,6 +443,9 @@ void Base::connectToWifi()
     Serial.println("initializing timeClient");
     timeClient.begin();
     timeClient.update(); // Initial update needed before isTimeSet()?
+    stateEnt->onConnectWifi();
+  } else {
+    stateEnt->onConnectWifiFailed();
   }
 }
 
@@ -1299,6 +1302,14 @@ void Base::onConnectWSServer()
 }
 
 void Base::onConnectWSServerFailed()
+{
+}
+
+void Base::onConnectWifi()
+{
+}
+
+void Base::onConnectWifiFailed()
 {
 }
 
