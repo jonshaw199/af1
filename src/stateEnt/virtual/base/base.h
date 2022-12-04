@@ -144,6 +144,8 @@ protected:
 
   std::map<String, Event> eventMap;
   static std::map<String, Event> globalEventMap;
+  static std::map<String, af1_peer_info> peerInfoMap;
+  static std::map<String, String> macToIDMap;
 
   static unsigned long syncStartTime;
 

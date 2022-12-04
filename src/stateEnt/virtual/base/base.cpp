@@ -40,9 +40,8 @@ static std::vector<wifi_ap_info> wifiAPs;
 static ws_client_info curWSClientInfo;
 static ws_client_info defaultWSClientInfo;
 
-// From espnowHandler
-static std::map<String, af1_peer_info> peerInfoMap;
-static std::map<String, String> macToIDMap;
+std::map<String, af1_peer_info> Base::peerInfoMap;
+std::map<String, String> Base::macToIDMap;
 
 WiFiUDP Base::ntpUDP;
 NTPClient Base::timeClient(ntpUDP);
