@@ -22,7 +22,7 @@ Until the dust settles, practical and up-to-date examples can be found in the [A
 ```
 #include <AF1.h>
 #include "stateEnt/macarena.h" // ...
-#define DEVICE_ID 1
+#define DEVICE_ID "Some unique ID"
 
 enum custom_states
 {
