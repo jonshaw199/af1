@@ -132,7 +132,8 @@ To Do...
 ```
   static void begin(String id);
   static void update();
-  // Virtual
+
+  // Override
   virtual void setup();
   virtual void loop();
   virtual void preStateChange(int s);
@@ -148,25 +149,18 @@ To Do...
   virtual void onConnectWifi();
   virtual void onConnectWifiFailed();
   virtual void onConnectEspNowPeer(String peerId);
-  // ESP-Now
-  static void handleHandshakes(bool resend = false);
-  // Inbox/Outbox
+
   static void pushOutbox(AF1Msg m);
   static void pushInbox(AF1Msg m);
-  // Websocket
   void setWS(String host, String path, int port, String protocol = "");
-  // HTTP
   static AF1JsonDoc httpFetch(String url);
   static AF1JsonDoc httpPost(String url, AF1JsonDoc body);
-  // Sync
   static void scheduleSyncStart();
 
   static int getCurState();
   static int getPrevState();
   static void setRequestedState(int s);
   static int getRequestedState();
-  static String stateToString(int s);
-  static const std::vector<wifi_ap_info> getWifiAPs();
   static void setInitialState(int s);
   static int getInitialState();
   static void setPurgNext(int p, int n);
