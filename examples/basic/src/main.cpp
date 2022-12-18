@@ -10,12 +10,11 @@ enum CustomStates
 class Blink : public Base
 {
 public:
-  Blink()
+  void setup()
   {
     addEvent(Event(
         "Blink-1", [](ECBArg a)
         {
-          Serial.print(a.cbCnt);
           setBuiltinLED(a.cbCnt % 2); // Blink once per sec
         },
         EVENT_TYPE_PERM, 500));
