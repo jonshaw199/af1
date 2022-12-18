@@ -4,7 +4,7 @@
 
 ### Features
 
-- :electric_plug: Websocket Client
+- :electric_plug: Websocket Client (w/ MQTT support)
 - :handshake: ESP-Now P2P (2-Way; Auto-Connect)
 - :globe_with_meridians: HTTP Client
 - :arrows_counterclockwise: AP/STA Mode (Use websocket, HTTP, and ESP-Now concurrently)
