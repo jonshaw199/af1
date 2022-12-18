@@ -130,59 +130,58 @@ To Do...
 To Do...
 
 ```
-  static void begin(String id);
-  static void update();
+static void begin(String id);
+static void update();
+static String macToString(const uint8_t *m);
+static void printMac(const uint8_t *m);
+static void pushOutbox(AF1Msg m);
+static void pushInbox(AF1Msg m);
+static AF1JsonDoc httpGet(String url);
+static AF1JsonDoc httpPost(String url, AF1JsonDoc body);
+static void setBuiltinLED(bool on);
+static int getCurState();
+static int getPrevState();
+static void setRequestedState(int s);
+static int getRequestedState();
+static String stateToString(int s);
+static void setInitialState(int s);
+static int getInitialState();
+static void setPurgNext(int p, int n);
+static Base *getCurStateEnt();
+static String getDeviceID();
+static void setIntervalTime(String e, unsigned long t);
+static void detach(bool detach);
+static void setDefaultWS(String host, String path, int port, String protocol = "");
+static void addEvent(Event e);
+static void removeEvent(String eventName);
+static void addStateEnt(int i, Base *s);
+static void removeStateEnt(int i);
+static void addStringHandler(String s, string_input_handler h);
+static void removeStringHandler(String s);
+static void addWifiAP(String s, String p);
+static void addWifiAP(String s, String p, int a, int b, int c, int d, int ga, int gb, int gc, int gd, int sa, int sb, int sc, int sd);
 
-  // Override
-  virtual void setup();
-  virtual void loop();
-  virtual void preStateChange(int s);
-  virtual msg_handler getInboxHandler();
-  virtual msg_handler getOutboxHandler();
-  virtual String getName();
-  virtual bool doScanForPeersESPNow();
-  virtual bool doConnectToWSServer();
-  virtual void doSynced();
-  virtual bool doSync();
-  virtual void onConnectWSServer();
-  virtual void onConnectWSServerFailed();
-  virtual void onConnectWifi();
-  virtual void onConnectWifiFailed();
-  virtual void onConnectEspNowPeer(String peerId);
+static NTPClient timeClient;
 
-  static void pushOutbox(AF1Msg m);
-  static void pushInbox(AF1Msg m);
-  void setWS(String host, String path, int port, String protocol = "");
-  static AF1JsonDoc httpFetch(String url);
-  static AF1JsonDoc httpPost(String url, AF1JsonDoc body);
-  static void scheduleSyncStart();
+virtual void setup();
+virtual void loop();
+virtual void preStateChange(int s);
+virtual msg_handler getInboxHandler();
+virtual msg_handler getOutboxHandler();
+virtual String getName();
+virtual bool doScanForPeersESPNow();
+virtual bool doConnectToWSServer();
+virtual void doSynced();
+virtual bool doSync();
+virtual void onConnectWSServer();
+virtual void onConnectWSServerFailed();
+virtual void onConnectWifi();
+virtual void onConnectWifiFailed();
+virtual void onConnectEspNowPeer(String peerId);
 
-  static int getCurState();
-  static int getPrevState();
-  static void setRequestedState(int s);
-  static int getRequestedState();
-  static void setInitialState(int s);
-  static int getInitialState();
-  static void setPurgNext(int p, int n);
-  static const std::map<int, Base *> &getStateEntMap();
-  static Base *getCurStateEnt();
-  static String getDeviceID();
-  static std::set<String> getPeerIDs();
-  static WiFiUDP ntpUDP;
-  static NTPClient timeClient;
-  static unsigned long convertTime(String id, unsigned long t);
-  static void setIntervalTime(String e, unsigned long t);
-  static void detach(bool detach);
-
-  static void setDefaultWS(String host, String path, int port, String protocol = "");
-  static void addEvent(Event e);
-  static void removeEvent(String eventName);
-  static void addStateEnt(int i, Base *s);
-  static void removeStateEnt(int i);
-  static void addStringHandler(String s, string_input_handler h);
-  static void removeStringHandler(String s);
-  static void addWifiAP(String s, String p);
-  static void addWifiAP(String s, String p, int a, int b, int c, int d, int ga, int gb, int gc, int gd, int sa, int sb, int sc, int sd);
+unsigned long getStartMs();
+unsigned long getElapsedMs();
+void setWS(String host, String path, int port, String protocol = "");
 ```
 
 ### Message Types
