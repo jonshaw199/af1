@@ -33,6 +33,7 @@ class Blink : public Base
 public:
   void setup()
   {
+    Base::setup();
     addEvent(Event(
         "Blink-1", [](ECBArg a)
         {
@@ -47,6 +48,7 @@ class Solid : public Base
 public:
   void setup()
   {
+    Base::setup();
     setBuiltinLED(1);
   }
 };
