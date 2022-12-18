@@ -55,7 +55,7 @@ void setup()
 {
   Serial.setTimeout(1500);
   Serial.begin(115200);
-  AF1::begin("unique-id"); // Device-specific ID; build flags might be useful for this (see basic example in examples directory)
+  AF1::begin("unique-device-id-1"); // Device-specific ID; build flags might be useful for this (see basic example in examples directory)
   AF1::addWifiAP("ssid", "pass", 192, 168, 1, 123, 192, 168, 1, 254, 255, 255, 255, 0); // Static IP used here which is nice for OTA but not required; build flags might be useful for this too
   AF1::addStateEnt(STATE_BLINK, new Blink());
   AF1::addStateEnt(STATE_SOLID, new Solid());
@@ -64,7 +64,7 @@ void setup()
   AF1::addStringHandler("solid", [](SHArg a)
                         { AF1::setRequestedState(STATE_SOLID); });
   AF1::setInitialState(STATE_BLINK);
-  // AF1::setDefaultWS(SERVER_IP, String("/?deviceId=") + String(JS_ID), SERVER_PORT);
+  // AF1::setDefaultWS(SERVER_IP, String("/?deviceId=") + String(DEVICE_ID), SERVER_PORT);
 }
 
 void loop()
