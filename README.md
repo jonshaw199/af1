@@ -17,72 +17,59 @@
 
 A state entity defines the behavior for a state, and new state entities can be created by extending the `Base` class. When creating new state entities, setup, loop, message handling, and other behavior from `Base` can be overridden as necessary. Every time the state changes, the corresponding state entity's `setup()` method is called once. Then that state entity's `loop()` method is called repeatedly, consistent with the Arduino framework.
 
-Until the dust settles, practical and up-to-date examples can be found in the [AF1-1](https://github.com/jonshaw199/af1-1/blob/main/firmware/lights/src/main.cpp) project. A more trivial example can be seen below:
+A boiled down example can be seen below. More practical examples can be found in the [AF1-1](https://github.com/jonshaw199/af1-1/blob/main/firmware/lights/src/main.cpp) project.
 
 ```
 #include <AF1.h>
-#include "stateEnt/macarena.h" // ...
-#define DEVICE_ID "Some unique ID"
 
-enum custom_states
+enum CustomStates
 {
   STATE_BLINK,
-  STATE_MACARENA
+  STATE_SOLID
 };
 
 class Blink : public Base
 {
 public:
-  Blink() {
-    addEvent(Event("Blink", [](ECBArg a) {
-      setBuiltinLED(a.cbCnt % 2); // Blink once per sec
-    }, EVENT_TYPE_PERM, 500));
+  void setup()
+  {
+    addEvent(Event(
+        "Blink-1", [](ECBArg a)
+        {
+          setBuiltinLED(a.cbCnt % 2); // Blink once per sec
+        },
+        EVENT_TYPE_PERM, 500));
   }
+};
 
-  /*
-    // Can be overridden
-    virtual void setup();
-    virtual void loop();
-    virtual void preStateChange(int s);
-    virtual msg_handler getInboxHandler();
-    virtual msg_handler getOutboxHandler();
-    virtual String getName();
-    virtual bool doScanForPeersESPNow();
-    virtual bool doConnectToWSServer();
-    virtual void doSynced();
-    virtual bool doSync();
-    virtual void onConnectWSServer();
-    virtual void onConnectWSServerFailed();
-    virtual void onConnectWifi();
-    virtual void onConnectWifiFailed();
-    virtual void onConnectEspNowPeer(String peerId);
-  */
-
-  void preStateChange(int nextState) {
-    Base::preStateChange(nextState); // Usually need to call super methods; easy to forget
-    setBuiltinLED(0); // Make sure LED is off before leaving state
+class Solid : public Base
+{
+public:
+  void setup()
+  {
+    setBuiltinLED(1);
   }
 };
 
 void setup()
 {
+  Serial.setTimeout(1500);
   Serial.begin(115200);
-  AF1::begin(DEVICE_ID); // Required
+  AF1::begin(JS_ID); // Device-specific; using build flags from platformio.ini
+  AF1::addWifiAP(JSSSID, JSPASS, JS_IP_A, JS_IP_B, JS_IP_C, JS_IP_D, 192, 168, 1, 254, 255, 255, 255, 0); // Static IP used here which is nice for OTA but not required
   AF1::addStateEnt(STATE_BLINK, new Blink());
-  AF1::addStateEnt(STATE_MACARENA, new Macarena());
-  AF1::addStringHandler("mac", [](SHArg a) { AF1::setRequestedState(STATE_MACARENA); });
+  AF1::addStateEnt(STATE_SOLID, new Solid());
+  AF1::addStringHandler("blink", [](SHArg a)
+                        { AF1::setRequestedState(STATE_BLINK); }); // Simply type "blink" in serial monitor for state change; convenient way of changing states in dev env
+  AF1::addStringHandler("solid", [](SHArg a)
+                        { AF1::setRequestedState(STATE_SOLID); });
   AF1::setInitialState(STATE_BLINK);
-
-  // AF1::addWifiAP(String ssid, String password)
-  // Static IP version also provided; multiple APs can be added
-  // AF1::setDefaultWS(String host, String path, int port, String protocol}
-  // State-specific websocket connections also supported using Base::setWS() instance method
-  // MQTT support is built in as an option (see below for example)
+  // AF1::setDefaultWS(SERVER_IP, String("/?deviceId=") + String(JS_ID), SERVER_PORT);
 }
 
 void loop()
 {
-  AF1::update(); // Required
+  AF1::update();
 }
 ```
 
