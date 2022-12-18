@@ -111,23 +111,6 @@ class Base
   static void setOutboxMsgHandler(msg_handler h);
   static bool handleStateChange(int s);
   static void handleUserInput(String s);
-
-  ws_client_info wsClientInfo;
-
-protected:
-  static void handleInboxMsg(AF1Msg &m);
-  static void handleOutboxMsg(AF1Msg &m);
-
-  static uint8_t macAP[6];
-  static uint8_t macSTA[6];
-
-  // Wifi
-  static bool broadcastAP();
-  static void connectToWifi();
-  // ESP-Now
-  static int8_t scanForPeersESPNow();
-  static void connectToPeers();
-  static void initEspNow();
   static void sendStateChangeMessages(int s);
   static void sendHandshakeRequests(std::set<String> ids);
   static void receiveHandshakeRequest(AF1Msg m);
@@ -138,22 +121,74 @@ protected:
   static void sendTimeSyncMsg(std::set<String> ids, bool isResponse = false);
   static void receiveTimeSyncMsg(AF1Msg m);
   static void sendAllTimeSyncMessages();
-  // Websocket
   static void sendMsgWS(AF1Msg msg);
   static void connectToWS();
+  static void connectToWifi();
+  static int8_t scanForPeersESPNow();
+  static void connectToPeers();
+  static const std::vector<wifi_ap_info> getWifiAPs();
+  static unsigned long convertTime(String id, unsigned long t);
+  static std::set<String> getPeerIDs();
 
-  std::map<String, Event> eventMap;
   static std::map<String, Event> globalEventMap;
   static std::map<String, af1_peer_info> peerInfoMap;
   static std::map<String, String> macToIDMap;
+  static WiFiUDP ntpUDP;
 
+  void resetEvents();
+  void activateEvents();
+  void deactivateEvents();
+
+  std::map<String, Event> eventMap;
+  ws_client_info wsClientInfo;
+
+protected:
+  static void handleInboxMsg(AF1Msg &m);
+  static void handleOutboxMsg(AF1Msg &m);
+  static bool broadcastAP();
+  static void handleHandshakes(bool resend = false);
+  static void scheduleSyncStart();
+  static void initEspNow();
+
+  static uint8_t macAP[6];
+  static uint8_t macSTA[6];
   static unsigned long syncStartTime;
 
 public:
   Base();
   static void begin(String id);
   static void update();
-  // Virtual
+  static String macToString(const uint8_t *m);
+  static void printMac(const uint8_t *m);
+  static void pushOutbox(AF1Msg m);
+  static void pushInbox(AF1Msg m);
+  static AF1JsonDoc httpGet(String url);
+  static AF1JsonDoc httpPost(String url, AF1JsonDoc body);
+  static void setBuiltinLED(bool on);
+  static int getCurState();
+  static int getPrevState();
+  static void setRequestedState(int s);
+  static int getRequestedState();
+  static String stateToString(int s);
+  static void setInitialState(int s);
+  static int getInitialState();
+  static void setPurgNext(int p, int n);
+  static Base *getCurStateEnt();
+  static String getDeviceID();
+  static void setIntervalTime(String e, unsigned long t);
+  static void detach(bool detach);
+  static void setDefaultWS(String host, String path, int port, String protocol = "");
+  static void addEvent(Event e);
+  static void removeEvent(String eventName);
+  static void addStateEnt(int i, Base *s);
+  static void removeStateEnt(int i);
+  static void addStringHandler(String s, string_input_handler h);
+  static void removeStringHandler(String s);
+  static void addWifiAP(String s, String p);
+  static void addWifiAP(String s, String p, int a, int b, int c, int d, int ga, int gb, int gc, int gd, int sa, int sb, int sc, int sd);
+
+  static NTPClient timeClient;
+
   virtual void setup();
   virtual void loop();
   virtual void preStateChange(int s);
@@ -169,58 +204,10 @@ public:
   virtual void onConnectWifi();
   virtual void onConnectWifiFailed();
   virtual void onConnectEspNowPeer(String peerId);
-  // Wifi
-  static String macToString(const uint8_t *m);
-  static void printMac(const uint8_t *m);
-  // ESP-Now
-  static void handleHandshakes(bool resend = false);
-  // Inbox/Outbox
-  static void pushOutbox(AF1Msg m);
-  static void pushInbox(AF1Msg m);
-  // Websocket
-  void setWS(String host, String path, int port, String protocol = "");
-  // HTTP
-  static AF1JsonDoc httpFetch(String url);
-  static AF1JsonDoc httpPost(String url, AF1JsonDoc body);
-  // Other
-  static void setBuiltinLED(bool on);
+
   unsigned long getStartMs();
-  // Sync
-  static void scheduleSyncStart();
-  // Events
   unsigned long getElapsedMs();
-  void resetEvents();
-  void activateEvents();
-  void deactivateEvents();
-
-  static int getCurState();
-  static int getPrevState();
-  static void setRequestedState(int s);
-  static int getRequestedState();
-  static String stateToString(int s);
-  static const std::vector<wifi_ap_info> getWifiAPs();
-  static void setInitialState(int s);
-  static int getInitialState();
-  static void setPurgNext(int p, int n);
-  static const std::map<int, Base *> &getStateEntMap();
-  static Base *getCurStateEnt();
-  static String getDeviceID();
-  static std::set<String> getPeerIDs();
-  static WiFiUDP ntpUDP;
-  static NTPClient timeClient;
-  static unsigned long convertTime(String id, unsigned long t);
-  static void setIntervalTime(String e, unsigned long t);
-  static void detach(bool detach);
-
-  static void setDefaultWS(String host, String path, int port, String protocol = "");
-  static void addEvent(Event e);
-  static void removeEvent(String eventName);
-  static void addStateEnt(int i, Base *s);
-  static void removeStateEnt(int i);
-  static void addStringHandler(String s, string_input_handler h);
-  static void removeStringHandler(String s);
-  static void addWifiAP(String s, String p);
-  static void addWifiAP(String s, String p, int a, int b, int c, int d, int ga, int gb, int gc, int gd, int sa, int sb, int sc, int sd);
+  void setWS(String host, String path, int port, String protocol = "");
 };
 
 #endif // STATEENT_VIRTUAL_BASE_BASE_H_

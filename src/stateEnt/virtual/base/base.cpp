@@ -560,7 +560,7 @@ void Base::pushInbox(AF1Msg m)
   New
 */
 
-AF1JsonDoc Base::httpFetch(String url)
+AF1JsonDoc Base::httpGet(String url)
 {
   AF1JsonDoc result;
   connectToWifi();
@@ -1394,11 +1394,6 @@ std::set<String> Base::getPeerIDs()
     result.insert(it->first);
   }
   return result;
-}
-
-const std::map<int, Base *> &Base::getStateEntMap()
-{
-  return stateEntMap;
 }
 
 Base *Base::getCurStateEnt()
