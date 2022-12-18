@@ -55,8 +55,8 @@ void setup()
 {
   Serial.setTimeout(1500);
   Serial.begin(115200);
-  AF1::begin(JS_ID); // Device-specific; using build flags from platformio.ini
-  AF1::addWifiAP(JSSSID, JSPASS, JS_IP_A, JS_IP_B, JS_IP_C, JS_IP_D, 192, 168, 1, 254, 255, 255, 255, 0); // Static IP used here which is nice for OTA but not required
+  AF1::begin("unique-id"); // Device-specific ID; build flags might be useful for this (see basic example in examples directory)
+  AF1::addWifiAP("ssid", "pass", 192, 168, 1, 123, 192, 168, 1, 254, 255, 255, 255, 0); // Static IP used here which is nice for OTA but not required; build flags might be useful for this too
   AF1::addStateEnt(STATE_BLINK, new Blink());
   AF1::addStateEnt(STATE_SOLID, new Solid());
   AF1::addStringHandler("blink", [](SHArg a)
