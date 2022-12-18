@@ -1208,6 +1208,11 @@ void Base::setRequestedState(int s)
     Serial.print(s);
     Serial.println(" is not recognized, not setting.");
   }
+  else if (curState == s)
+  {
+    Serial.print("Already in requested state ");
+    Serial.println(s);
+  }
   else
   {
     Serial.print("Setting requested state: ");
