@@ -20,7 +20,7 @@
 #ifndef STATE_STATE_H_
 #define STATE_STATE_H_
 
-enum af1_state
+enum State
 {
   STATE_INIT = 100,
   STATE_PURG,

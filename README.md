@@ -184,3 +184,48 @@ To Do...
   static void addWifiAP(String s, String p);
   static void addWifiAP(String s, String p, int a, int b, int c, int d, int ga, int gb, int gc, int gd, int sa, int sb, int sc, int sd);
 ```
+
+### Message Types
+
+Custom message types can be used and can start with 0. The base AF1 message types start at 100 and are as follows:
+
+```
+enum MessageType
+{
+  TYPE_NONE = 100,
+  TYPE_HANDSHAKE_REQUEST,
+  TYPE_HANDSHAKE_RESPONSE,
+  TYPE_CHANGE_STATE,
+  TYPE_TIME_SYNC,
+  TYPE_TIME_SYNC_RESPONSE,
+  TYPE_TIME_SYNC_START,
+  // MQTT
+  TYPE_MQTT_SUBSCRIBE,
+  TYPE_MQTT_SUBACK,
+  TYPE_MQTT_UNSUBSCRIBE,
+  TYPE_MQTT_UNSUBACK,
+  TYPE_MQTT_PUBLISH,
+  // QOS 1
+  TYPE_MQTT_PUBACK,
+  // QOS 2
+  TYPE_MQTT_PUBREC,
+  TYPE_MQTT_PUBREL,
+  TYPE_MQTT_PUBCOMP,
+};
+```
+
+### States
+
+Custom states can and should be used, and can start with 0. The base AF1 states start at 100 and are as follows:
+
+```
+enum State
+{
+  STATE_INIT = 100,
+  STATE_PURG,
+  STATE_OTA,
+  STATE_RESTART,
+  STATE_IDLE_BASE,
+  STATE_SYNC_TEST,
+};
+```
