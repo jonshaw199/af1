@@ -15,7 +15,7 @@
 
 ### Overview
 
-A state entity defines the behavior for a state, and new state entities can be created by extending the `Base` class. When creating new state entities, setup, loop, message handling, and other behavior from `Base` can be overridden as necessary.
+A state entity defines the behavior for a state, and new state entities can be created by extending the `Base` class. When creating new state entities, setup, loop, message handling, and other behavior from `Base` can be overridden as necessary. Every time the state changes, the corresponding state entity's `setup()` method is called once. Then that state entity's `loop()` method is called repeatedly, consistent with the Arduino framework.
 
 Until the dust settles, practical and up-to-date examples can be found in the [AF1-1](https://github.com/jonshaw199/af1-1/blob/main/firmware/lights/src/main.cpp) project. A more trivial example can be seen below:
 
