@@ -72,8 +72,12 @@ void setup()
   AF1::addStateEnt(STATE_MACARENA, new Macarena());
   AF1::addStringHandler("mac", [](SHArg a) { AF1::setRequestedState(STATE_MACARENA); });
   AF1::setInitialState(STATE_BLINK);
+
+  // AF1::addWifiAP(String ssid, String password)
+  // Static IP version also provided; multiple APs can be added
   // AF1::setDefaultWS(String host, String path, int port, String protocol}
-  // State-specific websocket connections can also be used
+  // State-specific websocket connections also supported using Base::setWS() instance method
+  // MQTT support is built in as an option (see below for example)
 }
 
 void loop()
@@ -84,7 +88,7 @@ void loop()
 
 ### Messaging
 
-A message can be sent to peer devices (auto-connect by default) and/or a websocket server with only a few lines of code:
+A message can be sent to peer ESP32s (auto-connect by default) and/or a websocket server with only a few lines of code:
 
 ```
 AF1Msg msg();
@@ -95,7 +99,6 @@ pushOutbox(msg);
 Messages can be received by overriding `getInboxHandler()`:
 
 ```
-
 msg_handler SomeSubclass::getInboxHandler()
 {
   return [](AF1Msg &m)
@@ -105,6 +108,15 @@ msg_handler SomeSubclass::getInboxHandler()
     Serial.print("Hello " + world);
   };
 }
+```
+
+MQTT support is built in and can be used if desired. This is how an ESP32 can subscribe to a topic, perhaps in `onConnectWS()` (overridden from `Base`):
+
+```
+AF1Msg m(TYPE_MQTT_SUBSCRIBE);
+m.json()["topic"] = "some/topic";
+m.json()["qos"] = 0;
+pushOutbox(m);
 ```
 
 ### Event Scheduling

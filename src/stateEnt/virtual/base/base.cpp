@@ -66,6 +66,11 @@ std::map<String, Event> Base::globalEventMap;
 
 static bool detached;
 
+#define MAX_PACKET_ID 5 // Can't store many unacked
+
+static uint8_t nextPacketId;
+static std::map<uint8_t, AF1Msg> unackedPackets;
+
 Base::Base()
 {
 }
@@ -217,6 +222,7 @@ void Base::handleInboxMsg(AF1Msg &m)
   switch (m.getType())
   {
   case TYPE_CHANGE_STATE:
+  {
     Serial.println("State change request message in inbox");
     if (detached)
     {
@@ -226,26 +232,36 @@ void Base::handleInboxMsg(AF1Msg &m)
     {
       requestedState = m.getState();
     }
-    break;
+  }
+  break;
   case TYPE_HANDSHAKE_REQUEST:
+  {
     Serial.println("Handshake request message in inbox");
     receiveHandshakeRequest(m);
     sendHandshakeResponses({m.getSenderId()});
-    break;
+  }
+  break;
   case TYPE_HANDSHAKE_RESPONSE:
+  {
     Serial.println("Handshake response message in inbox");
     receiveHandshakeResponse(m);
     sendTimeSyncMsg({m.getSenderId()});
-    break;
+  }
+  break;
   case TYPE_TIME_SYNC:
+  {
     Serial.println("Time sync message in inbox");
     receiveTimeSyncMsg(m);
-    break;
+  }
+  break;
   case TYPE_TIME_SYNC_RESPONSE:
+  {
     Serial.println("Time sync response message in inbox");
     receiveTimeSyncMsg(m);
-    break;
+  }
+  break;
   case TYPE_TIME_SYNC_START:
+  {
     Serial.print("Received time: ");
     unsigned long t = m.json()["timeSyncStart"];
     Serial.println(t);
@@ -253,7 +269,52 @@ void Base::handleInboxMsg(AF1Msg &m)
     Serial.print("Converted time: ");
     Serial.println(syncStartTime);
     scheduleSyncStart();
-    break;
+  }
+  break;
+  case TYPE_MQTT_PUBLISH:
+  {
+    // Acks
+    uint8_t q = m.json()["qos"];
+    if (q == 1)
+    {
+      int p = m.json()["packetId"];
+      AF1Msg res(TYPE_MQTT_PUBACK);
+      res.json()["packetId"] = p;
+      pushOutbox(res);
+    }
+    else if (q == 2)
+    {
+      int p = m.json()["packetId"];
+      AF1Msg res(TYPE_MQTT_PUBREC);
+      res.json()["packetId"] = p;
+      pushOutbox(res);
+    }
+  }
+  break;
+  case TYPE_MQTT_PUBACK:
+  case TYPE_MQTT_PUBCOMP:
+  {
+    uint8_t p = m.json()["packetId"];
+    unackedPackets.erase(p);
+  }
+  break;
+  case TYPE_MQTT_PUBREC:
+  {
+    uint8_t p = m.json()["packetId"];
+    unackedPackets[p] = m;
+    AF1Msg res(TYPE_MQTT_PUBREL);
+    res.json()["packetId"] = p;
+    pushOutbox(res);
+  }
+  break;
+  case TYPE_MQTT_PUBREL:
+  {
+    int p = m.json()["packetId"];
+    AF1Msg res(TYPE_MQTT_PUBCOMP);
+    res.json()["packetId"] = p;
+    pushOutbox(res);
+  }
+  break;
   }
 
 #if IMPLICIT_STATE_CHANGE
@@ -270,15 +331,26 @@ void Base::handleInboxMsg(AF1Msg &m)
 void Base::handleOutboxMsg(AF1Msg &m)
 {
   Serial.print(">");
-
-  if (m.getType() == TYPE_TIME_SYNC)
-  {
-    m.json()["timeSyncTime"] = millis();
-  }
-
 #if PRINT_MSG_SEND
   m.print();
 #endif
+
+  uint8_t q = m.json()["qos"];
+  switch (m.getType())
+  {
+  case TYPE_MQTT_PUBLISH:
+  case TYPE_MQTT_PUBREL:
+    if (q)
+    {
+      m.json()["packetId"] = nextPacketId;
+      unackedPackets[nextPacketId] = m;
+      nextPacketId = (nextPacketId + 1) % MAX_PACKET_ID;
+    }
+    break;
+  case TYPE_TIME_SYNC:
+    m.json()["timeSyncTime"] = millis();
+    break;
+  }
 
   // ESPNow
   sendMsgESPNow(m);
