@@ -1447,7 +1447,7 @@ void Base::handleWebSocketEvent(WStype_t type, uint8_t *payload, size_t length)
     AF1JsonDoc doc;
     if (validateJson((char *)payload))
     {
-      String payloadStr((char *)payload);
+      String payloadStr((char *)payload); // null termination!
       deserializeJson(doc, payloadStr);
     }
     else
