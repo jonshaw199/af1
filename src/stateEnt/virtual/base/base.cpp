@@ -1455,6 +1455,8 @@ void Base::handleWebSocketEvent(WStype_t type, uint8_t *payload, size_t length)
     hexdump(payload, length);
     // send data to server
     // webSocket.sendBIN(payload, length);
+
+    // to do
   }
   break;
   case WStype_ERROR:
