@@ -32,15 +32,17 @@ AF1Msg::AF1Msg()
   data["senderId"] = Base::getDeviceID();
 }
 
-AF1Msg::AF1Msg(uint8_t t) : AF1Msg() {
+AF1Msg::AF1Msg(uint8_t t) : AF1Msg()
+{
   data["type"] = t;
 }
 
-AF1Msg::AF1Msg(AF1JsonDoc d) : AF1Msg() {
+AF1Msg::AF1Msg(JsonDocument &d) : AF1Msg()
+{
   data = d;
 }
 
-AF1JsonDoc &AF1Msg::json()
+JsonDocument &AF1Msg::json()
 {
   return data;
 }
@@ -68,7 +70,8 @@ std::set<String> AF1Msg::getRecipients()
 void AF1Msg::setRecipients(std::set<String> r)
 {
   recipients = r;
-  for (std::set<String>::iterator it = r.begin(); it != r.end(); it++) {
+  for (std::set<String>::iterator it = r.begin(); it != r.end(); it++)
+  {
     recipients.insert(*it);
   }
 }

@@ -560,9 +560,9 @@ void Base::pushInbox(AF1Msg m)
   New
 */
 
-AF1JsonDoc Base::httpGet(String url)
+StaticJsonDocument<2048> Base::httpGet(String url)
 {
-  AF1JsonDoc result;
+  StaticJsonDocument<2048> result;
   connectToWifi();
   if (WiFi.status() == WL_CONNECTED)
   {
@@ -586,9 +586,9 @@ AF1JsonDoc Base::httpGet(String url)
   return result;
 }
 
-AF1JsonDoc Base::httpPost(String url, AF1JsonDoc body)
+StaticJsonDocument<2048> Base::httpPost(String url, JsonDocument &body)
 {
-  AF1JsonDoc result;
+  StaticJsonDocument<2048> result;
   connectToWifi();
   if ((WiFi.status() == WL_CONNECTED))
   {

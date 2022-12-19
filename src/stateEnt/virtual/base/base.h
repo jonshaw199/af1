@@ -162,8 +162,8 @@ public:
   static void printMac(const uint8_t *m);
   static void pushOutbox(AF1Msg m);
   static void pushInbox(AF1Msg m);
-  static AF1JsonDoc httpGet(String url);
-  static AF1JsonDoc httpPost(String url, AF1JsonDoc body);
+  static StaticJsonDocument<2048> httpGet(String url);
+  static StaticJsonDocument<2048> httpPost(String url, JsonDocument &body);
   static void setBuiltinLED(bool on);
   static int getCurState();
   static int getPrevState();

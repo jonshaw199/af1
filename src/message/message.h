@@ -61,9 +61,9 @@ class AF1Msg
 public:
   AF1Msg();
   AF1Msg(uint8_t type);
-  AF1Msg(AF1JsonDoc d);
+  AF1Msg(JsonDocument &d);
 
-  AF1JsonDoc &json();
+  JsonDocument &json();
   uint8_t getType();
   uint8_t getState();
   String getSenderId();
