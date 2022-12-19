@@ -1443,6 +1443,9 @@ void Base::handleWebSocketEvent(WStype_t type, uint8_t *payload, size_t length)
     // send message to server
     // webSocket.sendTXT("message here");
     Serial.print(".");
+
+    // Can't assume the payload is valid JSON here; big TO DO
+
     String payloadStr((char *)payload);
     AF1JsonDoc doc;
     deserializeJson(doc, payloadStr);
