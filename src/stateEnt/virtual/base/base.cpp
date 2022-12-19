@@ -1444,11 +1444,16 @@ void Base::handleWebSocketEvent(WStype_t type, uint8_t *payload, size_t length)
     // webSocket.sendTXT("message here");
     Serial.print(".");
 
-    // Can't assume the payload is valid JSON here; big TO DO
-
-    String payloadStr((char *)payload);
     AF1JsonDoc doc;
-    deserializeJson(doc, payloadStr);
+    if (validateJson((char *)payload))
+    {
+      String payloadStr((char *)payload);
+      deserializeJson(doc, payloadStr);
+    }
+    else
+    {
+      doc["rawTxt"] = payload;
+    }
     pushInbox(doc);
   }
   break;
@@ -1458,8 +1463,9 @@ void Base::handleWebSocketEvent(WStype_t type, uint8_t *payload, size_t length)
     hexdump(payload, length);
     // send data to server
     // webSocket.sendBIN(payload, length);
-
-    // to do
+    AF1JsonDoc doc;
+    doc["rawBin"] = payload;
+    pushInbox(doc);
   }
   break;
   case WStype_ERROR:
@@ -1469,4 +1475,10 @@ void Base::handleWebSocketEvent(WStype_t type, uint8_t *payload, size_t length)
   case WStype_FRAGMENT_FIN:
     break;
   }
+}
+
+bool Base::validateJson(const char *input)
+{
+  StaticJsonDocument<0> doc, filter;
+  return deserializeJson(doc, input, DeserializationOption::Filter(filter)) == DeserializationError::Ok;
 }
