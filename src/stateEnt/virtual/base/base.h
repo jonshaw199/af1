@@ -29,7 +29,7 @@
 #include <ArduinoJson.h>
 #include <esp_now.h>
 #include <set>
-#include <WebSocketClient.h>
+#include <WebSocketsClient.h>
 #include <vector>
 #include <mutex>
 #include <NTPClient.h>
@@ -129,11 +129,14 @@ class Base
   static const std::vector<wifi_ap_info> getWifiAPs();
   static unsigned long convertTime(String id, unsigned long t);
   static std::set<String> getPeerIDs();
+  static void hexdump(const void *mem, uint32_t len, uint8_t cols = 16);
+  static void handleWebSocketEvent(WStype_t type, uint8_t *payload, size_t length);
 
   static std::map<String, Event> globalEventMap;
   static std::map<String, af1_peer_info> peerInfoMap;
   static std::map<String, String> macToIDMap;
   static WiFiUDP ntpUDP;
+  static WebSocketsClient webSocketClient;
 
   void resetEvents();
   void activateEvents();
