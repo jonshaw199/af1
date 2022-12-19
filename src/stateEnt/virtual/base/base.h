@@ -89,6 +89,7 @@ public:
   String path;
   int port;
   String protocol;
+  unsigned long reconnectMs;
   String toString()
   {
     return "ws_client_info: host=" + host + ";path=" + path + ";port=" + String(port) + ";protocol=" + protocol;
@@ -180,7 +181,7 @@ public:
   static String getDeviceID();
   static void setIntervalTime(String e, unsigned long t);
   static void detach(bool detach);
-  static void setDefaultWS(String host, String path, int port, String protocol = "");
+  static void setDefaultWS(String host, String path, int port, String protocol = "", unsigned long reconnectMs = WS_RECONNECT_MS);
   static void addEvent(Event e);
   static void removeEvent(String eventName);
   static void addStateEnt(int i, Base *s);
@@ -210,7 +211,7 @@ public:
 
   unsigned long getStartMs();
   unsigned long getElapsedMs();
-  void setWS(String host, String path, int port, String protocol = "");
+  void setWS(String host, String path, int port, String protocol = "", unsigned long reconnectMs = WS_RECONNECT_MS);
 };
 
 #endif // STATEENT_VIRTUAL_BASE_BASE_H_

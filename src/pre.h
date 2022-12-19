@@ -96,6 +96,10 @@
 #define SAFETY_CHECK_INBOX_OVERFLOW true
 #endif
 
+#ifndef WS_RECONNECT_MS
+#define WS_RECONNECT_MS 10000
+#endif
+
 #define AF1_MSG_SIZE 225
 #define AF1JsonDoc StaticJsonDocument<AF1_MSG_SIZE>
 

@@ -1024,14 +1024,13 @@ void Base::sendAllTimeSyncMessages()
 
 // From WSEnt
 
-void Base::setWS(String host, String path, int port, String protocol)
+void Base::setWS(String host, String path, int port, String protocol, unsigned long reconnectMs)
 {
   wsClientInfo.host = host;
   wsClientInfo.path = path;
   wsClientInfo.port = port;
   wsClientInfo.protocol = protocol;
-  Serial.print("Setting websocket client info: ");
-  Serial.println(wsClientInfo.toString());
+  wsClientInfo.reconnectMs = reconnectMs;
 }
 
 void Base::sendMsgWS(AF1Msg m)
@@ -1084,7 +1083,7 @@ void Base::connectToWS()
         // use HTTP Basic Authorization this is optional remove if not needed
         // webSocketClient.setAuthorization("user", "Password");
         // try every 5000 again if connection has failed
-        webSocketClient.setReconnectInterval(5000);
+        webSocketClient.setReconnectInterval(i.reconnectMs);
       }
     }
     else
@@ -1316,12 +1315,13 @@ String Base::getDeviceID()
   return deviceID;
 }
 
-void Base::setDefaultWS(String host, String path, int port, String protocol)
+void Base::setDefaultWS(String host, String path, int port, String protocol, unsigned long reconnectMs)
 {
   defaultWSClientInfo.host = host;
   defaultWSClientInfo.path = path;
   defaultWSClientInfo.port = port;
   defaultWSClientInfo.protocol = protocol;
+  defaultWSClientInfo.reconnectMs = reconnectMs;
 }
 
 void Base::onConnectWSServer()
