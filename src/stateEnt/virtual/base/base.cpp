@@ -1084,7 +1084,7 @@ void Base::connectToWS()
         // use HTTP Basic Authorization this is optional remove if not needed
         // webSocketClient.setAuthorization("user", "Password");
         // try every 5000 again if connection has failed
-        // webSocketClient.setReconnectInterval(5000);
+        webSocketClient.setReconnectInterval(5000);
       }
     }
     else
@@ -1329,10 +1329,6 @@ void Base::onConnectWSServer()
 }
 
 void Base::onDisconnectWSServer()
-{
-}
-
-void Base::onConnectWSServerFailed()
 {
 }
 
