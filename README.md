@@ -163,6 +163,7 @@ virtual bool doConnectToWSServer();
 virtual void doSynced();
 virtual bool doSync();
 virtual void onConnectWSServer();
+virtual void onDisconnectWSServer();
 virtual void onConnectWSServerFailed();
 virtual void onConnectWifi();
 virtual void onConnectWifiFailed();

@@ -1328,6 +1328,10 @@ void Base::onConnectWSServer()
 {
 }
 
+void Base::onDisconnectWSServer()
+{
+}
+
 void Base::onConnectWSServerFailed()
 {
 }
@@ -1425,24 +1429,22 @@ void Base::handleWebSocketEvent(WStype_t type, uint8_t *payload, size_t length)
   case WStype_DISCONNECTED:
   {
     Serial.printf("[WSc] Disconnected!\n");
+    stateEnt->onDisconnectWSServer();
   }
   break;
   case WStype_CONNECTED:
   {
     Serial.printf("[WSc] Connected to url: %s\n", payload);
-
     // send message to server when Connected
-    webSocketClient.sendTXT("Connected");
+    // webSocketClient.sendTXT("Connected");
     stateEnt->onConnectWSServer();
   }
   break;
   case WStype_TEXT:
   {
     Serial.printf("[WSc] get text: %s\n", payload);
-
     // send message to server
     // webSocket.sendTXT("message here");
-
     Serial.print(".");
     String payloadStr((char *)payload);
     AF1JsonDoc doc;
@@ -1454,7 +1456,6 @@ void Base::handleWebSocketEvent(WStype_t type, uint8_t *payload, size_t length)
   {
     Serial.printf("[WSc] get binary length: %u\n", length);
     hexdump(payload, length);
-
     // send data to server
     // webSocket.sendBIN(payload, length);
   }
