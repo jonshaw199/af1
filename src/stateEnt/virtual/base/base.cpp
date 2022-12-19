@@ -1433,6 +1433,7 @@ void Base::handleWebSocketEvent(WStype_t type, uint8_t *payload, size_t length)
     Serial.printf("[WSc] Connected to url: %s\n", payload);
     // send message to server when Connected
     // webSocketClient.sendTXT("Connected");
+    delay(2000);
     stateEnt->onConnectWSServer();
   }
   break;
