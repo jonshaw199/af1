@@ -59,8 +59,7 @@ unsigned long Base::syncStartTime;
 uint8_t Base::macAP[6];
 uint8_t Base::macSTA[6];
 
-static WebSocketClient webSocketClient;
-static WiFiClient client; // Use WiFiClient class to create TCP connections
+WebSocketsClient Base::webSocketClient;
 
 std::map<String, Event> Base::globalEventMap;
 
@@ -139,23 +138,7 @@ void Base::update()
     globalEventMap[it->first].cbIfTimeAndActive();
   }
 
-  // Incoming websocket messages
-  String data;
-  if (client)
-  {
-    webSocketClient.getData(data);
-    if (data.length() > 0)
-    {
-      Serial.print(".");
-      AF1JsonDoc doc;
-      deserializeJson(doc, data);
-      pushInbox(doc);
-    }
-  }
-  else
-  {
-    // Serial.println("Client disconnected");
-  }
+  webSocketClient.loop();
 
   // StateManager Loop - END
   // Handling this first instead of last; allows us to use init.loop() if we need it before switching to the requested state (or maybe we don't want to request a new state during init at all?)
@@ -1041,26 +1024,25 @@ void Base::sendAllTimeSyncMessages()
 
 // From WSEnt
 
-void Base::setWS(String host, String path, int port, String protocol)
+void Base::setWS(String host, String path, int port, String protocol, unsigned long reconnectMs)
 {
   wsClientInfo.host = host;
   wsClientInfo.path = path;
   wsClientInfo.port = port;
   wsClientInfo.protocol = protocol;
-  Serial.print("Setting websocket client info: ");
-  Serial.println(wsClientInfo.toString());
+  wsClientInfo.reconnectMs = reconnectMs;
 }
 
 void Base::sendMsgWS(AF1Msg m)
 {
-  if (client)
+  if (webSocketClient.isConnected())
   {
     String s;
     serializeJson(m.json(), s);
 #if PRINT_MSG_SEND
     Serial.println("Sending websocket message");
 #endif
-    webSocketClient.sendData(s);
+    webSocketClient.sendTXT(s);
   }
   else
   {
@@ -1089,49 +1071,19 @@ void Base::connectToWS()
     {
       Serial.print("connectToWS(): checking WS connection: ");
       Serial.println(i.toString());
-      if (client && (i == curWSClientInfo || !curWSClientInfo) && i == defaultWSClientInfo)
+      if (webSocketClient.isConnected() && (i == curWSClientInfo || !curWSClientInfo) && i == defaultWSClientInfo)
       {
         Serial.println("Already connected to websocket");
       }
       else
       {
         // Connect to the websocket server
-        if (client.connect(i.host.c_str(), i.port))
-        {
-          Serial.println("Connected to websocket server");
-        }
-        else
-        {
-          Serial.println("Connection to websocket server failed");
-        }
-
-        int lenH = i.host.length() + 1;
-        int lenP = i.path.length() + 1;
-        int lenPr = i.protocol.length() + 1;
-        char h[lenH];
-        char p[lenP];
-        char pr[lenPr];
-        i.host.toCharArray(h, lenH);
-        i.path.toCharArray(p, lenP);
-        i.protocol.toCharArray(pr, lenPr);
-        webSocketClient.host = h;
-        webSocketClient.path = p;
-        if (i.protocol.length())
-        {
-          webSocketClient.protocol = pr;
-        }
-
-        if (webSocketClient.handshake(client))
-        {
-          Serial.println("WS handshake successful (WS connection complete)");
-          curWSClientInfo = i;
-          stateEnt->onConnectWSServer();
-        }
-        else
-        {
-          Serial.println("WS handshake failed (WS connection failed halfway)");
-          stateEnt->onConnectWSServerFailed();
-        }
+        webSocketClient.begin(i.host, i.port, i.path);
+        webSocketClient.onEvent(handleWebSocketEvent);
+        // use HTTP Basic Authorization this is optional remove if not needed
+        // webSocketClient.setAuthorization("user", "Password");
+        // try every 5000 again if connection has failed
+        webSocketClient.setReconnectInterval(i.reconnectMs);
       }
     }
     else
@@ -1363,19 +1315,20 @@ String Base::getDeviceID()
   return deviceID;
 }
 
-void Base::setDefaultWS(String host, String path, int port, String protocol)
+void Base::setDefaultWS(String host, String path, int port, String protocol, unsigned long reconnectMs)
 {
   defaultWSClientInfo.host = host;
   defaultWSClientInfo.path = path;
   defaultWSClientInfo.port = port;
   defaultWSClientInfo.protocol = protocol;
+  defaultWSClientInfo.reconnectMs = reconnectMs;
 }
 
 void Base::onConnectWSServer()
 {
 }
 
-void Base::onConnectWSServerFailed()
+void Base::onDisconnectWSServer()
 {
 }
 
@@ -1447,4 +1400,68 @@ void Base::detach(bool d)
   Serial.print("Detaching: ");
   Serial.println(d);
   detached = d;
+}
+
+void Base::hexdump(const void *mem, uint32_t len, uint8_t cols)
+{
+  const uint8_t *src = (const uint8_t *)mem;
+  Serial.printf("\n[HEXDUMP] Address: 0x%08X len: 0x%X (%d)", (ptrdiff_t)src, len, len);
+  for (uint32_t i = 0; i < len; i++)
+  {
+    if (i % cols == 0)
+    {
+      Serial.printf("\n[0x%08X] 0x%08X: ", (ptrdiff_t)src, i);
+    }
+    Serial.printf("%02X ", *src);
+    src++;
+  }
+  Serial.printf("\n");
+}
+
+void Base::handleWebSocketEvent(WStype_t type, uint8_t *payload, size_t length)
+{
+  switch (type)
+  {
+  case WStype_DISCONNECTED:
+  {
+    Serial.printf("[WSc] Disconnected!\n");
+    stateEnt->onDisconnectWSServer();
+  }
+  break;
+  case WStype_CONNECTED:
+  {
+    Serial.printf("[WSc] Connected to url: %s\n", payload);
+    // send message to server when Connected
+    // webSocketClient.sendTXT("Connected");
+    delay(2000);
+    stateEnt->onConnectWSServer();
+  }
+  break;
+  case WStype_TEXT:
+  {
+    Serial.printf("[WSc] get text: %s\n", payload);
+    // send message to server
+    // webSocket.sendTXT("message here");
+    Serial.print(".");
+    String payloadStr((char *)payload);
+    AF1JsonDoc doc;
+    deserializeJson(doc, payloadStr);
+    pushInbox(doc);
+  }
+  break;
+  case WStype_BIN:
+  {
+    Serial.printf("[WSc] get binary length: %u\n", length);
+    hexdump(payload, length);
+    // send data to server
+    // webSocket.sendBIN(payload, length);
+  }
+  break;
+  case WStype_ERROR:
+  case WStype_FRAGMENT_TEXT_START:
+  case WStype_FRAGMENT_BIN_START:
+  case WStype_FRAGMENT:
+  case WStype_FRAGMENT_FIN:
+    break;
+  }
 }

@@ -29,7 +29,7 @@
 #include <ArduinoJson.h>
 #include <esp_now.h>
 #include <set>
-#include <WebSocketClient.h>
+#include <WebSocketsClient.h>
 #include <vector>
 #include <mutex>
 #include <NTPClient.h>
@@ -89,6 +89,7 @@ public:
   String path;
   int port;
   String protocol;
+  unsigned long reconnectMs;
   String toString()
   {
     return "ws_client_info: host=" + host + ";path=" + path + ";port=" + String(port) + ";protocol=" + protocol;
@@ -129,11 +130,14 @@ class Base
   static const std::vector<wifi_ap_info> getWifiAPs();
   static unsigned long convertTime(String id, unsigned long t);
   static std::set<String> getPeerIDs();
+  static void hexdump(const void *mem, uint32_t len, uint8_t cols = 16);
+  static void handleWebSocketEvent(WStype_t type, uint8_t *payload, size_t length);
 
   static std::map<String, Event> globalEventMap;
   static std::map<String, af1_peer_info> peerInfoMap;
   static std::map<String, String> macToIDMap;
   static WiFiUDP ntpUDP;
+  static WebSocketsClient webSocketClient;
 
   void resetEvents();
   void activateEvents();
@@ -177,7 +181,7 @@ public:
   static String getDeviceID();
   static void setIntervalTime(String e, unsigned long t);
   static void detach(bool detach);
-  static void setDefaultWS(String host, String path, int port, String protocol = "");
+  static void setDefaultWS(String host, String path, int port, String protocol = "", unsigned long reconnectMs = WS_RECONNECT_MS);
   static void addEvent(Event e);
   static void removeEvent(String eventName);
   static void addStateEnt(int i, Base *s);
@@ -200,14 +204,14 @@ public:
   virtual void doSynced();
   virtual bool doSync();
   virtual void onConnectWSServer();
-  virtual void onConnectWSServerFailed();
+  virtual void onDisconnectWSServer();
   virtual void onConnectWifi();
   virtual void onConnectWifiFailed();
   virtual void onConnectEspNowPeer(String peerId);
 
   unsigned long getStartMs();
   unsigned long getElapsedMs();
-  void setWS(String host, String path, int port, String protocol = "");
+  void setWS(String host, String path, int port, String protocol = "", unsigned long reconnectMs = WS_RECONNECT_MS);
 };
 
 #endif // STATEENT_VIRTUAL_BASE_BASE_H_
