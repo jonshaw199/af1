@@ -1444,8 +1444,9 @@ void Base::handleWebSocketEvent(WStype_t type, uint8_t *payload, size_t length)
     // webSocket.sendTXT("message here");
 
     Serial.print(".");
+    String payloadStr((char *)payload);
     AF1JsonDoc doc;
-    deserializeJson(doc, payload);
+    deserializeJson(doc, payloadStr);
     pushInbox(doc);
   }
   break;
