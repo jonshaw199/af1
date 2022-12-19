@@ -140,7 +140,7 @@ static Base *getCurStateEnt();
 static String getDeviceID();
 static void setIntervalTime(String e, unsigned long t);
 static void detach(bool detach);
-static void setDefaultWS(String host, String path, int port, String protocol = "");
+static void setDefaultWS(String host, String path, int port, String protocol = "", unsigned long reconnectMs = 10000);
 static void addEvent(Event e);
 static void removeEvent(String eventName);
 static void addStateEnt(int i, Base *s);
@@ -170,7 +170,7 @@ virtual void onConnectEspNowPeer(String peerId);
 
 unsigned long getStartMs();
 unsigned long getElapsedMs();
-void setWS(String host, String path, int port, String protocol = "");
+void setWS(String host, String path, int port, String protocol = "", unsigned long reconnectMs = 10000);
 ```
 
 ### Message Types
