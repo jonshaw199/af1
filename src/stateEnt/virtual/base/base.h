@@ -41,7 +41,7 @@
 #include "box/box.h"
 #include "pre.h"
 
-#define max(a, b) ((a) >= (b) ? (a) : (b))
+#define preMax(a, b) ((a) >= (b) ? (a) : (b))
 
 class SHArg
 {
