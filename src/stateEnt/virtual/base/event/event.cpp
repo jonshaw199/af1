@@ -25,92 +25,92 @@
 ECBArg::ECBArg(unsigned long e, unsigned long i, unsigned long s, start_time_type s2, unsigned long c, unsigned long m, String n, event_type t)
     : name(n), curTime(e), cbCnt(c), maxCbCnt(m), intervalTime(i), startTime(s), startTimeType(s2), type(t) {}
 
-Event::Event() : name(""), mode(MODE_INACTIVE), type(EVENT_TYPE_TEMP)
+AF1Event::AF1Event() : name(""), mode(MODE_INACTIVE), type(EVENT_TYPE_TEMP)
 {
   cb = [](ECBArg a)
   { Serial.println("No event cb provided"); };
 }
 
-Event::Event(String n, event_cb c, event_type t, unsigned long i, unsigned long m, unsigned long s, start_time_type s2, event_mode m2, unsigned long c2)
+AF1Event::AF1Event(String n, event_cb c, event_type t, unsigned long i, unsigned long m, unsigned long s, start_time_type s2, event_mode m2, unsigned long c2)
     : name(n), cb(c), type(t), intervalTime(i), maxCbCnt(m), startTime(s), startTimeType(s2), mode(m2), cbCnt(c2) {}
 
-unsigned long Event::getIntervalTime()
+unsigned long AF1Event::getIntervalTime()
 {
   return intervalTime;
 }
 
-void Event::setIntervalTime(unsigned long t)
+void AF1Event::setIntervalTime(unsigned long t)
 {
   intervalTime = t;
 }
 
-void Event::setIntervalTime(unsigned long t, unsigned long c)
+void AF1Event::setIntervalTime(unsigned long t, unsigned long c)
 {
   intervalTime = t;
   cbCnt = t > 0 ? c / t : 0;
 }
 
-unsigned long Event::getCbCnt()
+unsigned long AF1Event::getCbCnt()
 {
   return cbCnt;
 }
 
-void Event::setCbCnt(unsigned long c)
+void AF1Event::setCbCnt(unsigned long c)
 {
   cbCnt = c;
 }
 
-String Event::getName()
+String AF1Event::getName()
 {
   return name;
 }
 
-void Event::setName(String n)
+void AF1Event::setName(String n)
 {
   name = n;
 }
 
-unsigned long Event::getMaxCbCnt()
+unsigned long AF1Event::getMaxCbCnt()
 {
   return maxCbCnt;
 }
 
-void Event::setMaxCbCnt(unsigned long c)
+void AF1Event::setMaxCbCnt(unsigned long c)
 {
   maxCbCnt = c;
 }
 
-unsigned long Event::getStartTime()
+unsigned long AF1Event::getStartTime()
 {
   return startTime;
 }
 
-void Event::setStartTime(unsigned long t)
+void AF1Event::setStartTime(unsigned long t)
 {
   startTime = t;
 }
 
-start_time_type Event::getStartTimeType()
+start_time_type AF1Event::getStartTimeType()
 {
   return startTimeType;
 }
 
-unsigned long Event::getLastCbTime()
+unsigned long AF1Event::getLastCbTime()
 {
   return intervalTime * cbCnt + getStartTime();
 }
 
-unsigned long Event::getNextCbTime()
+unsigned long AF1Event::getNextCbTime()
 {
   return intervalTime ? getLastCbTime() + intervalTime : getStartTime();
 }
 
-bool Event::isTime(unsigned long curTime)
+bool AF1Event::isTime(unsigned long curTime)
 {
   return curTime >= getNextCbTime() && (!maxCbCnt || cbCnt < maxCbCnt);
 }
 
-bool Event::cbIfTimeAndActive(unsigned long curTime)
+bool AF1Event::cbIfTimeAndActive(unsigned long curTime)
 {
   if (mode == MODE_ACTIVE && isTime(curTime))
   {
@@ -122,7 +122,7 @@ bool Event::cbIfTimeAndActive(unsigned long curTime)
   return false;
 }
 
-unsigned long Event::getCurTime()
+unsigned long AF1Event::getCurTime()
 {
   switch (startTimeType)
   {
@@ -137,47 +137,47 @@ unsigned long Event::getCurTime()
   }
 }
 
-bool Event::cbIfTimeAndActive()
+bool AF1Event::cbIfTimeAndActive()
 {
   return cbIfTimeAndActive(getCurTime());
 }
 
-event_type Event::getType()
+event_type AF1Event::getType()
 {
   return type;
 }
 
-void Event::setMode(event_mode m)
+void AF1Event::setMode(event_mode m)
 {
   mode = m;
 }
 
-event_mode Event::getMode()
+event_mode AF1Event::getMode()
 {
   return mode;
 }
 
-void Event::reset()
+void AF1Event::reset()
 {
   cbCnt = 0;
 }
 
-void Event::activate()
+void AF1Event::activate()
 {
   mode = MODE_ACTIVE;
 }
 
-void Event::deactivate()
+void AF1Event::deactivate()
 {
   mode = MODE_INACTIVE;
 }
 
-event_cb Event::getCb()
+event_cb AF1Event::getCb()
 {
   return cb;
 }
 
-void Event::setCb(event_cb c)
+void AF1Event::setCb(event_cb c)
 {
   cb = c;
 }

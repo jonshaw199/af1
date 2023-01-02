@@ -61,7 +61,7 @@ uint8_t Base::macSTA[6];
 
 WebSocketsClient Base::webSocketClient;
 
-std::map<String, Event> Base::globalEventMap;
+std::map<String, AF1Event> Base::globalEventMap;
 
 static bool detached;
 
@@ -128,12 +128,12 @@ void Base::update()
   }
 
   // State Events
-  for (std::map<String, Event>::iterator it = stateEnt->eventMap.begin(); it != stateEnt->eventMap.end(); it++)
+  for (std::map<String, AF1Event>::iterator it = stateEnt->eventMap.begin(); it != stateEnt->eventMap.end(); it++)
   {
     stateEnt->eventMap[it->first].cbIfTimeAndActive();
   }
   // Global Events
-  for (std::map<String, Event>::iterator it = globalEventMap.begin(); it != globalEventMap.end(); it++)
+  for (std::map<String, AF1Event>::iterator it = globalEventMap.begin(); it != globalEventMap.end(); it++)
   {
     globalEventMap[it->first].cbIfTimeAndActive();
   }
@@ -360,12 +360,12 @@ String Base::getName()
 
 void Base::resetEvents()
 {
-  for (std::map<String, Event>::iterator it = eventMap.begin(); it != eventMap.end(); it++)
+  for (std::map<String, AF1Event>::iterator it = eventMap.begin(); it != eventMap.end(); it++)
   {
     eventMap[it->first].reset();
   }
   // Global
-  for (std::map<String, Event>::iterator it = globalEventMap.begin(); it != globalEventMap.end(); it++)
+  for (std::map<String, AF1Event>::iterator it = globalEventMap.begin(); it != globalEventMap.end(); it++)
   {
     if (globalEventMap[it->first].getStartTimeType() == START_STATE_MS)
     {
@@ -376,7 +376,7 @@ void Base::resetEvents()
 
 void Base::activateEvents()
 {
-  for (std::map<String, Event>::iterator it = eventMap.begin(); it != eventMap.end(); it++)
+  for (std::map<String, AF1Event>::iterator it = eventMap.begin(); it != eventMap.end(); it++)
   {
     eventMap[it->first].activate();
   }
@@ -385,7 +385,7 @@ void Base::activateEvents()
 void Base::deactivateEvents()
 {
   std::vector<String> delKeys;
-  for (std::map<String, Event>::iterator it = eventMap.begin(); it != eventMap.end(); it++)
+  for (std::map<String, AF1Event>::iterator it = eventMap.begin(); it != eventMap.end(); it++)
   {
     eventMap[it->first].deactivate();
     if (eventMap[it->first].getType() == EVENT_TYPE_TEMP)
@@ -1118,7 +1118,7 @@ void Base::scheduleSyncStart()
   unsigned long dif = s - millis();
   unsigned long startMs = dif + stateEnt->getElapsedMs();
 
-  addEvent(Event(
+  addEvent(AF1Event(
       EVENTKEY_SCHEDULE_SYNC_START, [](ECBArg a)
       {
     Serial.println("Starting");
@@ -1128,7 +1128,7 @@ void Base::scheduleSyncStart()
 
 void Base::doSynced()
 {
-  addEvent(Event(
+  addEvent(AF1Event(
       EVENTKEY_SYNC_START,
       [](ECBArg a)
       { setBuiltinLED(a.cbCnt % 2); },
@@ -1377,7 +1377,7 @@ void Base::setIntervalTime(String e, unsigned long t)
   }
 }
 
-void Base::addEvent(Event e)
+void Base::addEvent(AF1Event e)
 {
   if (e.getType() == EVENT_TYPE_GLOBAL)
   {

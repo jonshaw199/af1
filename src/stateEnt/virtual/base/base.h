@@ -134,7 +134,7 @@ class Base
   static void handleWebSocketEvent(WStype_t type, uint8_t *payload, size_t length);
   static bool validateJson(const char *input);
 
-  static std::map<String, Event> globalEventMap;
+  static std::map<String, AF1Event> globalEventMap;
   static std::map<String, af1_peer_info> peerInfoMap;
   static std::map<String, String> macToIDMap;
   static WiFiUDP ntpUDP;
@@ -144,7 +144,7 @@ class Base
   void activateEvents();
   void deactivateEvents();
 
-  std::map<String, Event> eventMap;
+  std::map<String, AF1Event> eventMap;
   ws_client_info wsClientInfo;
 
 protected:
@@ -183,7 +183,7 @@ public:
   static void setIntervalTime(String e, unsigned long t);
   static void detach(bool detach);
   static void setDefaultWS(String host, String path, int port, String protocol = "", unsigned long reconnectMs = WS_RECONNECT_MS);
-  static void addEvent(Event e);
+  static void addEvent(AF1Event e);
   static void removeEvent(String eventName);
   static void addStateEnt(int i, Base *s);
   static void removeStateEnt(int i);

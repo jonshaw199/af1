@@ -13,7 +13,7 @@ public:
   void setup()
   {
     Base::setup();
-    addEvent(Event(
+    addEvent(AF1Event(
         "Blink-1", [](ECBArg a)
         {
           setBuiltinLED(a.cbCnt % 2); // Blink once per sec

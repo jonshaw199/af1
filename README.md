@@ -34,7 +34,7 @@ public:
   void setup()
   {
     Base::setup();
-    addEvent(Event(
+    addEvent(AF1Event(
         "Blink-1", [](ECBArg a)
         {
           setBuiltinLED(a.cbCnt % 2); // Blink once per sec
@@ -141,7 +141,7 @@ static String getDeviceID();
 static void setIntervalTime(String e, unsigned long t);
 static void detach(bool detach);
 static void setDefaultWS(String host, String path, int port, String protocol = "", unsigned long reconnectMs = 10000);
-static void addEvent(Event e);
+static void addEvent(AF1Event e);
 static void removeEvent(String eventName);
 static void addStateEnt(int i, Base *s);
 static void removeStateEnt(int i);
