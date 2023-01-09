@@ -27,39 +27,39 @@ AF1Msg::AF1Msg()
   retries = 0;
   maxRetries = 0;
 
-  data["state"] = Base::getCurState();
-  data["type"] = TYPE_NONE;
-  data["senderId"] = Base::getDeviceID();
+  jsonDoc["state"] = Base::getCurState();
+  jsonDoc["type"] = TYPE_NONE;
+  jsonDoc["senderId"] = Base::getDeviceID();
 }
 
 AF1Msg::AF1Msg(uint8_t t) : AF1Msg()
 {
-  data["type"] = t;
+  jsonDoc["type"] = t;
 }
 
 AF1Msg::AF1Msg(JsonDocument &d) : AF1Msg()
 {
-  data = d;
+  jsonDoc = d;
 }
 
 JsonDocument &AF1Msg::json()
 {
-  return data;
+  return jsonDoc;
 }
 
 uint8_t AF1Msg::getType()
 {
-  return data["type"];
+  return jsonDoc["type"];
 }
 
 uint8_t AF1Msg::getState()
 {
-  return data["state"];
+  return jsonDoc["state"];
 }
 
 String AF1Msg::getSenderId()
 {
-  return data["senderId"];
+  return jsonDoc["senderId"];
 }
 
 std::set<String> AF1Msg::getRecipients()
@@ -99,7 +99,7 @@ int AF1Msg::getMaxRetries()
 void AF1Msg::print()
 {
   String j;
-  serializeJsonPretty(data, j);
+  serializeJsonPretty(jsonDoc, j);
   Serial.print("Message: ");
   Serial.println(j);
 }

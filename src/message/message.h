@@ -52,7 +52,7 @@ enum MessageType
 
 class AF1Msg
 {
-  AF1JsonDoc data;
+  AF1JsonDoc jsonDoc;
   std::set<String> recipients;
   int sendCnt;
   int retries;
