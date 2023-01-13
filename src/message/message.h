@@ -53,6 +53,9 @@ enum MessageType
 class AF1Msg
 {
   AF1JsonDoc jsonDoc;
+  uint8_t *raw;
+  int rawLen;
+  bool isTxt;
   std::set<String> recipients;
   int sendCnt;
   int retries;
@@ -62,8 +65,15 @@ public:
   AF1Msg();
   AF1Msg(uint8_t type);
   AF1Msg(JsonDocument &d);
+  AF1Msg(uint8_t *raw, int rawLen, bool isTxt = false);
+  AF1Msg(const AF1Msg &m);
+  ~AF1Msg();
+  AF1Msg &operator=(const AF1Msg &other);
 
   JsonDocument &json();
+  const uint8_t *getRaw();
+  int getRawLen();
+  bool getIsTxt();
   uint8_t getType();
   uint8_t getState();
   String getSenderId();
@@ -74,6 +84,7 @@ public:
   int getSendCnt();
   void setMaxRetries(int m);
   int getMaxRetries();
+  int getRetries();
   void print();
 };
 

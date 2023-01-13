@@ -26,7 +26,9 @@ AF1Msg::AF1Msg()
   sendCnt = 0;
   retries = 0;
   maxRetries = 0;
-
+  rawLen = 0;
+  isTxt = false;
+  raw = NULL;
   jsonDoc["state"] = Base::getCurState();
   jsonDoc["type"] = TYPE_NONE;
   jsonDoc["senderId"] = Base::getDeviceID();
@@ -42,9 +44,73 @@ AF1Msg::AF1Msg(JsonDocument &d) : AF1Msg()
   jsonDoc = d;
 }
 
+AF1Msg::AF1Msg(uint8_t *r, int l, bool t)
+{
+  recipients = {};
+  sendCnt = 0;
+  retries = 0;
+  maxRetries = 0;
+  rawLen = l ? l + 1 : 0;
+  isTxt = t;
+  raw = new uint8_t[l + 1];
+  memcpy(raw, r, l);
+  raw[l] = 0;
+}
+
+AF1Msg::AF1Msg(const AF1Msg &m)
+{
+  recipients = m.recipients;
+  sendCnt = m.sendCnt;
+  retries = m.retries;
+  maxRetries = m.maxRetries;
+  rawLen = m.rawLen;
+  isTxt = m.isTxt;
+  jsonDoc = m.jsonDoc;
+  if (m.raw != NULL)
+  {
+    raw = new uint8_t[m.rawLen];
+    memcpy(raw, m.raw, m.rawLen);
+  }
+  else
+  {
+    raw = NULL;
+  }
+}
+
+AF1Msg::~AF1Msg()
+{
+  if (raw != NULL)
+  {
+    delete[] raw;
+    raw = NULL;
+  }
+}
+
+AF1Msg &AF1Msg::operator=(const AF1Msg &other)
+{
+  AF1Msg temp(other);
+  std::swap(*this, temp);
+  return *this;
+}
+
 JsonDocument &AF1Msg::json()
 {
   return jsonDoc;
+}
+
+const uint8_t *AF1Msg::getRaw()
+{
+  return raw;
+}
+
+int AF1Msg::getRawLen()
+{
+  return rawLen;
+}
+
+bool AF1Msg::getIsTxt()
+{
+  return isTxt;
 }
 
 uint8_t AF1Msg::getType()
@@ -96,10 +162,30 @@ int AF1Msg::getMaxRetries()
   return maxRetries;
 }
 
+int AF1Msg::getRetries()
+{
+  return retries;
+}
+
 void AF1Msg::print()
 {
-  String j;
-  serializeJsonPretty(jsonDoc, j);
   Serial.print("Message: ");
-  Serial.println(j);
+  if (raw != NULL)
+  {
+    if (isTxt)
+    {
+      Serial.println((char *)raw);
+    }
+    else
+    {
+      Serial.print("length");
+      Serial.println(rawLen);
+    }
+  }
+  else
+  {
+    String j;
+    serializeJsonPretty(jsonDoc, j);
+    Serial.println(j);
+  }
 }

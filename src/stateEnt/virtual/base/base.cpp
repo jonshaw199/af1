@@ -199,7 +199,7 @@ void Base::handleInboxMsg(AF1Msg &m)
   Serial.print("<");
 
 #if PRINT_MSG_RECV
-  m.print();
+  // m.print();
 #endif
 
   switch (m.getType())
@@ -668,10 +668,13 @@ void Base::onESPNowDataRecv(const uint8_t *mac, const uint8_t *incomingData, int
   Serial.print("Last Packet Recv from: ");
   Serial.println(macStr);
 #endif
-  AF1JsonDoc data;
-  deserializeJson(data, incomingData);
-  AF1Msg msg(data);
-  pushInbox(msg);
+
+  uint8_t *nonConst = new uint8_t[len + 1];
+  memcpy(nonConst, incomingData, len);
+  AF1JsonDoc doc;
+  deserializeJson(doc, nonConst, len);
+  pushInbox(!doc.isNull() ? doc : AF1Msg(nonConst, len));
+  delete[] nonConst;
 }
 
 void Base::initEspNow()
@@ -1445,16 +1448,8 @@ void Base::handleWebSocketEvent(WStype_t type, uint8_t *payload, size_t length)
     Serial.print(".");
 
     AF1JsonDoc doc;
-    if (validateJson((char *)payload))
-    {
-      String payloadStr((char *)payload); // null termination!
-      deserializeJson(doc, payloadStr);
-    }
-    else
-    {
-      doc["rawTxt"] = payload;
-    }
-    pushInbox(doc);
+    deserializeJson(doc, payload, length);
+    pushInbox(!doc.isNull() ? doc : AF1Msg(payload, length, true));
   }
   break;
   case WStype_BIN:
@@ -1463,9 +1458,7 @@ void Base::handleWebSocketEvent(WStype_t type, uint8_t *payload, size_t length)
     hexdump(payload, length);
     // send data to server
     // webSocket.sendBIN(payload, length);
-    AF1JsonDoc doc;
-    doc["rawBin"] = payload;
-    pushInbox(doc);
+    pushInbox(AF1Msg(payload, length));
   }
   break;
   case WStype_ERROR:
@@ -1475,10 +1468,4 @@ void Base::handleWebSocketEvent(WStype_t type, uint8_t *payload, size_t length)
   case WStype_FRAGMENT_FIN:
     break;
   }
-}
-
-bool Base::validateJson(const char *input)
-{
-  StaticJsonDocument<0> doc, filter;
-  return deserializeJson(doc, input, DeserializationOption::Filter(filter)) == DeserializationError::Ok;
 }

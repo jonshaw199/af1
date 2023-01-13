@@ -132,7 +132,6 @@ class Base
   static std::set<String> getPeerIDs();
   static void hexdump(const void *mem, uint32_t len, uint8_t cols = 16);
   static void handleWebSocketEvent(WStype_t type, uint8_t *payload, size_t length);
-  static bool validateJson(const char *input);
 
   static std::map<String, AF1Event> globalEventMap;
   static std::map<String, af1_peer_info> peerInfoMap;
