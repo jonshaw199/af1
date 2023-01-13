@@ -669,7 +669,7 @@ void Base::onESPNowDataRecv(const uint8_t *mac, const uint8_t *incomingData, int
   Serial.println(macStr);
 #endif
 
-  uint8_t *nonConst = new uint8_t[len + 1];
+  uint8_t *nonConst = new uint8_t[len];
   memcpy(nonConst, incomingData, len);
   AF1JsonDoc doc;
   deserializeJson(doc, nonConst, len);

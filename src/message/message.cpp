@@ -86,10 +86,36 @@ AF1Msg::~AF1Msg()
   }
 }
 
-AF1Msg &AF1Msg::operator=(const AF1Msg &other)
+AF1Msg &AF1Msg::operator=(const AF1Msg &m)
 {
+  /*
   AF1Msg temp(other);
   std::swap(*this, temp);
+  return *this;
+  */
+  recipients = m.recipients;
+  sendCnt = m.sendCnt;
+  retries = m.retries;
+  maxRetries = m.maxRetries;
+  rawLen = m.rawLen;
+  isTxt = m.isTxt;
+  jsonDoc = m.jsonDoc;
+  if (raw != NULL)
+  {
+    Serial.println("Deleting raw");
+    delete[] raw;
+  }
+  if (m.raw != NULL)
+  {
+    Serial.println("Copy");
+    raw = new uint8_t[m.rawLen];
+    memcpy(raw, m.raw, m.rawLen);
+  }
+  else
+  {
+    raw = NULL;
+  }
+  Serial.println("Done");
   return *this;
 }
 
