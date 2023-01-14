@@ -77,6 +77,35 @@ AF1Msg::AF1Msg(const AF1Msg &m)
   }
 }
 
+AF1Msg::AF1Msg(AF1Msg &&m)
+{
+  Serial.println("MOVE CONSTRUCTOR");
+  recipients = m.recipients;
+  sendCnt = m.sendCnt;
+  retries = m.retries;
+  maxRetries = m.maxRetries;
+  rawLen = m.rawLen;
+  isTxt = m.isTxt;
+  jsonDoc = m.jsonDoc;
+  if (m.raw != NULL)
+  {
+    raw = new uint8_t[m.rawLen];
+    memcpy(raw, m.raw, m.rawLen);
+  }
+  else
+  {
+    raw = NULL;
+  }
+  m.recipients = {};
+  m.sendCnt = 0;
+  m.retries = 0;
+  m.maxRetries = 0;
+  m.rawLen = 0;
+  m.isTxt = false;
+  m.raw = NULL;
+  m.jsonDoc.clear();
+}
+
 AF1Msg::~AF1Msg()
 {
   if (raw != NULL)
@@ -114,6 +143,43 @@ AF1Msg &AF1Msg::operator=(const AF1Msg &m)
     raw = NULL;
   }
   return *this;
+}
+
+AF1Msg &AF1Msg::operator=(AF1Msg &&m)
+{
+  if (this != &m)
+  {
+    Serial.println("MOVE OPERATOR");
+    recipients = m.recipients;
+    sendCnt = m.sendCnt;
+    retries = m.retries;
+    maxRetries = m.maxRetries;
+    rawLen = m.rawLen;
+    isTxt = m.isTxt;
+    jsonDoc = m.jsonDoc;
+    if (raw != NULL)
+    {
+      delete[] raw;
+    }
+    if (m.raw != NULL)
+    {
+      raw = new uint8_t[m.rawLen];
+      memcpy(raw, m.raw, m.rawLen);
+    }
+    else
+    {
+      raw = NULL;
+    }
+    m.recipients = {};
+    m.sendCnt = 0;
+    m.retries = 0;
+    m.maxRetries = 0;
+    m.rawLen = 0;
+    m.isTxt = false;
+    m.raw = NULL;
+    m.jsonDoc.clear();
+    return *this;
+  }
 }
 
 JsonDocument &AF1Msg::json()
