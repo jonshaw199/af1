@@ -50,11 +50,10 @@ AF1Msg::AF1Msg(uint8_t *r, int l, bool t)
   sendCnt = 0;
   retries = 0;
   maxRetries = 0;
-  rawLen = l ? l + 1 : 0;
+  rawLen = l;
   isTxt = t;
-  raw = new uint8_t[l + 1];
+  raw = new uint8_t[l];
   memcpy(raw, r, l);
-  raw[l] = 0;
 }
 
 AF1Msg::AF1Msg(const AF1Msg &m)
@@ -79,7 +78,6 @@ AF1Msg::AF1Msg(const AF1Msg &m)
 
 AF1Msg::AF1Msg(AF1Msg &&m)
 {
-  Serial.println("MOVE CONSTRUCTOR");
   recipients = m.recipients;
   sendCnt = m.sendCnt;
   retries = m.retries;
@@ -149,7 +147,6 @@ AF1Msg &AF1Msg::operator=(AF1Msg &&m)
 {
   if (this != &m)
   {
-    Serial.println("MOVE OPERATOR");
     recipients = m.recipients;
     sendCnt = m.sendCnt;
     retries = m.retries;
@@ -178,8 +175,8 @@ AF1Msg &AF1Msg::operator=(AF1Msg &&m)
     m.isTxt = false;
     m.raw = NULL;
     m.jsonDoc.clear();
-    return *this;
   }
+  return *this;
 }
 
 JsonDocument &AF1Msg::json()
@@ -267,14 +264,13 @@ void AF1Msg::print() const
     }
     else
     {
-      Serial.print("length");
-      Serial.println(rawLen);
+      Base::hexdump(raw, rawLen);
     }
   }
   else
   {
     String j;
-    serializeJsonPretty(jsonDoc, j);
+    serializeJson(jsonDoc, j);
     Serial.println(j);
   }
 }

@@ -671,16 +671,14 @@ void Base::onESPNowDataRecv(const uint8_t *mac, const uint8_t *incomingData, int
   Serial.println(macStr);
 #endif
 
-  // uint8_t *nonConst = new uint8_t[len];
   uint8_t nonConst[len];
   memcpy(nonConst, incomingData, len);
   AF1JsonDoc doc;
-  deserializeJson(doc, nonConst, len);
+  deserializeJson(doc, nonConst);
   AF1Msg m = !doc.isNull() ? doc : AF1Msg(nonConst, len);
   Serial.print("Received ESP Now message: ");
   m.print();
   pushInbox(m);
-  // delete[] nonConst;
 }
 
 void Base::initEspNow()
@@ -860,7 +858,7 @@ void Base::sendMsgESPNow(AF1Msg msg)
     if (msg.getRaw() != NULL)
     {
       Serial.print("Sending raw: ");
-      Serial.println((char *)msg.getRaw());
+      hexdump(msg.getRaw(), msg.getRawLen());
       result = esp_now_send(peerInfoMap[*it].espnowPeerInfo.peer_addr, msg.getRaw(), msg.getRawLen());
     }
     else

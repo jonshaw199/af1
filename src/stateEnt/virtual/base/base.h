@@ -130,7 +130,6 @@ class Base
   static const std::vector<wifi_ap_info> getWifiAPs();
   static unsigned long convertTime(String id, unsigned long t);
   static std::set<String> getPeerIDs();
-  static void hexdump(const void *mem, uint32_t len, uint8_t cols = 16);
   static void handleWebSocketEvent(WStype_t type, uint8_t *payload, size_t length);
 
   static std::map<String, AF1Event> globalEventMap;
@@ -192,6 +191,7 @@ public:
   static void addWifiAP(String s, String p, int a, int b, int c, int d, int ga, int gb, int gc, int gd, int sa, int sb, int sc, int sd);
   static bool getIsMaster();
   static void setIsMaster(bool isMaster);
+  static void hexdump(const void *mem, uint32_t len, uint8_t cols = 16);
 
   static NTPClient timeClient;
 
