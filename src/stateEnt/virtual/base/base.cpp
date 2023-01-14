@@ -202,7 +202,8 @@ void Base::handleInboxMsg(AF1Msg &m)
   Serial.print("<");
 
 #if PRINT_MSG_RECV
-  // m.print();
+  Serial.print("Handling inbox msg: ");
+  m.print();
 #endif
 
   switch (m.getType())
@@ -670,12 +671,16 @@ void Base::onESPNowDataRecv(const uint8_t *mac, const uint8_t *incomingData, int
   Serial.println(macStr);
 #endif
 
-  uint8_t *nonConst = new uint8_t[len];
+  // uint8_t *nonConst = new uint8_t[len];
+  uint8_t nonConst[len];
   memcpy(nonConst, incomingData, len);
   AF1JsonDoc doc;
   deserializeJson(doc, nonConst, len);
-  pushInbox(!doc.isNull() ? doc : AF1Msg(nonConst, len));
-  delete[] nonConst;
+  AF1Msg m = !doc.isNull() ? doc : AF1Msg(nonConst, len);
+  Serial.print("Received ESP Now message: ");
+  m.print();
+  pushInbox(m);
+  // delete[] nonConst;
 }
 
 void Base::initEspNow()
@@ -854,12 +859,15 @@ void Base::sendMsgESPNow(AF1Msg msg)
     esp_err_t result;
     if (msg.getRaw() != NULL)
     {
+      Serial.print("Sending raw: ");
+      Serial.println((char *)msg.getRaw());
       result = esp_now_send(peerInfoMap[*it].espnowPeerInfo.peer_addr, msg.getRaw(), msg.getRawLen());
     }
     else
     {
       String s;
       size_t len = serializeJson(msg.json(), s);
+      Serial.printf("Sending json: %s (size: %d)\n", s.c_str(), len);
       result = esp_now_send(peerInfoMap[*it].espnowPeerInfo.peer_addr, (uint8_t *)s.c_str(), len);
     }
 
@@ -1455,13 +1463,13 @@ void Base::handleWebSocketEvent(WStype_t type, uint8_t *payload, size_t length)
   break;
   case WStype_TEXT:
   {
-    Serial.printf("[WSc] get text: %s\n", payload);
+    Serial.printf("[WSc] get text: %s (length: %d)\n", payload, length);
     // send message to server
     // webSocket.sendTXT("message here");
     Serial.print(".");
 
     AF1JsonDoc doc;
-    deserializeJson(doc, payload, length);
+    deserializeJson(doc, String((char *)payload));
     pushInbox(!doc.isNull() ? doc : AF1Msg(payload, length, true));
   }
   break;
