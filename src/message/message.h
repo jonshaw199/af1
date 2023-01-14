@@ -85,7 +85,7 @@ public:
   void setMaxRetries(int m);
   int getMaxRetries();
   int getRetries();
-  void print();
+  void print() const;
 };
 
 #endif // MESSAGE_MESSAGE_H_

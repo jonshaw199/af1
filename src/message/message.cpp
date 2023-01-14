@@ -102,12 +102,10 @@ AF1Msg &AF1Msg::operator=(const AF1Msg &m)
   jsonDoc = m.jsonDoc;
   if (raw != NULL)
   {
-    Serial.println("Deleting raw");
     delete[] raw;
   }
   if (m.raw != NULL)
   {
-    Serial.println("Copy");
     raw = new uint8_t[m.rawLen];
     memcpy(raw, m.raw, m.rawLen);
   }
@@ -115,7 +113,6 @@ AF1Msg &AF1Msg::operator=(const AF1Msg &m)
   {
     raw = NULL;
   }
-  Serial.println("Done");
   return *this;
 }
 
@@ -193,7 +190,7 @@ int AF1Msg::getRetries()
   return retries;
 }
 
-void AF1Msg::print()
+void AF1Msg::print() const
 {
   Serial.print("Message: ");
   if (raw != NULL)
