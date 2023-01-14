@@ -54,6 +54,8 @@ static Box outbox;
 static HTTPClient httpClient;
 static WiFiMulti wifiMulti;
 
+static bool isMaster;
+
 unsigned long Base::syncStartTime;
 
 uint8_t Base::macAP[6];
@@ -76,6 +78,9 @@ Base::Base()
 
 void Base::begin(String id)
 {
+#if MASTER
+  isMaster = true;
+#endif
   stateEntMap[STATE_INIT] = new Init();
   stateEntMap[STATE_OTA] = new OTA();
   stateEntMap[STATE_RESTART] = new Restart();
@@ -178,12 +183,10 @@ void Base::preStateChange(int s)
   Serial.println(" state now.");
   deactivateEvents();
 
-#if MASTER
-  if (!detached)
+  if (isMaster && !detached)
   {
     sendStateChangeMessages(s);
   }
-#endif
 
   setBuiltinLED(0); // to do
 }
@@ -301,13 +304,11 @@ void Base::handleInboxMsg(AF1Msg &m)
   }
 
 #if IMPLICIT_STATE_CHANGE
-#ifndef MASTER
-  if (m.getState() != curState && m.getState() != requestedState && !detached)
+  if (!isMaster && m.getState() != curState && m.getState() != requestedState && !detached)
   {
     Serial.println("Implicit state change to " + stateToString(m.getState()));
     requestedState = m.getState();
   }
-#endif
 #endif
 }
 
@@ -849,14 +850,18 @@ void Base::sendMsgESPNow(AF1Msg msg)
     peerInfoMap[*it].mutex.lock();
     // Update last msg sent for this peer (now doing this even if sending fails)
     peerInfoMap[*it].lastMsg = msg;
-    // Serial.println("Sending message to device ID " + String(*it) + " (MAC address " + macToString(peerInfoMap[*it].espnowPeerInfo.peer_addr) + ")");
-    /*
-    af1_msg m = msg.getInnerMsg();
-    esp_err_t result = esp_now_send(peerInfoMap[*it].espnowPeerInfo.peer_addr, (uint8_t *)&m, sizeof(m));
-    */
-    String s;
-    serializeJson(msg.json(), s);
-    esp_err_t result = esp_now_send(peerInfoMap[*it].espnowPeerInfo.peer_addr, (uint8_t *)s.c_str(), AF1_MSG_SIZE);
+
+    esp_err_t result;
+    if (msg.getRaw() != NULL)
+    {
+      result = esp_now_send(peerInfoMap[*it].espnowPeerInfo.peer_addr, msg.getRaw(), msg.getRawLen());
+    }
+    else
+    {
+      String s;
+      size_t len = serializeJson(msg.json(), s);
+      result = esp_now_send(peerInfoMap[*it].espnowPeerInfo.peer_addr, (uint8_t *)s.c_str(), len);
+    }
 
     // Serial.print("Send Status: ");
     if (result == ESP_OK)
@@ -1040,12 +1045,20 @@ void Base::sendMsgWS(AF1Msg m)
 {
   if (webSocketClient.isConnected())
   {
-    String s;
-    serializeJson(m.json(), s);
 #if PRINT_MSG_SEND
     Serial.println("Sending websocket message");
 #endif
-    webSocketClient.sendTXT(s);
+
+    if (m.getRaw() != NULL)
+    {
+      webSocketClient.sendBIN(m.getRaw(), m.getRawLen());
+    }
+    else
+    {
+      String s;
+      serializeJson(m.json(), s);
+      webSocketClient.sendTXT(s);
+    }
   }
   else
   {
@@ -1468,4 +1481,14 @@ void Base::handleWebSocketEvent(WStype_t type, uint8_t *payload, size_t length)
   case WStype_FRAGMENT_FIN:
     break;
   }
+}
+
+bool Base::getIsMaster()
+{
+  return isMaster;
+}
+
+void Base::setIsMaster(bool m)
+{
+  isMaster = m;
 }

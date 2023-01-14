@@ -37,10 +37,11 @@ Init::Init()
     } },
       EVENT_TYPE_GLOBAL, MS_HANDSHAKE_LOOP, 0, 0, START_DEVICE_MS));
 
-#if MASTER
-  addEvent(AF1Event(
-      EVENTKEY_SYNC_START_TIME, [](ECBArg a)
-      {
+  if (getIsMaster())
+  {
+    addEvent(AF1Event(
+        EVENTKEY_SYNC_START_TIME, [](ECBArg a)
+        {
     if (getCurStateEnt()->doSync())
     {
       syncStartTime = millis() + (unsigned long)MS_TIME_SYNC_START;
@@ -50,8 +51,8 @@ Init::Init()
       Serial.println("Scheduling sync start");
       scheduleSyncStart();
     } },
-      EVENT_TYPE_GLOBAL, MS_TIME_SYNC_SCHEDULE_START, 1));
-#endif
+        EVENT_TYPE_GLOBAL, MS_TIME_SYNC_SCHEDULE_START, 1));
+  }
 }
 
 void Init::setup()

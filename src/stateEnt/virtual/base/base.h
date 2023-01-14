@@ -190,6 +190,8 @@ public:
   static void removeStringHandler(String s);
   static void addWifiAP(String s, String p);
   static void addWifiAP(String s, String p, int a, int b, int c, int d, int ga, int gb, int gc, int gd, int sa, int sb, int sc, int sd);
+  static bool getIsMaster();
+  static void setIsMaster(bool isMaster);
 
   static NTPClient timeClient;
 
