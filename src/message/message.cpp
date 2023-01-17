@@ -56,6 +56,19 @@ AF1Msg::AF1Msg(uint8_t *r, int l, bool t)
   memcpy(raw, r, l);
 }
 
+AF1Msg::AF1Msg(uint8_t type, uint8_t *r, int l, bool t)
+{
+  recipients = {};
+  sendCnt = 0;
+  retries = 0;
+  maxRetries = 0;
+  rawLen = l + 1;
+  isTxt = t;
+  raw = new uint8_t[rawLen];
+  raw[0] = type;
+  memcpy(raw + 1, r, l);
+}
+
 AF1Msg::AF1Msg(const AF1Msg &m)
 {
   recipients = m.recipients;

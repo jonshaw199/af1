@@ -66,6 +66,7 @@ public:
   AF1Msg(uint8_t type);
   AF1Msg(JsonDocument &d);
   AF1Msg(uint8_t *raw, int rawLen, bool isTxt = false);
+  AF1Msg(uint8_t type, uint8_t *raw, int rawLen, bool isTxt = false);
   AF1Msg(const AF1Msg &m); // Copy
   AF1Msg(AF1Msg &&m);      // Move
   ~AF1Msg();
