@@ -1474,7 +1474,7 @@ void Base::handleWebSocketEvent(WStype_t type, uint8_t *payload, size_t length)
   case WStype_BIN:
   {
     Serial.printf("[WSc] get binary length: %u\n", length);
-    hexdump(payload, length);
+    // hexdump(payload, length);
     // send data to server
     // webSocket.sendBIN(payload, length);
     pushInbox(AF1Msg(payload, length));
